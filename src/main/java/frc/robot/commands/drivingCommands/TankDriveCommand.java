@@ -5,27 +5,28 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands;
+package frc.robot.commands.drivingCommands;
 
-import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Controllers;
+import frc.robot.subsystems.DriveTrainSubsystem;
 
 /**
  * An example command that uses an example subsystem.
  */
-public class DriveTrainCommands extends CommandBase {
+public class TankDriveCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final ExampleSubsystem m_subsystem;
+  DriveTrainSubsystem driveTrain;
 
   /**
-   * Creates a new DriveTrainCommands.
+   * Creates a new TankDriveCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public DriveTrainCommands(ExampleSubsystem subsystem) {
-    m_subsystem = subsystem;
+  public TankDriveCommand(DriveTrainSubsystem driveTrain) {
+    this.driveTrain = driveTrain;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(subsystem);
+    addRequirements(driveTrain);
   }
 
   // Called when the command is initially scheduled.
@@ -36,6 +37,7 @@ public class DriveTrainCommands extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    driveTrain.setMotorPowers(Controllers.DriveController.getThrottle(), Controllers.DriveController.getY());
   }
 
   // Called once the command ends or is interrupted.
