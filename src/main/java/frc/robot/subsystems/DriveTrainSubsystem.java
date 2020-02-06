@@ -33,13 +33,13 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
 
   public DriveTrainSubsystem() {
-    rightEncoder = new Encoder(Constants.RightEncoderCAM, Constants.RightEncoder2CAM, false);
-    leftEncoder = new Encoder(Constants.LeftEncoderCAM, Constants.LeftEncoder2CAM, false);
+    rightEncoder = new Encoder(Constants.RightEncoderCAN, Constants.RightEncoder2CAN, false);
+    leftEncoder = new Encoder(Constants.LeftEncoderCAN, Constants.LeftEncoder2CAN, false);
 
-    rightDriveFalconMain = new WPI_TalonFX(Constants.RightDriveFalconMainCAM);
-    leftDriveFalconMain = new WPI_TalonFX(Constants.LeftDriveFalconMainCAM);
-    rightDriveFalconSub = new WPI_TalonFX(Constants.RightDriveFalconSubCAM);
-    leftDriveFalconSub = new WPI_TalonFX(Constants.LeftDriveFalconSubCAM);
+    rightDriveFalconMain = new WPI_TalonFX(Constants.RightDriveFalconMainCAN);
+    leftDriveFalconMain = new WPI_TalonFX(Constants.LeftDriveFalconMainCAN);
+    rightDriveFalconSub = new WPI_TalonFX(Constants.RightDriveFalconSubCAN);
+    leftDriveFalconSub = new WPI_TalonFX(Constants.LeftDriveFalconSubCAN);
 
     leftDriveFalconSub.follow(leftDriveFalconMain);
     rightDriveFalconSub.follow(rightDriveFalconMain);
