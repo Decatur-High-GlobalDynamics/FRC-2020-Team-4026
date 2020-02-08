@@ -7,13 +7,14 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.commands.drivingCommands.TankDriveCommand;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 
 public class DriveTrainSubsystem extends SubsystemBase {
@@ -28,7 +29,6 @@ public class DriveTrainSubsystem extends SubsystemBase {
   final Encoder rightEncoder;
   final Encoder leftEncoder;
 
-
   public static final double maxPowerChange = 0.1;
 
 
@@ -41,14 +41,13 @@ public class DriveTrainSubsystem extends SubsystemBase {
     rightDriveFalconSub = new WPI_TalonFX(Constants.RightDriveFalconSubCAN);
     leftDriveFalconSub = new WPI_TalonFX(Constants.LeftDriveFalconSubCAN);
 
+    rightDriveFalconMain.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+    leftDriveFalconMain.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+
     leftDriveFalconSub.follow(leftDriveFalconMain);
     rightDriveFalconSub.follow(rightDriveFalconMain);
 
-    //Sets the distance/encoder tick to be 1 unit. Should be updated after inches/encoeder is calculated. 
-    leftEncoder.setDistancePerPulse(1);
-    rightEncoder.setDistancePerPulse(1);
-
-    setDefaultCommand(new TankDriveCommand(this));
+    this.setDefaultCommand(new TankDriveCommand(this));
   }
 
   @Override
