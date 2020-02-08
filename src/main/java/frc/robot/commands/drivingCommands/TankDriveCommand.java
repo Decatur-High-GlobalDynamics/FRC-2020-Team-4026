@@ -37,7 +37,7 @@ public class TankDriveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    driveTrain.setMotorPowers(Controllers.DriveController.getThrottle(), Controllers.DriveController.getY());
+    driveTrain.setMotorPowers(Controllers.DriveController.getThrottle(), -Controllers.DriveController.getY());
   }
 
   // Called once the command ends or is interrupted.
