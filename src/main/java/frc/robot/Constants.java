@@ -25,12 +25,14 @@ public final class Constants {
     public static final int TopShooterMotorCAN = 5;
     public static final int BotShooterMotorCAN = 6;
 
-    public static final int IndexerHorizPWM = 0;
-    public static final int IndexerVertPWN = 1;
+    public static final int IndexerHorizPWM = 8;
+    public static final int IndexerVertPWN = 9;
 
     public static final int ClimbCAN = 7;
 
     public static final int IntakeCAN = 8;
+
+    public static final int TurretCan = 9;
     
     public static final int RightEncoderCAN = 1;
     public static final int LeftEncoderCAN = 2;

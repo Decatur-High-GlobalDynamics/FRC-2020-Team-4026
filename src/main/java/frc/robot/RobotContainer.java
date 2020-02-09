@@ -13,11 +13,17 @@ import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.OuttakeCommand;
 import frc.robot.commands.SimpleShootCommand;
+import frc.robot.commands.SimpleTurretLeftCommand;
+import frc.robot.commands.SimpleTurretRightCommand;
+import frc.robot.commands.VerticalIndexerDownCommand;
+import frc.robot.commands.VerticalIndexerUpCommand;
 import frc.robot.commands.drivingCommands.TankDriveCommand;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.NavigationSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.TurretSubsystem;
+import frc.robot.subsystems.VerticalIndexerSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -33,6 +39,8 @@ public class RobotContainer {
   private final NavigationSubsystem navigationSubsystem = new NavigationSubsystem();
   private final IntakeSubsystem intake = new IntakeSubsystem();
   private final ShooterSubsystem shooter = new ShooterSubsystem();
+  private final VerticalIndexerSubsystem verticalIndexer = new VerticalIndexerSubsystem();
+  private final TurretSubsystem turret = new TurretSubsystem();
 
   public static final Joystick DriveController = new Joystick(0);
   public static final Joystick SecondaryJoystick = new Joystick(1);
@@ -43,7 +51,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
-    driveTrain.setDefaultCommand(new TankDriveCommand(driveTrain,()->DriveController.getY(),()->DriveController.getThrottle()));
+    driveTrain.setDefaultCommand(new TankDriveCommand(driveTrain,()->DriveController.getThrottle(),()->DriveController.getY()));
     shooter.setDefaultCommand(new SimpleShootCommand(shooter,()->SecondaryJoystick.getY(),()->SecondaryJoystick.getThrottle()));
   }
 
@@ -56,8 +64,16 @@ public class RobotContainer {
   private void configureButtonBindings() {
     //When A is held, Intake
     new JoystickButton(SecondaryJoystick, 1).whileHeld(new IntakeCommand(this.intake));
-    //When B is held, Outtake
+    //When X is held, Outtake
     new JoystickButton(SecondaryJoystick,2).whileHeld(new OuttakeCommand(this.intake));
+    //When B is held, Indexer up
+    new JoystickButton(SecondaryJoystick, 3).whileHeld(new VerticalIndexerUpCommand(this.verticalIndexer));
+    //When Y is held, Indexer down
+    new JoystickButton(SecondaryJoystick, 4).whileHeld(new VerticalIndexerDownCommand(this.verticalIndexer)); 
+    //When left bumper  is held, Turret left
+    new JoystickButton(SecondaryJoystick,5).whileHeld(new SimpleTurretLeftCommand(this.turret));
+    //When right bumper is held, Turret right
+    new JoystickButton(SecondaryJoystick, 6).whileHeld(new SimpleTurretRightCommand(this.turret));
   }
 
 

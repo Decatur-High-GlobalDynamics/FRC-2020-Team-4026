@@ -1,5 +1,5 @@
 /*----------------------------------------------------------------------------*/
-/* Copyright (c) 2018-2019 FIRST. All Rights Reserved.                        */
+/* Copyright (c) 2019 FIRST. All Rights Reserved.                             */
 /* Open Source Software - may be modified and shared by FRC teams. The code   */
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
@@ -7,30 +7,18 @@
 
 package frc.robot.commands;
 
-import java.util.function.DoubleSupplier;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ShooterSubsystem;;;
+import frc.robot.subsystems.TurretSubsystem;
 
-/**
- * An example command that uses an example subsystem.
- */
-public class SimpleShootCommand extends CommandBase {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  ShooterSubsystem shooter;
-  DoubleSupplier topThrottle;
-  DoubleSupplier bottomThrottle;
+public class SimpleTurretRightCommand extends CommandBase {
   /**
-   * Creates a new TankDriveCommand.
-   *
-   * @param subsystem The subsystem used by this command.
+   * Creates a new SimpleTurretRightCommand.
    */
-  public SimpleShootCommand(ShooterSubsystem shooter, DoubleSupplier top, DoubleSupplier bottom) {
-    this.shooter = shooter;
-    this.topThrottle = top;
-    this.bottomThrottle = bottom;
+  private final TurretSubsystem turret;
+  public SimpleTurretRightCommand(TurretSubsystem turret_in) {
+    this.turret = turret_in;
+    addRequirements(turret_in);
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(shooter);
   }
 
   // Called when the command is initially scheduled.
@@ -41,14 +29,13 @@ public class SimpleShootCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooter.setBottomMotor(-this.bottomThrottle.getAsDouble());
-    shooter.setTopMotor(this.topThrottle.getAsDouble());
+    turret.goRight();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-      shooter.stop();
+    turret.stop();
   }
 
   // Returns true when the command should end.
