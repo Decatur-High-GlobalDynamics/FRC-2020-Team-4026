@@ -47,7 +47,6 @@ public class DriveTrainSubsystem extends SubsystemBase {
     leftDriveFalconSub.follow(leftDriveFalconMain);
     rightDriveFalconSub.follow(rightDriveFalconMain);
 
-    this.setDefaultCommand(new TankDriveCommand(this));
   }
 
   @Override

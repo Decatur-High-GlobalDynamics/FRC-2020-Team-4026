@@ -8,10 +8,18 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.OuttakeCommand;
+import frc.robot.commands.SimpleShootCommand;
+import frc.robot.commands.drivingCommands.TankDriveCommand;
 import frc.robot.subsystems.DriveTrainSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.NavigationSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -23,6 +31,11 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DriveTrainSubsystem driveTrain = new DriveTrainSubsystem();
   private final NavigationSubsystem navigationSubsystem = new NavigationSubsystem();
+  private final IntakeSubsystem intake = new IntakeSubsystem();
+  private final ShooterSubsystem shooter = new ShooterSubsystem();
+
+  public static final Joystick DriveController = new Joystick(0);
+  public static final Joystick SecondaryJoystick = new Joystick(1);
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -30,6 +43,8 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
+    driveTrain.setDefaultCommand(new TankDriveCommand(driveTrain,()->DriveController.getY(),()->DriveController.getThrottle()));
+    shooter.setDefaultCommand(new SimpleShootCommand(shooter,()->SecondaryJoystick.getY(),()->SecondaryJoystick.getThrottle()));
   }
 
   /**
@@ -39,6 +54,10 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    //When A is held, Intake
+    new JoystickButton(SecondaryJoystick, 1).whileHeld(new IntakeCommand(this.intake));
+    //When B is held, Outtake
+    new JoystickButton(SecondaryJoystick,2).whileHeld(new OuttakeCommand(this.intake));
   }
 
 

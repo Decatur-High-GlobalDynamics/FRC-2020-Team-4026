@@ -5,34 +5,32 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.drivingCommands;
+package frc.robot.commands;
 
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.DriveTrainSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;;;
 
 /**
  * An example command that uses an example subsystem.
  */
-public class TankDriveCommand extends CommandBase {
+public class SimpleShootCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  DriveTrainSubsystem driveTrain;
-
-  private final DoubleSupplier leftStick;
-  private final DoubleSupplier rightStick;
-
+  ShooterSubsystem shooter;
+  DoubleSupplier topThrottle;
+  DoubleSupplier bottomThrottle;
   /**
    * Creates a new TankDriveCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public TankDriveCommand(DriveTrainSubsystem driveTrain, DoubleSupplier left, DoubleSupplier right) {
-    this.driveTrain = driveTrain;
-    this.leftStick = left;
-    this.rightStick = right;
+  public SimpleShootCommand(ShooterSubsystem shooter, DoubleSupplier top, DoubleSupplier bottom) {
+    this.shooter = shooter;
+    this.topThrottle = top;
+    this.bottomThrottle = bottom;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(driveTrain);
+    addRequirements(shooter);
   }
 
   // Called when the command is initially scheduled.
@@ -43,12 +41,14 @@ public class TankDriveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    driveTrain.setMotorPowers(this.leftStick.getAsDouble(), -this.rightStick.getAsDouble());
+    shooter.setBottomMotor(this.bottomThrottle.getAsDouble());
+    shooter.setTopMotor(this.topThrottle.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+      shooter.stop();
   }
 
   // Returns true when the command should end.
