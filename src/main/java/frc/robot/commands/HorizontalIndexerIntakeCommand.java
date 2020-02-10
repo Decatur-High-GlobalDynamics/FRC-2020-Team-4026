@@ -14,7 +14,7 @@ public class HorizontalIndexerIntakeCommand extends CommandBase {
   HorizontalIndexerSubsystem horizontalIndexer;
 
   /**
-   * Creates a new VerticalIndexerDownCommand.
+   * Creates a new HorizontalIndexerIntakeCommand.
    */
   public HorizontalIndexerIntakeCommand(HorizontalIndexerSubsystem horizontalIndexer) {
     this.horizontalIndexer = horizontalIndexer;

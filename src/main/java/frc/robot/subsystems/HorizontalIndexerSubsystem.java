@@ -14,7 +14,7 @@ import frc.robot.Constants;
 
 public class HorizontalIndexerSubsystem extends SubsystemBase {
   /**
-   * Creates a new VerticalIndexerSubsystem.
+   * Creates a new HorizontalIndexerSubsystem.
    */
   private final VictorSP horizontalIndexer;
 
