@@ -7,34 +7,35 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class ShooterSubsystem extends SubsystemBase {
-  private final WPI_TalonSRX shooter_bottom;
-  private final WPI_TalonSRX shooter_top;
+public class VerticalIndexerSubsystem extends SubsystemBase {
   /**
-   * Creates a new ShooterSubsystem.
+   * Creates a new VerticalIndexerSubsystem.
    */
-  public ShooterSubsystem() {
-    shooter_bottom = new WPI_TalonSRX(Constants.BotShooterMotorCAN);
-    shooter_top = new WPI_TalonSRX(Constants.TopShooterMotorCAN);
+  private final VictorSP verticalIndexer;
+
+  private final double upSpeed = .5;
+  private final double downSpeed = -.5;
+  public VerticalIndexerSubsystem() {
+    verticalIndexer = new VictorSP(Constants.IndexerVertPWM);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
   }
-  public void setBottomMotor(double speed){
-    this.shooter_bottom.set(speed);
+  public void up(){
+      verticalIndexer.set(upSpeed);
   }
-  public void setTopMotor(double speed){
-    this.shooter_top.set(speed);
+  public void down(){
+      verticalIndexer.set(downSpeed);
   }
   public void stop(){
-    shooter_bottom.set(0);
-    shooter_top.set(0);
+  verticalIndexer.set(0);
   }
+
 }

@@ -1,38 +1,24 @@
 /*----------------------------------------------------------------------------*/
-/* Copyright (c) 2018-2019 FIRST. All Rights Reserved.                        */
+/* Copyright (c) 2019 FIRST. All Rights Reserved.                             */
 /* Open Source Software - may be modified and shared by FRC teams. The code   */
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.drivingCommands;
-
-import java.util.function.DoubleSupplier;
+package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.DriveTrainSubsystem;
+import frc.robot.subsystems.TurretSubsystem;
 
-/**
- * An example command that uses an example subsystem.
- */
-public class TankDriveCommand extends CommandBase {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  DriveTrainSubsystem driveTrain;
-
-  private final DoubleSupplier leftStick;
-  private final DoubleSupplier rightStick;
-
+public class SimpleTurretRightCommand extends CommandBase {
   /**
-   * Creates a new TankDriveCommand.
-   *
-   * @param subsystem The subsystem used by this command.
+   * Creates a new SimpleTurretRightCommand.
    */
-  public TankDriveCommand(DriveTrainSubsystem driveTrain, DoubleSupplier left, DoubleSupplier right) {
-    this.driveTrain = driveTrain;
-    this.leftStick = left;
-    this.rightStick = right;
+  private final TurretSubsystem turret;
+  public SimpleTurretRightCommand(TurretSubsystem turret) {
+    this.turret = turret;
+    addRequirements(turret);
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(driveTrain);
   }
 
   // Called when the command is initially scheduled.
@@ -43,12 +29,13 @@ public class TankDriveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    driveTrain.setMotorPowers(this.leftStick.getAsDouble(), -this.rightStick.getAsDouble());
+    turret.goRight();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    turret.stop();
   }
 
   // Returns true when the command should end.

@@ -12,29 +12,29 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class ShooterSubsystem extends SubsystemBase {
-  private final WPI_TalonSRX shooter_bottom;
-  private final WPI_TalonSRX shooter_top;
+public class TurretSubsystem extends SubsystemBase {
   /**
-   * Creates a new ShooterSubsystem.
+   * Creates a new TurretSubsystem.
    */
-  public ShooterSubsystem() {
-    shooter_bottom = new WPI_TalonSRX(Constants.BotShooterMotorCAN);
-    shooter_top = new WPI_TalonSRX(Constants.TopShooterMotorCAN);
+  private final WPI_TalonSRX turret;
+
+  private final double turnSpeed = .25;
+  public TurretSubsystem() {
+    turret = new WPI_TalonSRX(Constants.TurretCAN);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
   }
-  public void setBottomMotor(double speed){
-    this.shooter_bottom.set(speed);
+  public void goLeft(){
+    turret.set(turnSpeed);
   }
-  public void setTopMotor(double speed){
-    this.shooter_top.set(speed);
+  public void goRight(){
+    turret.set(-turnSpeed);
   }
   public void stop(){
-    shooter_bottom.set(0);
-    shooter_top.set(0);
+    turret.set(0);
   }
+
 }

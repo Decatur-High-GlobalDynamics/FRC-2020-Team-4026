@@ -10,11 +10,9 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 import frc.robot.Constants;
-import frc.robot.commands.drivingCommands.TankDriveCommand;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 
 public class DriveTrainSubsystem extends SubsystemBase {
@@ -26,15 +24,11 @@ public class DriveTrainSubsystem extends SubsystemBase {
   final WPI_TalonFX rightDriveFalconSub;
   final WPI_TalonFX leftDriveFalconSub;
 
-  final Encoder rightEncoder;
-  final Encoder leftEncoder;
 
   public static final double maxPowerChange = 0.1;
 
 
   public DriveTrainSubsystem() {
-    rightEncoder = new Encoder(Constants.RightEncoderCAN, Constants.RightEncoder2CAN, false);
-    leftEncoder = new Encoder(Constants.LeftEncoderCAN, Constants.LeftEncoder2CAN, false);
 
     rightDriveFalconMain = new WPI_TalonFX(Constants.RightDriveFalconMainCAN);
     leftDriveFalconMain = new WPI_TalonFX(Constants.LeftDriveFalconMainCAN);
@@ -47,7 +41,6 @@ public class DriveTrainSubsystem extends SubsystemBase {
     leftDriveFalconSub.follow(leftDriveFalconMain);
     rightDriveFalconSub.follow(rightDriveFalconMain);
 
-    this.setDefaultCommand(new TankDriveCommand(this));
   }
 
   @Override
