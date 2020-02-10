@@ -1,5 +1,5 @@
 /*----------------------------------------------------------------------------*/
-/* Copyright (c) 2018-2019 FIRST. All Rights Reserved.                        */
+/* Copyright (c) 2019 FIRST. All Rights Reserved.                             */
 /* Open Source Software - may be modified and shared by FRC teams. The code   */
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
@@ -8,24 +8,18 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.VerticalIndexerSubsystem;;
+import frc.robot.subsystems.VerticalIndexerSubsystem;
 
-/**
- * An example command that uses an example subsystem.
- */
 public class VerticalIndexerUpCommand extends CommandBase {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+  
   VerticalIndexerSubsystem verticalIndexer;
-
   /**
-   * Creates a new TankDriveCommand.
-   *
-   * @param subsystem The subsystem used by this command.
+   * Creates a new VerticalIndexerUpCommand.
    */
-  public VerticalIndexerUpCommand(VerticalIndexerSubsystem indexer) {
-    this.verticalIndexer = indexer;
+  public VerticalIndexerUpCommand(VerticalIndexerSubsystem verticalIndexer) {
+    this.verticalIndexer = verticalIndexer;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(indexer);
+    addRequirements(verticalIndexer);
   }
 
   // Called when the command is initially scheduled.
@@ -42,7 +36,7 @@ public class VerticalIndexerUpCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-      verticalIndexer.stop();
+    verticalIndexer.stop();
   }
 
   // Returns true when the command should end.

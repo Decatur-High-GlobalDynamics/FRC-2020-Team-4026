@@ -14,14 +14,14 @@ import frc.robot.Constants;
 
 public class VerticalIndexerSubsystem extends SubsystemBase {
   /**
-   * Creates a new IntakeSubsystem.
+   * Creates a new VerticalIndexerSubsystem.
    */
   private final VictorSP verticalIndexer;
 
   private final double upSpeed = .5;
   private final double downSpeed = -.5;
   public VerticalIndexerSubsystem() {
-    verticalIndexer = new VictorSP(Constants.IndexerVertPWN);
+    verticalIndexer = new VictorSP(Constants.IndexerVertPWM);
   }
 
   @Override

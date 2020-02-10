@@ -20,6 +20,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
   private final double intakeSpeed = .5;
   private final double outtakeSpeed = -.5;
+  
   public IntakeSubsystem() {
     intake = new WPI_TalonSRX(Constants.IntakeCAN);
   }

@@ -1,5 +1,5 @@
 /*----------------------------------------------------------------------------*/
-/* Copyright (c) 2018-2019 FIRST. All Rights Reserved.                        */
+/* Copyright (c) 2019 FIRST. All Rights Reserved.                             */
 /* Open Source Software - may be modified and shared by FRC teams. The code   */
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
@@ -10,20 +10,15 @@ package frc.robot.commands;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ShooterSubsystem;;;
+import frc.robot.subsystems.ShooterSubsystem;
 
-/**
- * An example command that uses an example subsystem.
- */
 public class SimpleShootCommand extends CommandBase {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+  
   ShooterSubsystem shooter;
   DoubleSupplier topThrottle;
   DoubleSupplier bottomThrottle;
   /**
-   * Creates a new TankDriveCommand.
-   *
-   * @param subsystem The subsystem used by this command.
+   * Creates a new SimpleShootCommand.
    */
   public SimpleShootCommand(ShooterSubsystem shooter, DoubleSupplier top, DoubleSupplier bottom) {
     this.shooter = shooter;
@@ -31,6 +26,7 @@ public class SimpleShootCommand extends CommandBase {
     this.bottomThrottle = bottom;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(shooter);
+
   }
 
   // Called when the command is initially scheduled.
@@ -48,7 +44,7 @@ public class SimpleShootCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-      shooter.stop();
+    shooter.stop();
   }
 
   // Returns true when the command should end.

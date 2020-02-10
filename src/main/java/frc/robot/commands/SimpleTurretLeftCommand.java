@@ -15,9 +15,9 @@ public class SimpleTurretLeftCommand extends CommandBase {
    * Creates a new SimpleTurretLeftComand.
    */
   private final TurretSubsystem turret;
-  public SimpleTurretLeftCommand(TurretSubsystem turret_in) {
-    this.turret = turret_in;
-    addRequirements(turret_in);
+  public SimpleTurretLeftCommand(TurretSubsystem turret) {
+    this.turret = turret;
+    addRequirements(turret);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 

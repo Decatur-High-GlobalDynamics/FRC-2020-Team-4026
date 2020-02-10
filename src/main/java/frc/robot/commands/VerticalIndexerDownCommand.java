@@ -16,10 +16,10 @@ public class VerticalIndexerDownCommand extends CommandBase {
   /**
    * Creates a new VerticalIndexerDownCommand.
    */
-  public VerticalIndexerDownCommand(VerticalIndexerSubsystem indexer) {
-    this.verticalIndexer = indexer;
+  public VerticalIndexerDownCommand(VerticalIndexerSubsystem verticalIndexer) {
+    this.verticalIndexer = verticalIndexer;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(indexer);
+    addRequirements(verticalIndexer);
   }
 
   // Called when the command is initially scheduled.

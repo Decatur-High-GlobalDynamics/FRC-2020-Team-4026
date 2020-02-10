@@ -10,8 +10,10 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.commands.IntakeCommand;
-import frc.robot.commands.OuttakeCommand;
+
+
+import frc.robot.commands.SimpleIntakeCommand;
+import frc.robot.commands.SimpleOuttakeCommand;
 import frc.robot.commands.SimpleShootCommand;
 import frc.robot.commands.SimpleTurretLeftCommand;
 import frc.robot.commands.SimpleTurretRightCommand;
@@ -20,7 +22,7 @@ import frc.robot.commands.VerticalIndexerUpCommand;
 import frc.robot.commands.drivingCommands.TankDriveCommand;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.NavigationSubsystem;
+//import frc.robot.subsystems.NavigationSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
 import frc.robot.subsystems.VerticalIndexerSubsystem;
@@ -36,7 +38,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DriveTrainSubsystem driveTrain = new DriveTrainSubsystem();
-  private final NavigationSubsystem navigationSubsystem = new NavigationSubsystem();
+ // private final NavigationSubsystem navigationSubsystem = new NavigationSubsystem();
   private final IntakeSubsystem intake = new IntakeSubsystem();
   private final ShooterSubsystem shooter = new ShooterSubsystem();
   private final VerticalIndexerSubsystem verticalIndexer = new VerticalIndexerSubsystem();
@@ -51,7 +53,11 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
+
+    //Configure driveTrain default command, which is tank drive with Primary Controller Joysticks (NUMBERED CONTROLLER)
     driveTrain.setDefaultCommand(new TankDriveCommand(driveTrain,()->DriveController.getThrottle(),()->DriveController.getY()));
+
+    //Configure shooter default command, which is to spin either wheel with the two Secondary joysticks
     shooter.setDefaultCommand(new SimpleShootCommand(shooter,()->SecondaryJoystick.getY(),()->SecondaryJoystick.getThrottle()));
   }
 
@@ -63,9 +69,9 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     //When A is held, Intake
-    new JoystickButton(SecondaryJoystick, 1).whileHeld(new IntakeCommand(this.intake));
+    new JoystickButton(SecondaryJoystick, 1).whileHeld(new SimpleIntakeCommand(this.intake));
     //When X is held, Outtake
-    new JoystickButton(SecondaryJoystick,2).whileHeld(new OuttakeCommand(this.intake));
+    new JoystickButton(SecondaryJoystick,2).whileHeld(new SimpleOuttakeCommand(this.intake));
     //When B is held, Indexer up
     new JoystickButton(SecondaryJoystick, 3).whileHeld(new VerticalIndexerUpCommand(this.verticalIndexer));
     //When Y is held, Indexer down

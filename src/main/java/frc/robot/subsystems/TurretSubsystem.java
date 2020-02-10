@@ -14,13 +14,13 @@ import frc.robot.Constants;
 
 public class TurretSubsystem extends SubsystemBase {
   /**
-   * Creates a new IntakeSubsystem.
+   * Creates a new TurretSubsystem.
    */
   private final WPI_TalonSRX turret;
 
   private final double turnSpeed = .25;
   public TurretSubsystem() {
-    turret = new WPI_TalonSRX(Constants.TurretCan);
+    turret = new WPI_TalonSRX(Constants.TurretCAN);
   }
 
   @Override
@@ -28,14 +28,13 @@ public class TurretSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
   }
   public void goLeft(){
-
-      turret.set(turnSpeed);
+    turret.set(turnSpeed);
   }
   public void goRight(){
-      turret.set(-turnSpeed);
+    turret.set(-turnSpeed);
   }
   public void stop(){
-  turret.set(0);
+    turret.set(0);
   }
 
 }
