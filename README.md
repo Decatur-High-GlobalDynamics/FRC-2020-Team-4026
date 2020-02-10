@@ -21,3 +21,6 @@ Robot features include:
 1. Run the >WPILib Build Robot Code command while connected to the internet (resolves dependencies)
 2. Connect to the robot over either USB-B, Ethernet, or Wifi
 3. Run the >WPILib Deploy Robot Code command to deploy the code to the robot
+
+## Documentation
+* Download links, installation instructions and documentation for the 2020 FRC WPILib code base can be found at: https://github.com/wpilibsuite/frc-docs
