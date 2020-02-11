@@ -10,8 +10,8 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-
-
+import frc.robot.commands.HorizontalIndexerIntakeCommand;
+import frc.robot.commands.HorizontalIndexerOuttakeCommand;
 import frc.robot.commands.SimpleIntakeCommand;
 import frc.robot.commands.SimpleOuttakeCommand;
 import frc.robot.commands.SimpleShootCommand;
@@ -28,8 +28,10 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
 import frc.robot.subsystems.VerticalIndexerSubsystem;
+import frc.robot.subsystems.HorizontalIndexerSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -45,6 +47,7 @@ public class RobotContainer {
   private final ShooterSubsystem shooter = new ShooterSubsystem();
   private final VerticalIndexerSubsystem verticalIndexer = new VerticalIndexerSubsystem();
   private final TurretSubsystem turret = new TurretSubsystem();
+  private final HorizontalIndexerSubsystem horizontalIndexer = new HorizontalIndexerSubsystem();
 
   public static final Joystick DriveController = new Joystick(0);
   public static final Joystick SecondaryJoystick = new Joystick(1);
@@ -81,6 +84,7 @@ public class RobotContainer {
     new JoystickButton(SecondaryJoystick, 3).whileHeld(new VerticalIndexerUpCommand(this.verticalIndexer));
     //When Y is held, Indexer down
     new JoystickButton(SecondaryJoystick, 4).whileHeld(new VerticalIndexerDownCommand(this.verticalIndexer)); 
+<<<<<<< HEAD
   
     //--------Turret Button Bindings--------
     //When left bumper  is held, Turret Clockwise
@@ -94,6 +98,16 @@ public class RobotContainer {
     //--------Shooting Button Bindings--------
     //When button 8 (Right Trigger) is pressed, start constant shooting
     new JoystickButton(SecondaryJoystick, 8).whileHeld(new ConstantShootCommand(this.shooter));
+=======
+    //When left bumper  is held, Turret left
+    new JoystickButton(SecondaryJoystick,5).whileHeld(new SimpleTurretLeftCommand(this.turret));
+    //When right bumper is held, Turret right
+    new JoystickButton(SecondaryJoystick, 6).whileHeld(new SimpleTurretRightCommand(this.turret));
+    //When left d-pad left is held, Indexer out 
+    new POVButton(SecondaryJoystick, 270).whileHeld(new HorizontalIndexerOuttakeCommand(this.horizontalIndexer));
+    //When left d-pad right is held, Indexer in 
+    new POVButton(SecondaryJoystick, 90).whileHeld(new HorizontalIndexerIntakeCommand(this.horizontalIndexer));
+>>>>>>> 53f719bdc111bda8c793728f9196fb816c57c936
   }
 
 
