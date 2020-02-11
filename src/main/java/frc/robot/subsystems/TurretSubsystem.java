@@ -25,6 +25,8 @@ public class TurretSubsystem extends SubsystemBase {
   private double turnSpeed = baseTurnSpeed;
   private int numEStops = 0;
 
+  private boolean isTurnCW = true;
+
   public TurretSubsystem() {
     turretMotor = new WPI_TalonSRX(Constants.TurretCAN);
     turretLimit = new DigitalInput(Constants.TurretLimitDIO);
@@ -43,6 +45,11 @@ public class TurretSubsystem extends SubsystemBase {
 	  SmartDashboard.putNumber("Subsystems.Turret.motorPower", turretMotor.get());
     SmartDashboard.putBoolean("Subsystems.Turret.limitStatus", this.getTurretLimit());
     SmartDashboard.putNumber("Subsystems.Turret.numEStops", numEStops);
+    isTurnCW = SmartDashboard.getBoolean("Subsystems.Turret.isTurnCW", true);
+    SmartDashboard.putBoolean("Subsystems.Turret.isTurnCW", isTurnCW);
+  }
+  public boolean shouldTurnCW(){
+    return isTurnCW;
   }
   public void goClockwise(){
     turretMotor.set(turnSpeed);

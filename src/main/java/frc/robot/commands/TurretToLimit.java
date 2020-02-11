@@ -10,12 +10,12 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.TurretSubsystem;
 
-public class TurretCWToLimit extends CommandBase {
+public class TurretToLimit extends CommandBase {
   /**
-   * Creates a new TurretLeftToLimit.
+   * Creates a new TurretCWToLimit.
    */
   private final TurretSubsystem turret;
-  public TurretCWToLimit(TurretSubsystem turret) {
+  public TurretToLimit(TurretSubsystem turret) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.turret = turret;
     addRequirements(this.turret);
@@ -29,7 +29,12 @@ public class TurretCWToLimit extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    turret.goClockwise();
+    if (turret.shouldTurnCW()){
+      turret.goClockwise();
+    } else {
+      turret.goCounterClockwise();
+    }
+    
   }
 
   // Called once the command ends or is interrupted.
