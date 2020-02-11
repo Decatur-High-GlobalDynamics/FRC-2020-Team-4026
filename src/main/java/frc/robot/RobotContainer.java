@@ -15,8 +15,11 @@ import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.SimpleIntakeCommand;
 import frc.robot.commands.SimpleOuttakeCommand;
 import frc.robot.commands.SimpleShootCommand;
-import frc.robot.commands.SimpleTurretLeftCommand;
-import frc.robot.commands.SimpleTurretRightCommand;
+import frc.robot.commands.SimpleTurretCCWCommand;
+import frc.robot.commands.SimpleTurretCWCommand;
+import frc.robot.commands.SimplerShootCommand;
+import frc.robot.commands.TurretCCWToLimit;
+import frc.robot.commands.TurretCWToLimit;
 import frc.robot.commands.VerticalIndexerDownCommand;
 import frc.robot.commands.VerticalIndexerUpCommand;
 import frc.robot.commands.drivingCommands.TankDriveCommand;
@@ -77,9 +80,15 @@ public class RobotContainer {
     //When Y is held, Indexer down
     new JoystickButton(SecondaryJoystick, 4).whileHeld(new VerticalIndexerDownCommand(this.verticalIndexer)); 
     //When left bumper  is held, Turret left
-    new JoystickButton(SecondaryJoystick,5).whileHeld(new SimpleTurretLeftCommand(this.turret));
+    new JoystickButton(SecondaryJoystick,5).whileHeld(new SimpleTurretCWCommand(this.turret));
     //When right bumper is held, Turret right
-    new JoystickButton(SecondaryJoystick, 6).whileHeld(new SimpleTurretRightCommand(this.turret));
+    new JoystickButton(SecondaryJoystick, 6).whileHeld(new SimpleTurretCCWCommand(this.turret));
+    //When button 9 is pressed, turn the turret right
+    new JoystickButton(SecondaryJoystick, 9).whenPressed(new TurretCWToLimit(this.turret));
+    //When button 10 is pressed, turn the turret right
+    new JoystickButton(SecondaryJoystick, 10).whenPressed(new TurretCCWToLimit(this.turret));
+    //When button 10 is pressed, start constant shooting
+    new JoystickButton(SecondaryJoystick, 8).whileHeld(new SimplerShootCommand(this.shooter));
   }
 
 

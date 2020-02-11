@@ -34,4 +34,8 @@ public final class Constants {
     public static final int IndexerHorizPWM = 8;
     public static final int IndexerVertPWM = 9;
 
+
+    // DIO Ports
+    public static final int TurretLimitDIO = 0;
+
 }

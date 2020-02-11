@@ -9,6 +9,8 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -16,25 +18,44 @@ public class TurretSubsystem extends SubsystemBase {
   /**
    * Creates a new TurretSubsystem.
    */
-  private final WPI_TalonSRX turret;
+  private final WPI_TalonSRX turretMotor;
+  private final DigitalInput turretLimit;
 
-  private final double turnSpeed = .25;
+  private final double baseTurnSpeed = .15;
+  private double turnSpeed = baseTurnSpeed;
+  private int numEStops = 0;
+
   public TurretSubsystem() {
-    turret = new WPI_TalonSRX(Constants.TurretCAN);
+    turretMotor = new WPI_TalonSRX(Constants.TurretCAN);
+    turretLimit = new DigitalInput(Constants.TurretLimitDIO);
+
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    if (this.getTurretLimit() && turretMotor.get() > 0){
+      this.stop();
+      numEStops ++; 
+    }
+    turnSpeed = SmartDashboard.getNumber("Subsystems.Turret.turnSpeed", baseTurnSpeed);
+    SmartDashboard.putNumber("Subsystems.Turret.turnSpeed", turnSpeed);
+	  SmartDashboard.putNumber("Subsystems.Turret.motorPower", turretMotor.get());
+    SmartDashboard.putBoolean("Subsystems.Turret.limitStatus", this.getTurretLimit());
+    SmartDashboard.putNumber("Subsystems.Turret.numEStops", numEStops);
   }
-  public void goLeft(){
-    turret.set(turnSpeed);
+  public void goClockwise(){
+    turretMotor.set(turnSpeed);
   }
-  public void goRight(){
-    turret.set(-turnSpeed);
+  public void goCounterClockwise(){
+    turretMotor.set(-turnSpeed);
   }
   public void stop(){
-    turret.set(0);
+    turretMotor.set(0);
+  }
+
+  public boolean getTurretLimit(){
+    return !turretLimit.get();
   }
 
 }

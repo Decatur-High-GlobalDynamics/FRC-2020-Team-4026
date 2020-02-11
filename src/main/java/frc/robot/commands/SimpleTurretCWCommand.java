@@ -10,12 +10,12 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.TurretSubsystem;
 
-public class SimpleTurretRightCommand extends CommandBase {
+public class SimpleTurretCWCommand extends CommandBase {
   /**
-   * Creates a new SimpleTurretRightCommand.
+   * Creates a new SimpleTurretLeftComand.
    */
   private final TurretSubsystem turret;
-  public SimpleTurretRightCommand(TurretSubsystem turret) {
+  public SimpleTurretCWCommand(TurretSubsystem turret) {
     this.turret = turret;
     addRequirements(turret);
     // Use addRequirements() here to declare subsystem dependencies.
@@ -29,7 +29,7 @@ public class SimpleTurretRightCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    turret.goRight();
+    turret.goClockwise();
   }
 
   // Called once the command ends or is interrupted.

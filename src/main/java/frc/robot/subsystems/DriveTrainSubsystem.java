@@ -10,8 +10,8 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
 import frc.robot.Constants;
 
 
@@ -24,12 +24,13 @@ public class DriveTrainSubsystem extends SubsystemBase {
   final WPI_TalonFX rightDriveFalconSub;
   final WPI_TalonFX leftDriveFalconSub;
 
-
-  public static final double maxPowerChange = 0.1;
+  public static final double defaultMaxPowerChange = 0.001;
+  public static double maxPowerChange = defaultMaxPowerChange;
+  public static final double basePowMod = .5;
+  public static double powMod = basePowMod;
 
 
   public DriveTrainSubsystem() {
-
     rightDriveFalconMain = new WPI_TalonFX(Constants.RightDriveFalconMainCAN);
     leftDriveFalconMain = new WPI_TalonFX(Constants.LeftDriveFalconMainCAN);
     rightDriveFalconSub = new WPI_TalonFX(Constants.RightDriveFalconSubCAN);
@@ -40,13 +41,18 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
     leftDriveFalconSub.follow(leftDriveFalconMain);
     rightDriveFalconSub.follow(rightDriveFalconMain);
-
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-  }
+    SmartDashboard.putNumber("Subsystems.DriveTrain.leftPower", leftDriveFalconMain.get());
+    SmartDashboard.putNumber("Subsystems.DriveTrain.rightPower", rightDriveFalconMain.get());
+    maxPowerChange = SmartDashboard.getNumber("Subsystems.DriveTrain.maxPowerChange", defaultMaxPowerChange);
+    SmartDashboard.putNumber("Subsystems.DriveTrain.maxPowerChange", maxPowerChange);
+    powMod = SmartDashboard.getNumber("Subsystems.DriveTrain.powMod", basePowMod);
+    SmartDashboard.putNumber("Subsystems.DriveTrain.powMod", powMod);
+    }
 
   public void setMotorPowers(double rightPower, double leftPower){
     setRightMotorPower(rightPower);
@@ -54,6 +60,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
   }
 
   public void setRightMotorPower(double power){
+    power = power * powMod;
     double curPower = rightDriveFalconMain.get();
     double nextPower;
     
@@ -67,10 +74,12 @@ public class DriveTrainSubsystem extends SubsystemBase {
   }
 
   public void setLeftMotorPower(double power){
+    power = power * powMod;
     double curPower = leftDriveFalconMain.get();
     double nextPower;
-    
-    if (Math.abs(power - curPower) <= maxPowerChange){
+    if (Math.signum(power) == Math.signum(curPower) && Math.abs(power) < Math.abs(curPower)){
+      nextPower = power;
+    } else if (Math.abs(power - curPower) <= maxPowerChange){
       nextPower = power;
     } else {
       nextPower = curPower + Math.signum(power - curPower) * maxPowerChange;
