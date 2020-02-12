@@ -47,13 +47,12 @@ public class DriveTrainSubsystem extends SubsystemBase {
     rightDriveFalconMain.configAllSettings(configs);
     leftDriveFalconMain.configAllSettings(configs);
 
-    SpeedControllerGroup leftMotors = new SpeedControllerGroup(leftDriveFalconMain, leftDriveFalconSub);
-    SpeedControllerGroup rightMotors = new SpeedControllerGroup(rightDriveFalconMain, rightDriveFalconSub);
-
-    drive = new DifferentialDrive(leftMotors, rightMotors);
-
     leftDriveFalconSub.follow(leftDriveFalconMain);
     rightDriveFalconSub.follow(rightDriveFalconMain);
+
+    drive = new DifferentialDrive(leftDriveFalconMain, rightDriveFalconMain);
+
+    
   }
 
   @Override
