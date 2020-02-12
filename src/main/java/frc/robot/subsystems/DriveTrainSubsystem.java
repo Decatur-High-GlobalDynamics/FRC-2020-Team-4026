@@ -14,8 +14,8 @@ import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
 import frc.robot.Constants;
 
 
@@ -31,13 +31,13 @@ public class DriveTrainSubsystem extends SubsystemBase {
   WPI_TalonFX rightDriveFalconSub;
   WPI_TalonFX leftDriveFalconSub;
 
-  DifferentialDriveOdometry odometry;
-
-  public static final double maxPowerChange = 0.1;
+  public static final double defaultMaxPowerChange = 0.001;
+  public static double maxPowerChange = defaultMaxPowerChange;
+  public static final double basePowMod = .5;
+  public static double powMod = basePowMod;
 
 
   public DriveTrainSubsystem() {
-
     rightDriveFalconMain = new WPI_TalonFX(Constants.RightDriveFalconMainCAN);
     leftDriveFalconMain = new WPI_TalonFX(Constants.LeftDriveFalconMainCAN);
     rightDriveFalconSub = new WPI_TalonFX(Constants.RightDriveFalconSubCAN);
@@ -48,12 +48,20 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
     drive = new DifferentialDrive(leftMotors, rightMotors);
 
+    leftDriveFalconSub.follow(leftDriveFalconMain);
+    rightDriveFalconSub.follow(rightDriveFalconMain);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-  }
+    SmartDashboard.putNumber("Subsystems.DriveTrain.leftPower", leftDriveFalconMain.get());
+    SmartDashboard.putNumber("Subsystems.DriveTrain.rightPower", rightDriveFalconMain.get());
+    maxPowerChange = SmartDashboard.getNumber("Subsystems.DriveTrain.maxPowerChange", defaultMaxPowerChange);
+    SmartDashboard.putNumber("Subsystems.DriveTrain.maxPowerChange", maxPowerChange);
+    powMod = SmartDashboard.getNumber("Subsystems.DriveTrain.powMod", basePowMod);
+    SmartDashboard.putNumber("Subsystems.DriveTrain.powMod", powMod);
+    }
 
   //Caps the requested powers then sends them to Differential Drive
   public void setMotorPowers(double rightPower, double leftPower){
@@ -79,8 +87,4 @@ public class DriveTrainSubsystem extends SubsystemBase {
     drive.tankDrive(nextleftPower, nextRightPower);
   }
 
-  //Returns the robot's pose (position and rotation) in meters
-  public Pose2d getPost() {
-    return odometry.getPoseMeters();
-  }
 }

@@ -57,4 +57,8 @@ public final class Constants {
     public static final double kDriveGearRatio = 1;
 
     public static final double kEncoderDistancePerPulse = (0.1524 * 2 * Math.PI * kDriveGearRatio) / 2048;
+
+    // DIO Ports
+    public static final int TurretLimitDIO = 0;
+
 }

@@ -8,17 +8,18 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.TurretSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 
-public class SimpleTurretLeftCommand extends CommandBase {
+public class ConstantShootCommand extends CommandBase {
   /**
-   * Creates a new SimpleTurretLeftComand.
+   * Creates a new ConstantShootCommand.
    */
-  private final TurretSubsystem turret;
-  public SimpleTurretLeftCommand(TurretSubsystem turret) {
-    this.turret = turret;
-    addRequirements(turret);
+  ShooterSubsystem shooter;
+
+  public ConstantShootCommand(ShooterSubsystem shooter) {
     // Use addRequirements() here to declare subsystem dependencies.
+    this.shooter = shooter;
+    addRequirements(shooter);
   }
 
   // Called when the command is initially scheduled.
@@ -29,13 +30,14 @@ public class SimpleTurretLeftCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    turret.goLeft();
+    shooter.setBottomMotor(shooter.getShooterPowerBot());
+    shooter.setTopMotor(shooter.getShooterPowerTop());
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    turret.stop();
+    shooter.stop();
   }
 
   // Returns true when the command should end.
