@@ -28,6 +28,6 @@ public class ClimberSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
   }
   public void stop(){
-    climber.set(0)
+    climber.set(0);
   }
 }
