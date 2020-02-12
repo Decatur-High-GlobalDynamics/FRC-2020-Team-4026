@@ -8,12 +8,11 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -42,6 +41,11 @@ public class DriveTrainSubsystem extends SubsystemBase {
     leftDriveFalconMain = new WPI_TalonFX(Constants.LeftDriveFalconMainCAN);
     rightDriveFalconSub = new WPI_TalonFX(Constants.RightDriveFalconSubCAN);
     leftDriveFalconSub = new WPI_TalonFX(Constants.LeftDriveFalconSubCAN);
+
+    TalonFXConfiguration configs = new TalonFXConfiguration();
+    configs.primaryPID.selectedFeedbackSensor = FeedbackDevice.IntegratedSensor;
+    rightDriveFalconMain.configAllSettings(configs);
+    leftDriveFalconMain.configAllSettings(configs);
 
     SpeedControllerGroup leftMotors = new SpeedControllerGroup(leftDriveFalconMain, leftDriveFalconSub);
     SpeedControllerGroup rightMotors = new SpeedControllerGroup(rightDriveFalconMain, rightDriveFalconSub);
@@ -85,6 +89,14 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
     
     drive.tankDrive(nextleftPower, nextRightPower);
+  }
+
+  public int getLeftEncoder() {
+    return leftDriveFalconMain.getSelectedSensorPosition();
+  }
+
+  public int getRightEncoder() {
+    return rightDriveFalconMain.getSelectedSensorPosition();
   }
 
 }

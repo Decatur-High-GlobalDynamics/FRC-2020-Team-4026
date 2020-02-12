@@ -42,7 +42,6 @@ public final class Constants {
     public static final double ka = 0;
     //Define this
     public static final double kPDriveVel = 0;
-    //make more accurate, was a bit rushed
     public static final double kTrackWidthMeters = 0.581025;
     public static final DifferentialDriveKinematics kDriveKinematics = DifferentialDriveKinematics(kTrackWidthMeters);
     //TBD

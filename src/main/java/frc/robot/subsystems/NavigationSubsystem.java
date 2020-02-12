@@ -20,34 +20,34 @@ public class NavigationSubsystem extends SubsystemBase {
 
     DifferentialDriveOdometry odometry;
 
+    DriveTrainSubsystem driveTrain;
+
     AHRS navx;
 
   /**
    * Creates a new NavigationSubsystem.
    */
-  public NavigationSubsystem() {
+  public NavigationSubsystem(DriveTrainSubsystem driveTrain) {
     //VisionPI = Constants.VisionPI;
     //Change this to whatever constructor is nescessary
+    this.driveTrain = driveTrain;
     navx = new AHRS(SerialPort.Port.kMXP);
     odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
     //Change these to actual values
   }
 
+  //Returns the robot's pose (position and rotation) in meters
   public Pose2d getPose() {
     return odometry.getPoseMeters();
   }
 
+  public void calibratePose(Pose2d pose) {
+    odometry.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
+  }
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
-    /*
-    robotX = VisionPI.get(x);
-    robotZ = VisionPI.get(z);
-    robotHeading = VisionPI.get(heading);
-
-    Change to whatever protocol is needed
-    */
+    odometry.update(Rotation2d.fromDegrees(getHeading()), driveTrain.getLeftEncoder(), driveTrain.getRightEncoder());
   }
 
   public double getHeading() {

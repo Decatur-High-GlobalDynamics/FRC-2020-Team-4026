@@ -84,21 +84,6 @@ public class RobotContainer {
     new JoystickButton(SecondaryJoystick, 3).whileHeld(new VerticalIndexerUpCommand(this.verticalIndexer));
     //When Y is held, Indexer down
     new JoystickButton(SecondaryJoystick, 4).whileHeld(new VerticalIndexerDownCommand(this.verticalIndexer)); 
-<<<<<<< HEAD
-  
-    //--------Turret Button Bindings--------
-    //When left bumper  is held, Turret Clockwise
-    new JoystickButton(SecondaryJoystick,5).whileHeld(new SimpleTurretCWCommand(this.turret));
-    //When right bumper is held, Turret Counterclockwise
-    new JoystickButton(SecondaryJoystick, 6).whileHeld(new SimpleTurretCCWCommand(this.turret));
-    //When button 9 is pressed, turn the turret Clockwise
-    new JoystickButton(SecondaryJoystick, 9).whenPressed(new TurretToLimit(this.turret));
-    //When button 10 is pressed, turn the turret Counterclockwise
-
-    //--------Shooting Button Bindings--------
-    //When button 8 (Right Trigger) is pressed, start constant shooting
-    new JoystickButton(SecondaryJoystick, 8).whileHeld(new ConstantShootCommand(this.shooter));
-=======
     //When left bumper  is held, Turret left
     new JoystickButton(SecondaryJoystick,5).whileHeld(new SimpleTurretLeftCommand(this.turret));
     //When right bumper is held, Turret right
@@ -107,7 +92,6 @@ public class RobotContainer {
     new POVButton(SecondaryJoystick, 270).whileHeld(new HorizontalIndexerOuttakeCommand(this.horizontalIndexer));
     //When left d-pad right is held, Indexer in 
     new POVButton(SecondaryJoystick, 90).whileHeld(new HorizontalIndexerIntakeCommand(this.horizontalIndexer));
->>>>>>> 53f719bdc111bda8c793728f9196fb816c57c936
   }
 
 
