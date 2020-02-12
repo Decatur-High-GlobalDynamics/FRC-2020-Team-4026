@@ -73,7 +73,7 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    //--------Indexer Button Bindings--------
+    //--------Intake Button Bindings--------
     //When A is held, Intake
     new JoystickButton(SecondaryJoystick, 1).whileHeld(new SimpleIntakeCommand(this.intake));
     //When X is held, Outtake
@@ -84,14 +84,22 @@ public class RobotContainer {
     new JoystickButton(SecondaryJoystick, 3).whileHeld(new VerticalIndexerUpCommand(this.verticalIndexer));
     //When Y is held, Indexer down
     new JoystickButton(SecondaryJoystick, 4).whileHeld(new VerticalIndexerDownCommand(this.verticalIndexer)); 
-    //When left bumper  is held, Turret left
-    new JoystickButton(SecondaryJoystick,5).whileHeld(new SimpleTurretLeftCommand(this.turret));
-    //When right bumper is held, Turret right
-    new JoystickButton(SecondaryJoystick, 6).whileHeld(new SimpleTurretRightCommand(this.turret));
-    //When left d-pad left is held, Indexer out 
+    //When left d-pad is held, Horizontal Indexer in
+    new POVButton(SecondaryJoystick,90).whileHeld(new HorizontalIndexerIntakeCommand(this.horizontalIndexer));
+    //When right d-pad is held, Horizontal Indexer out
     new POVButton(SecondaryJoystick, 270).whileHeld(new HorizontalIndexerOuttakeCommand(this.horizontalIndexer));
-    //When left d-pad right is held, Indexer in 
-    new POVButton(SecondaryJoystick, 90).whileHeld(new HorizontalIndexerIntakeCommand(this.horizontalIndexer));
+
+    //--------Turret Button Bindings--------
+    //When left bumper  is held, Turret Clockwise
+    new JoystickButton(SecondaryJoystick,5).whileHeld(new SimpleTurretCWCommand(this.turret));
+    //When right bumper is held, Turret Counterclockwise
+    new JoystickButton(SecondaryJoystick, 6).whileHeld(new SimpleTurretCCWCommand(this.turret));
+    //When button 9 is pressed, zero the shooter
+    new JoystickButton(SecondaryJoystick, 9).whenPressed(new TurretToLimit(this.turret));
+
+    //--------Shooting Button Bindings--------
+    //When button 8 (Right Trigger) is pressed, start constant shooting
+    new JoystickButton(SecondaryJoystick, 8).whileHeld(new ConstantShootCommand(this.shooter));
   }
 
 
