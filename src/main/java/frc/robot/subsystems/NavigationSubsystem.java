@@ -7,13 +7,20 @@
 
 package frc.robot.subsystems;
 
+import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.SerialPort;
 
 public class NavigationSubsystem extends SubsystemBase {
-    private double robotX, robotZ, robotHeading;
     //private int VisionPI; //Change this to whatever type is needed
 
+    DifferentialDriveOdometry odometry;
 
+    AHRS navx;
 
   /**
    * Creates a new NavigationSubsystem.
@@ -21,20 +28,13 @@ public class NavigationSubsystem extends SubsystemBase {
   public NavigationSubsystem() {
     //VisionPI = Constants.VisionPI;
     //Change this to whatever constructor is nescessary
-    robotX = 0;
-    robotZ = 0;
-    robotHeading = 0;
+    navx = new AHRS(SerialPort.Port.kMXP);
+    odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
     //Change these to actual values
   }
 
-  public double getX(){
-    return robotX;
-  }
-  public double getY(){
-    return robotZ;
-  }
-  public double getHeading(){
-    return robotHeading;
+  public Pose2d getPose() {
+    return odometry.getPoseMeters();
   }
 
 
@@ -48,5 +48,9 @@ public class NavigationSubsystem extends SubsystemBase {
 
     Change to whatever protocol is needed
     */
+  }
+
+  public double getHeading() {
+    return navx.getYaw();
   }
 }

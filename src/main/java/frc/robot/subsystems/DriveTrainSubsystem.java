@@ -10,20 +10,28 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants;
+
 
 
 public class DriveTrainSubsystem extends SubsystemBase {
   /**
    * Creates a new DriveTrainSubsystem.
    */
-  final WPI_TalonFX rightDriveFalconMain;
-  final WPI_TalonFX leftDriveFalconMain;
-  final WPI_TalonFX rightDriveFalconSub;
-  final WPI_TalonFX leftDriveFalconSub;
+  final DifferentialDrive drive;
 
+  WPI_TalonFX rightDriveFalconMain; 
+  WPI_TalonFX leftDriveFalconMain;
+  WPI_TalonFX rightDriveFalconSub;
+  WPI_TalonFX leftDriveFalconSub;
+
+  DifferentialDriveOdometry odometry;
 
   public static final double maxPowerChange = 0.1;
 
@@ -35,11 +43,10 @@ public class DriveTrainSubsystem extends SubsystemBase {
     rightDriveFalconSub = new WPI_TalonFX(Constants.RightDriveFalconSubCAN);
     leftDriveFalconSub = new WPI_TalonFX(Constants.LeftDriveFalconSubCAN);
 
-    rightDriveFalconMain.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
-    leftDriveFalconMain.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+    SpeedControllerGroup leftMotors = new SpeedControllerGroup(leftDriveFalconMain, leftDriveFalconSub);
+    SpeedControllerGroup rightMotors = new SpeedControllerGroup(rightDriveFalconMain, rightDriveFalconSub);
 
-    leftDriveFalconSub.follow(leftDriveFalconMain);
-    rightDriveFalconSub.follow(rightDriveFalconMain);
+    drive = new DifferentialDrive(leftMotors, rightMotors);
 
   }
 
@@ -48,34 +55,32 @@ public class DriveTrainSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
+  //Caps the requested powers then sends them to Differential Drive
   public void setMotorPowers(double rightPower, double leftPower){
-    setRightMotorPower(rightPower);
-    setLeftMotorPower(leftPower);
-  }
-
-  public void setRightMotorPower(double power){
-    double curPower = rightDriveFalconMain.get();
-    double nextPower;
+    double curRightPower = rightDriveFalconMain.get();
+    double nextRightPower;
     
-    if (Math.abs(power - curPower) <= maxPowerChange){
-      nextPower = power;
+    if (Math.abs(rightPower - curRightPower) <= maxPowerChange){
+      nextRightPower = rightPower;
     } else {
-      nextPower = curPower + Math.signum(power - curPower) * maxPowerChange;
+      nextRightPower = curRightPower + Math.signum(rightPower - curRightPower) * maxPowerChange;
     }
 
-    rightDriveFalconMain.set(nextPower);
-  }
-
-  public void setLeftMotorPower(double power){
-    double curPower = leftDriveFalconMain.get();
-    double nextPower;
+    double curleftPower = leftDriveFalconMain.get();
+    double nextleftPower;
     
-    if (Math.abs(power - curPower) <= maxPowerChange){
-      nextPower = power;
+    if (Math.abs(leftPower - curleftPower) <= maxPowerChange){
+      nextleftPower = leftPower;
     } else {
-      nextPower = curPower + Math.signum(power - curPower) * maxPowerChange;
+      nextleftPower = curleftPower + Math.signum(leftPower - curleftPower) * maxPowerChange;
     }
 
-    leftDriveFalconMain.set(nextPower);
+    
+    drive.tankDrive(nextleftPower, nextRightPower);
+  }
+
+  //Returns the robot's pose (position and rotation) in meters
+  public Pose2d getPost() {
+    return odometry.getPoseMeters();
   }
 }
