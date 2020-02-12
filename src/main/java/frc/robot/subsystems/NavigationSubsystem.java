@@ -20,17 +20,14 @@ public class NavigationSubsystem extends SubsystemBase {
 
     DifferentialDriveOdometry odometry;
 
-    DriveTrainSubsystem driveTrain;
-
     AHRS navx;
 
   /**
    * Creates a new NavigationSubsystem.
    */
-  public NavigationSubsystem(DriveTrainSubsystem driveTrain) {
+  public NavigationSubsystem() {
     //VisionPI = Constants.VisionPI;
     //Change this to whatever constructor is nescessary
-    this.driveTrain = driveTrain;
     navx = new AHRS(SerialPort.Port.kMXP);
     odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
     //Change these to actual values
@@ -41,13 +38,16 @@ public class NavigationSubsystem extends SubsystemBase {
     return odometry.getPoseMeters();
   }
 
+  public void updatePoseNormally(int encoderLeft, int encoderRight) {
+    odometry.update(Rotation2d.fromDegrees(getHeading()), encoderLeft, encoderRight);
+  }
+
   public void calibratePose(Pose2d pose) {
     odometry.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
   }
 
   @Override
   public void periodic() {
-    odometry.update(Rotation2d.fromDegrees(getHeading()), driveTrain.getLeftEncoder(), driveTrain.getRightEncoder());
   }
 
   public double getHeading() {
