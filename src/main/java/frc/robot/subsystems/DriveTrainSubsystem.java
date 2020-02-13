@@ -12,6 +12,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -49,9 +50,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
     leftDriveFalconSub.follow(leftDriveFalconMain);
     rightDriveFalconSub.follow(rightDriveFalconMain);
 
-    drive = new DifferentialDrive(leftDriveFalconMain, rightDriveFalconMain);
-
-    
+    drive = new DifferentialDrive(leftDriveFalconMain, rightDriveFalconMain);    
   }
 
   @Override
@@ -95,6 +94,12 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
   public int getRightEncoder() {
     return rightDriveFalconMain.getSelectedSensorPosition();
+  }
+
+  //This gets wheel speeds for pathing. The one issue is, the falcons get selected sensor velocity gives it in raw units per 100 ms, whereas the Wpi encoder gives as distance per
+  //second, so I multiply by 10 then divide by distance per pulse. I don't know where to see how wpi does it so I can't say that multiplying by 10 is correct, but it should be
+  public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+    return new DifferentialDriveWheelSpeeds((leftDriveFalconMain.getSelectedSensorVelocity() * 10) / Constants.kEncoderDistancePerPulse, (rightDriveFalconMain.getSelectedSensorVelocity() * 10) * Constants.kEncoderDistancePerPulse);
   }
 
 }

@@ -36,26 +36,31 @@ public final class Constants {
     public static final int IndexerHorizPWM = 8;
     public static final int IndexerVertPWM = 9;
 
-    //Define these
+    //TBD
     public static final double ks = 0;
     public static final double kv = 0;
     public static final double ka = 0;
-    //Define this
+    //TBD
     public static final double kPDriveVel = 0;
+
+    //Width between the wheels
     public static final double kTrackWidthMeters = 0.581025;
+    //An object that can be used to go from chassis velocity (a speed and an angle) to velocities for the wheels
     public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackWidthMeters);
-    //TBD
-    public static final double kMaxSpeedMetersPerSecond = 3;
-    //TBD
+
+    //Max speed for trajectory tracking
+    public static final double kMaxSpeedMetersPerSecond = 4;
+    //Max acceleration for trajectory tracking
     public static final double kMaxAccelMetersPerSecondSquared = 3;
 
+    //These are gains for trajectory tracking, WPI said these gains were best for most bots
     public static final double kRamseteB = 2;
     public static final double kRamseteZeta = 0.7;
 
-    //TBD
-    public static final double kDriveGearRatio = 1;
+    //Gear ratio for drive. It is scaled DOWN by this much
+    public static final double kDriveGearRatio = 10.71;
 
-    public static final double kEncoderDistancePerPulse = (0.1524 * 2 * Math.PI * kDriveGearRatio) / 2048;
+    public static final double kEncoderDistancePerPulse = (0.1524 * Math.PI) / (2048*kDriveGearRatio);
 
     // DIO Ports
     public static final int TurretLimitDIO = 0;
