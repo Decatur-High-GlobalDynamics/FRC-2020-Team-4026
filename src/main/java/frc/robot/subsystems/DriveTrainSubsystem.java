@@ -11,6 +11,8 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -29,6 +31,10 @@ public class DriveTrainSubsystem extends SubsystemBase {
   public static final double basePowMod = .5;
   public static double powMod = basePowMod;
 
+  private NetworkTableEntry leftPowerEntry;
+  private NetworkTableEntry rightPowerEntry;
+  private NetworkTableEntry maxPowerChangeEntry;
+  private NetworkTableEntry powModEntry;
 
   public DriveTrainSubsystem() {
     rightDriveFalconMain = new WPI_TalonFX(Constants.RightDriveFalconMainCAN);
@@ -41,17 +47,30 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
     leftDriveFalconSub.follow(leftDriveFalconMain);
     rightDriveFalconSub.follow(rightDriveFalconMain);
+
+    leftPowerEntry = Shuffleboard.getTab("Drivetrain").add("Left Power",0).getEntry();
+    rightPowerEntry = Shuffleboard.getTab("Drivetrain").add("Right Power",0).getEntry();
+    maxPowerChangeEntry = Shuffleboard.getTab("Drivetrain").add("Max Power Change",maxPowerChange).getEntry();
+    powModEntry = Shuffleboard.getTab("Drivetrain").add("powMod",basePowMod).getEntry();
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Subsystems.DriveTrain.leftPower", leftDriveFalconMain.get());
-    SmartDashboard.putNumber("Subsystems.DriveTrain.rightPower", rightDriveFalconMain.get());
-    maxPowerChange = SmartDashboard.getNumber("Subsystems.DriveTrain.maxPowerChange", defaultMaxPowerChange);
-    SmartDashboard.putNumber("Subsystems.DriveTrain.maxPowerChange", maxPowerChange);
-    powMod = SmartDashboard.getNumber("Subsystems.DriveTrain.powMod", basePowMod);
-    SmartDashboard.putNumber("Subsystems.DriveTrain.powMod", powMod);
+   // SmartDashboard.putNumber("Subsystems.DriveTrain.leftPower", leftDriveFalconMain.get());
+    //SmartDashboard.putNumber("Subsystems.DriveTrain.rightPower", rightDriveFalconMain.get());
+    leftPowerEntry.setDouble(leftDriveFalconMain.get());
+    rightPowerEntry.setDouble(rightDriveFalconMain.get());
+
+    //maxPowerChange = SmartDashboard.getNumber("Subsystems.DriveTrain.maxPowerChange", defaultMaxPowerChange);
+    //SmartDashboard.putNumber("Subsystems.DriveTrain.maxPowerChange", maxPowerChange);
+    maxPowerChange = maxPowerChangeEntry.getDouble(defaultMaxPowerChange);
+    maxPowerChangeEntry.setDouble(maxPowerChange);
+
+   // powMod = SmartDashboard.getNumber("Subsystems.DriveTrain.powMod", basePowMod);
+   // SmartDashboard.putNumber("Subsystems.DriveTrain.powMod", powMod);
+   powMod = powModEntry.getDouble(basePowMod);
+   powModEntry.setDouble(powMod);
     }
 
   public void setMotorPowers(double rightPower, double leftPower){
