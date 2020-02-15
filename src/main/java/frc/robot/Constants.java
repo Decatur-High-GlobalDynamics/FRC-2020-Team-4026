@@ -37,5 +37,7 @@ public final class Constants {
 
     // DIO Ports
     public static final int TurretLimitDIO = 0;
+    public static final int TurretEncoderDIO1 = 1;
+    public static final int TurretEncoderDIO2 = 2;
 
 }

@@ -19,6 +19,7 @@ import frc.robot.commands.SimpleTurretCCWCommand;
 import frc.robot.commands.SimpleTurretCWCommand;
 import frc.robot.commands.ConstantShootCommand;
 import frc.robot.commands.TurretToLimit;
+import frc.robot.commands.TurretToPosition;
 import frc.robot.commands.VerticalIndexerDownCommand;
 import frc.robot.commands.VerticalIndexerUpCommand;
 import frc.robot.commands.drivingCommands.TankDriveCommand;
@@ -96,6 +97,8 @@ public class RobotContainer {
     new JoystickButton(SecondaryJoystick, 6).whileHeld(new SimpleTurretCCWCommand(this.turret));
     //When button 9 is pressed, zero the shooter
     new JoystickButton(SecondaryJoystick, 9).whenPressed(new TurretToLimit(this.turret));
+    //When down d-pad is pressed, go to target position
+    new JoystickButton(SecondaryJoystick, 180).whenPressed(new TurretToPosition(this.turret));
 
     //--------Shooting Button Bindings--------
     //When button 8 (Right Trigger) is pressed, start constant shooting

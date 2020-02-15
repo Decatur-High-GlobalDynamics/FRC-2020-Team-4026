@@ -7,15 +7,17 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.TurretSubsystem;
 
-public class TurretToLimit extends CommandBase {
+public class TurretToPosition extends CommandBase {
   /**
-   * Creates a new TurretCWToLimit.
+   * Creates a new TurretToPosition.
    */
   private final TurretSubsystem turret;
-  public TurretToLimit(TurretSubsystem turret) {
+  private double targetRad;
+  public TurretToPosition(TurretSubsystem turret) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.turret = turret;
     addRequirements(this.turret);
@@ -24,28 +26,25 @@ public class TurretToLimit extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    targetRad = SmartDashboard.getNumber("Commands.TurretToPosition.targetRad", 0);
+    turret.rotateToPosition(targetRad);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (turret.shouldTurnCW()){
-      turret.goClockwise();
-    } else {
-      turret.goCounterClockwise();
-    }
+    SmartDashboard.putNumber("Commands.TurretToPosition.targetRad", targetRad);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     turret.stop();
-    turret.resetEncoder();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return turret.getTurretLimit();
+    return turret.getRadians() > Math.abs(targetRad);
   }
 }
