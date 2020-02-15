@@ -28,11 +28,10 @@ public class DriveTrainSubsystem extends SubsystemBase {
   WPI_TalonFX leftDriveFalconMain;
   WPI_TalonFX rightDriveFalconSub;
   WPI_TalonFX leftDriveFalconSub;
-
-  public static final double defaultMaxPowerChange = 0.001;
-  public static double maxPowerChange = defaultMaxPowerChange;
-  public static final double basePowMod = .5;
-  public static double powMod = basePowMod;
+  //This was tested to be the lowest value where problems weren't had with the squaring thing that differential drive does
+  public double maxPowerChange = 0.43;
+  public static double maxOutputSlow = .5;
+  public static double maxOutputFast = 1;
 
 
   public DriveTrainSubsystem() {
@@ -51,7 +50,6 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
     drive = new DifferentialDrive(leftDriveFalconMain, rightDriveFalconMain);
 
-    
   }
 
   @Override
@@ -59,33 +57,36 @@ public class DriveTrainSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Subsystems.DriveTrain.leftPower", leftDriveFalconMain.get());
     SmartDashboard.putNumber("Subsystems.DriveTrain.rightPower", rightDriveFalconMain.get());
-    maxPowerChange = SmartDashboard.getNumber("Subsystems.DriveTrain.maxPowerChange", defaultMaxPowerChange);
+    maxPowerChange = SmartDashboard.getNumber("Subsystems.DriveTrain.maxPowerChange", maxPowerChange);
     SmartDashboard.putNumber("Subsystems.DriveTrain.maxPowerChange", maxPowerChange);
-    powMod = SmartDashboard.getNumber("Subsystems.DriveTrain.powMod", basePowMod);
-    SmartDashboard.putNumber("Subsystems.DriveTrain.powMod", powMod);
-    }
+    maxOutputSlow = SmartDashboard.getNumber("Subsystems.DriveTrain.maxOutputSlow", maxOutputSlow);
+    SmartDashboard.putNumber("Subsystems.DriveTrain.maxOutputSlow", maxOutputSlow);
+    maxOutputFast = SmartDashboard.getNumber("Subsystems.DriveTrain.maxOutputFast", maxOutputFast);
+    SmartDashboard.putNumber("Subsystems.DriveTrain.maxOutputFast", maxOutputFast);
+  }
 
   //Caps the requested powers then sends them to Differential Drive
-  public void setMotorPowers(double rightPower, double leftPower){
+  public void setMotorPowers(double leftPowerDesired, double rightPowerDesired){
+    SmartDashboard.putNumber("Subsystems.DriveTrain.leftPowerDemand", leftPowerDesired);
+    SmartDashboard.putNumber("Subsystems.DriveTrain.rightPowerDemand", rightPowerDesired);
     double curRightPower = rightDriveFalconMain.get();
+    
     double nextRightPower;
     
-    if (Math.abs(rightPower - curRightPower) <= maxPowerChange){
-      nextRightPower = rightPower;
+    if (Math.abs(rightPowerDesired - curRightPower) <= maxPowerChange){
+      nextRightPower = rightPowerDesired;
     } else {
-      nextRightPower = curRightPower + Math.signum(rightPower - curRightPower) * maxPowerChange;
+      nextRightPower = curRightPower + Math.signum(rightPowerDesired - curRightPower) * maxPowerChange;
     }
 
     double curleftPower = leftDriveFalconMain.get();
     double nextleftPower;
-    
-    if (Math.abs(leftPower - curleftPower) <= maxPowerChange){
-      nextleftPower = leftPower;
+    if (Math.abs(leftPowerDesired - curleftPower) <= maxPowerChange){
+      nextleftPower = leftPowerDesired;
     } else {
-      nextleftPower = curleftPower + Math.signum(leftPower - curleftPower) * maxPowerChange;
+      nextleftPower = curleftPower + Math.signum(leftPowerDesired - curleftPower) * maxPowerChange;
     }
 
-    
     drive.tankDrive(nextleftPower, nextRightPower);
   }
 
@@ -97,4 +98,11 @@ public class DriveTrainSubsystem extends SubsystemBase {
     return rightDriveFalconMain.getSelectedSensorPosition();
   }
 
+  public void setFastMode() {
+    drive.setMaxOutput(maxOutputFast);
+  }
+
+  public void setSlowMode() {
+    drive.setMaxOutput(maxOutputSlow);
+  }
 }
