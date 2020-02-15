@@ -12,6 +12,7 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.SerialPort;
 
@@ -49,6 +50,9 @@ public class NavigationSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    SmartDashboard.putNumber("Subsystems.Navigation.xCoord", getPose().getTranslation().getX());
+    SmartDashboard.putNumber("Subsystems.Navigation.yCoord", getPose().getTranslation().getY());
+    SmartDashboard.putNumber("Subsystems.Navigation.Heading", getPose().getRotation().getDegrees());
   }
 
   public double getHeading() {
