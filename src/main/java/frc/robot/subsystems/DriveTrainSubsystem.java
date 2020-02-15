@@ -52,6 +52,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
     //This wraps the motors
     drive = new DifferentialDrive(leftDriveFalconMain, rightDriveFalconMain);
 
+    drive.setRightSideInverted(false);
   }
 
   @Override
@@ -72,24 +73,25 @@ public class DriveTrainSubsystem extends SubsystemBase {
     //Display the power we are asking for
     SmartDashboard.putNumber("Subsystems.DriveTrain.leftPowerDemand", leftPowerDesired);
     SmartDashboard.putNumber("Subsystems.DriveTrain.rightPowerDemand", rightPowerDesired);
-    double curRightPower = rightDriveFalconMain.get();
+    double curRightPower = signPreservingSqrt(rightDriveFalconMain.get());
     
     double nextRightPower;
     
     if (Math.abs(rightPowerDesired - curRightPower) <= maxPowerChange){
       nextRightPower = rightPowerDesired;
     } else {
-      nextRightPower = curRightPower + Math.signum(rightPowerDesired - curRightPower) * maxPowerChange;
+      nextRightPower = curRightPower + Math.signum(rightPowerDesired - curRightPower) * Math.sqrt(maxPowerChange);
     }
 
-    double curleftPower = leftDriveFalconMain.get();
+    double curleftPower = signPreservingSqrt(leftDriveFalconMain.get());
     double nextleftPower;
     if (Math.abs(leftPowerDesired - curleftPower) <= maxPowerChange){
       nextleftPower = leftPowerDesired;
     } else {
-      nextleftPower = curleftPower + Math.signum(leftPowerDesired - curleftPower) * maxPowerChange;
+      nextleftPower = curleftPower + Math.signum(leftPowerDesired - curleftPower) * Math.sqrt(maxPowerChange);
     }
-
+    SmartDashboard.putNumber("Subsystems.DriveTrain.rightPowerGiven", nextRightPower);
+    SmartDashboard.putNumber("Subsystems.DriveTrain.leftPowerGiven", nextleftPower);
     drive.tankDrive(nextleftPower, nextRightPower);
   }
 
@@ -109,5 +111,9 @@ public class DriveTrainSubsystem extends SubsystemBase {
   //sets it to half for controlability
   public void setSlowMode() {
     drive.setMaxOutput(maxOutputSlow);
+  }
+
+  public static double signPreservingSqrt(double input) {
+    return Math.copySign(Math.sqrt(Math.abs(input)), input);
   }
 }
