@@ -102,4 +102,10 @@ public class DriveTrainSubsystem extends SubsystemBase {
     return new DifferentialDriveWheelSpeeds((leftDriveFalconMain.getSelectedSensorVelocity() * 10) / Constants.kEncoderDistancePerPulse, (rightDriveFalconMain.getSelectedSensorVelocity() * 10) * Constants.kEncoderDistancePerPulse);
   }
 
+  public void tankDriveWithVolts(double leftVolts, double rightVolts) {
+    rightDriveFalconMain.setVoltage(-rightVolts);
+    leftDriveFalconMain.setVoltage(leftVolts);
+    drive.feed();
+  }
+
 }
