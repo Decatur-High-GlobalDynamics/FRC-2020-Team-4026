@@ -20,6 +20,7 @@ public class UpdateNavigationCommand extends CommandBase {
     //This just updates position. Vision and stuff should be added here (i.e. this can query vision and if it exists do that after it updates pose normally)
     @Override
     public void execute() {
+        //Update the pose based on encoders
         navSystem.updatePoseNormally(leftEncoder.getAsInt(), rightEncoder.getAsInt());
     }
 }

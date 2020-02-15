@@ -26,11 +26,10 @@ public class NavigationSubsystem extends SubsystemBase {
    * Creates a new NavigationSubsystem.
    */
   public NavigationSubsystem() {
-    //VisionPI = Constants.VisionPI;
-    //Change this to whatever constructor is nescessary
+    //Create navx
     navx = new AHRS(SerialPort.Port.kMXP);
+    //This keeps a tally of position and heading and updates them based on encoders
     odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
-    //Change these to actual values
   }
 
   //Returns the robot's pose (position and rotation) in meters
@@ -38,10 +37,12 @@ public class NavigationSubsystem extends SubsystemBase {
     return odometry.getPoseMeters();
   }
 
+  //This updates the pose based on the encoder values, and heading. Not super accurate but good for low time scales
   public void updatePoseNormally(int encoderLeft, int encoderRight) {
     odometry.update(Rotation2d.fromDegrees(getHeading()), encoderLeft, encoderRight);
   }
 
+  //Calibrates the pose based on vision/lidar/etc.
   public void calibratePose(Pose2d pose) {
     odometry.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
   }

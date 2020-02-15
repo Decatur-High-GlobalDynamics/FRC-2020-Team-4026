@@ -62,8 +62,9 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
+    //Create a button to make a BooleanSupplier off of, for the speed mode in Tank Drive
     final JoystickButton speedModeButton = new JoystickButton(DriveController, 8);
-    //Configure driveTrain default command, which is tank drive with Primary Controller Joysticks (NUMBERED CONTROLLER)
+    //Configure driveTrain default command, which is tank drive with Primary Controller Joysticks (NUMBERED CONTROLLER). It also uses trigger for speed mode
     driveTrain.setDefaultCommand(new TankDriveCommand(driveTrain,()->DriveController.getY(),()->DriveController.getThrottle(), ()->speedModeButton.get()));
 
     //Configure shooter default command, which is to spin either wheel with the two Secondary joysticks

@@ -40,6 +40,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
     rightDriveFalconSub = new WPI_TalonFX(Constants.RightDriveFalconSubCAN);
     leftDriveFalconSub = new WPI_TalonFX(Constants.LeftDriveFalconSubCAN);
 
+    //This configures the falcons to use their internal encoders
     TalonFXConfiguration configs = new TalonFXConfiguration();
     configs.primaryPID.selectedFeedbackSensor = FeedbackDevice.IntegratedSensor;
     rightDriveFalconMain.configAllSettings(configs);
@@ -48,6 +49,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
     leftDriveFalconSub.follow(leftDriveFalconMain);
     rightDriveFalconSub.follow(rightDriveFalconMain);
 
+    //This wraps the motors
     drive = new DifferentialDrive(leftDriveFalconMain, rightDriveFalconMain);
 
   }
@@ -67,6 +69,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
   //Caps the requested powers then sends them to Differential Drive
   public void setMotorPowers(double leftPowerDesired, double rightPowerDesired){
+    //Display the power we are asking for
     SmartDashboard.putNumber("Subsystems.DriveTrain.leftPowerDemand", leftPowerDesired);
     SmartDashboard.putNumber("Subsystems.DriveTrain.rightPowerDemand", rightPowerDesired);
     double curRightPower = rightDriveFalconMain.get();
@@ -98,10 +101,12 @@ public class DriveTrainSubsystem extends SubsystemBase {
     return rightDriveFalconMain.getSelectedSensorPosition();
   }
 
+  //Sets the max output to full
   public void setFastMode() {
     drive.setMaxOutput(maxOutputFast);
   }
 
+  //sets it to half for controlability
   public void setSlowMode() {
     drive.setMaxOutput(maxOutputSlow);
   }

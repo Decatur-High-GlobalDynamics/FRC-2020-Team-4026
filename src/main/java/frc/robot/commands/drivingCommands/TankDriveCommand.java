@@ -34,6 +34,7 @@ public class TankDriveCommand extends CommandBase {
     this.driveTrain = driveTrain;
     this.leftStick = left;
     this.rightStick = right;
+    //This is the trigger that determines whether we are at full or half speed
     this.speedMode = trigger;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(driveTrain);
@@ -49,7 +50,8 @@ public class TankDriveCommand extends CommandBase {
   public void execute() {
     driveTrain.setMotorPowers(this.leftStick.getAsDouble(), -this.rightStick.getAsDouble());
 
-    if ( speedMode.getAsBoolean()) {
+    //If the trigger is held, set max power to 1 for full speed. Else 0.5
+    if (speedMode.getAsBoolean()) {
       driveTrain.setFastMode();
     } else {
       driveTrain.setSlowMode();
