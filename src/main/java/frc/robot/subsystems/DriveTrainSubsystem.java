@@ -32,6 +32,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
   public double maxPowerChange = 0.43;
   public static double maxOutputSlow = .5;
   public static double maxOutputFast = 1;
+  public double currentMaxPower = maxOutputSlow;
 
 
   public DriveTrainSubsystem() {
@@ -51,6 +52,8 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
     //This wraps the motors
     drive = new DifferentialDrive(leftDriveFalconMain, rightDriveFalconMain);
+    
+    setSlowMode();
 
     drive.setRightSideInverted(false);
   }
@@ -70,6 +73,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
   //Caps the requested powers then sends them to Differential Drive
   public void setMotorPowers(double leftPowerDesired, double rightPowerDesired){
+    double maxPowerChangeTemp = maxPowerChange * currentMaxPower;
     //Display the power we are asking for
     SmartDashboard.putNumber("Subsystems.DriveTrain.leftPowerDemand", leftPowerDesired);
     SmartDashboard.putNumber("Subsystems.DriveTrain.rightPowerDemand", rightPowerDesired);
@@ -77,18 +81,18 @@ public class DriveTrainSubsystem extends SubsystemBase {
     
     double nextRightPower;
     
-    if (Math.abs(rightPowerDesired - curRightPower) <= maxPowerChange){
+    if (Math.abs(rightPowerDesired - curRightPower) <= maxPowerChangeTemp){
       nextRightPower = rightPowerDesired;
     } else {
-      nextRightPower = curRightPower + Math.signum(rightPowerDesired - curRightPower) * Math.sqrt(maxPowerChange);
+      nextRightPower = curRightPower + Math.signum(rightPowerDesired - curRightPower) * Math.sqrt(maxPowerChangeTemp);
     }
 
     double curleftPower = signPreservingSqrt(leftDriveFalconMain.get());
     double nextleftPower;
-    if (Math.abs(leftPowerDesired - curleftPower) <= maxPowerChange){
+    if (Math.abs(leftPowerDesired - curleftPower) <= maxPowerChangeTemp){
       nextleftPower = leftPowerDesired;
     } else {
-      nextleftPower = curleftPower + Math.signum(leftPowerDesired - curleftPower) * Math.sqrt(maxPowerChange);
+      nextleftPower = curleftPower + Math.signum(leftPowerDesired - curleftPower) * Math.sqrt(maxPowerChangeTemp);
     }
     SmartDashboard.putNumber("Subsystems.DriveTrain.rightPowerGiven", nextRightPower);
     SmartDashboard.putNumber("Subsystems.DriveTrain.leftPowerGiven", nextleftPower);
@@ -105,11 +109,13 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
   //Sets the max output to full
   public void setFastMode() {
+    currentMaxPower = maxOutputFast;
     drive.setMaxOutput(maxOutputFast);
   }
 
   //sets it to half for controlability
   public void setSlowMode() {
+    currentMaxPower = maxOutputSlow;
     drive.setMaxOutput(maxOutputSlow);
   }
 
