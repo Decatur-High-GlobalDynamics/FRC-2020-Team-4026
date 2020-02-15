@@ -21,7 +21,7 @@ public class HorizontalIndexerSubsystem extends SubsystemBase {
   private final double intakeSpeed = .5;
   private final double outtakeSpeed = -.5;
   public HorizontalIndexerSubsystem() {
-    horizontalIndexer = new VictorSP(Constants.IndexerVertPWM);
+    horizontalIndexer = new VictorSP(Constants.IndexerHorizPWM);
   }
 
   @Override
