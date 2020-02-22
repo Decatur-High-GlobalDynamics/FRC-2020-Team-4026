@@ -52,6 +52,8 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
     //This wraps the motors
     drive = new DifferentialDrive(leftDriveFalconMain, rightDriveFalconMain);
+
+    drive.setDeadband(0);
     
     setSlowMode();
 
@@ -73,32 +75,33 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
   //Caps the requested powers then sends them to Differential Drive
   public void setMotorPowers(double leftPowerDesired, double rightPowerDesired){
-    double maxPowerChangeTemp = maxPowerChange * currentMaxPower;
+    double maxPowerChangeTemp = maxPowerChange;
     leftPowerDesired = Math.max(Math.min(1, leftPowerDesired), -1);
     rightPowerDesired = Math.max(Math.min(1, rightPowerDesired), -1);
     //Display the power we are asking for
     SmartDashboard.putNumber("Subsystems.DriveTrain.leftPowerDemand", leftPowerDesired);
     SmartDashboard.putNumber("Subsystems.DriveTrain.rightPowerDemand", rightPowerDesired);
-    double curRightPower = signPreservingSqrt(rightDriveFalconMain.get());
-    
+
+    //Divide by current max power bcause it was divided by it earlier, and that puts it back into the unit of "requested power", instead of "raw power", which is scaled by current max power
+    double curRightPower = rightDriveFalconMain.get()/currentMaxPower;
     double nextRightPower;
-    
     if (Math.abs(rightPowerDesired - curRightPower) <= maxPowerChangeTemp){
       nextRightPower = rightPowerDesired;
     } else {
-      nextRightPower = curRightPower + Math.signum(rightPowerDesired - curRightPower) * Math.sqrt(maxPowerChangeTemp);
+      nextRightPower = curRightPower + Math.signum(rightPowerDesired - curRightPower) * maxPowerChangeTemp;
     }
 
-    double curleftPower = signPreservingSqrt(leftDriveFalconMain.get());
+    double curleftPower = leftDriveFalconMain.get()/currentMaxPower;
     double nextleftPower;
     if (Math.abs(leftPowerDesired - curleftPower) <= maxPowerChangeTemp){
       nextleftPower = leftPowerDesired;
     } else {
-      nextleftPower = curleftPower + Math.signum(leftPowerDesired - curleftPower) * Math.sqrt(maxPowerChangeTemp);
+      nextleftPower = curleftPower + Math.signum(leftPowerDesired - curleftPower) * maxPowerChangeTemp;
     }
+
     SmartDashboard.putNumber("Subsystems.DriveTrain.rightPowerGiven", nextRightPower);
     SmartDashboard.putNumber("Subsystems.DriveTrain.leftPowerGiven", nextleftPower);
-    drive.tankDrive(nextleftPower, nextRightPower);
+    drive.tankDrive(nextleftPower, nextRightPower, false);
   }
 
   public int getLeftEncoder() {
