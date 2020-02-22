@@ -29,11 +29,11 @@ public class DriveTrainSubsystem extends SubsystemBase {
   WPI_TalonFX leftDriveFalconMain;
   WPI_TalonFX rightDriveFalconSub;
   WPI_TalonFX leftDriveFalconSub;
-
-  public static final double defaultMaxPowerChange = 0.001;
-  public static double maxPowerChange = defaultMaxPowerChange;
-  public static final double basePowMod = .5;
-  public static double powMod = basePowMod;
+  //This was tested to be the lowest value where problems weren't had with the squaring thing that differential drive does
+  public double maxPowerChange = 0.43;
+  public static double maxOutputSlow = .5;
+  public static double maxOutputFast = 1;
+  public double currentMaxPower = maxOutputSlow;
 
 
   public DriveTrainSubsystem() {
@@ -42,6 +42,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
     rightDriveFalconSub = new WPI_TalonFX(Constants.RightDriveFalconSubCAN);
     leftDriveFalconSub = new WPI_TalonFX(Constants.LeftDriveFalconSubCAN);
 
+    //This configures the falcons to use their internal encoders
     TalonFXConfiguration configs = new TalonFXConfiguration();
     configs.primaryPID.selectedFeedbackSensor = FeedbackDevice.IntegratedSensor;
     rightDriveFalconMain.configAllSettings(configs);
@@ -50,7 +51,14 @@ public class DriveTrainSubsystem extends SubsystemBase {
     leftDriveFalconSub.follow(leftDriveFalconMain);
     rightDriveFalconSub.follow(rightDriveFalconMain);
 
-    drive = new DifferentialDrive(leftDriveFalconMain, rightDriveFalconMain);    
+    //This wraps the motors
+    drive = new DifferentialDrive(leftDriveFalconMain, rightDriveFalconMain);
+
+    drive.setDeadband(0);
+    
+    setSlowMode();
+
+    drive.setRightSideInverted(false);
   }
 
   @Override
@@ -58,34 +66,41 @@ public class DriveTrainSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Subsystems.DriveTrain.leftPower", leftDriveFalconMain.get());
     SmartDashboard.putNumber("Subsystems.DriveTrain.rightPower", rightDriveFalconMain.get());
-    maxPowerChange = SmartDashboard.getNumber("Subsystems.DriveTrain.maxPowerChange", defaultMaxPowerChange);
+    maxPowerChange = SmartDashboard.getNumber("Subsystems.DriveTrain.maxPowerChange", maxPowerChange);
     SmartDashboard.putNumber("Subsystems.DriveTrain.maxPowerChange", maxPowerChange);
-    powMod = SmartDashboard.getNumber("Subsystems.DriveTrain.powMod", basePowMod);
-    SmartDashboard.putNumber("Subsystems.DriveTrain.powMod", powMod);
-    }
+    maxOutputSlow = SmartDashboard.getNumber("Subsystems.DriveTrain.maxOutputSlow", maxOutputSlow);
+    SmartDashboard.putNumber("Subsystems.DriveTrain.maxOutputSlow", maxOutputSlow);
+    maxOutputFast = SmartDashboard.getNumber("Subsystems.DriveTrain.maxOutputFast", maxOutputFast);
+    SmartDashboard.putNumber("Subsystems.DriveTrain.maxOutputFast", maxOutputFast);
+  }
 
   //Caps the requested powers then sends them to Differential Drive
-  public void setMotorPowers(double rightPower, double leftPower){
-    double curRightPower = rightDriveFalconMain.get();
+  public void setMotorPowers(double leftPowerDesired, double rightPowerDesired){
+    double maxPowerChangeTemp = maxPowerChange;
+    //Display the power we are asking for
+    SmartDashboard.putNumber("Subsystems.DriveTrain.leftPowerDemand", leftPowerDesired);
+    SmartDashboard.putNumber("Subsystems.DriveTrain.rightPowerDemand", rightPowerDesired);
+
+    //Divide by current max power bcause it was divided by it earlier, and that puts it back into the unit of "requested power", instead of "raw power", which is scaled by current max power
+    double curRightPower = rightDriveFalconMain.get()/currentMaxPower;
     double nextRightPower;
-    
-    if (Math.abs(rightPower - curRightPower) <= maxPowerChange){
-      nextRightPower = rightPower;
+    if (Math.abs(rightPowerDesired - curRightPower) <= maxPowerChangeTemp){
+      nextRightPower = rightPowerDesired;
     } else {
-      nextRightPower = curRightPower + Math.signum(rightPower - curRightPower) * maxPowerChange;
+      nextRightPower = curRightPower + Math.signum(rightPowerDesired - curRightPower) * maxPowerChangeTemp;
     }
 
-    double curleftPower = leftDriveFalconMain.get();
+    double curleftPower = leftDriveFalconMain.get()/currentMaxPower;
     double nextleftPower;
-    
-    if (Math.abs(leftPower - curleftPower) <= maxPowerChange){
-      nextleftPower = leftPower;
+    if (Math.abs(leftPowerDesired - curleftPower) <= maxPowerChangeTemp){
+      nextleftPower = leftPowerDesired;
     } else {
-      nextleftPower = curleftPower + Math.signum(leftPower - curleftPower) * maxPowerChange;
+      nextleftPower = curleftPower + Math.signum(leftPowerDesired - curleftPower) * maxPowerChangeTemp;
     }
 
-    
-    drive.tankDrive(nextleftPower, nextRightPower);
+    SmartDashboard.putNumber("Subsystems.DriveTrain.rightPowerGiven", nextRightPower);
+    SmartDashboard.putNumber("Subsystems.DriveTrain.leftPowerGiven", nextleftPower);
+    drive.tankDrive(nextleftPower, nextRightPower, false);
   }
 
   public int getLeftEncoder() {
@@ -108,4 +123,19 @@ public class DriveTrainSubsystem extends SubsystemBase {
     drive.feed();
   }
 
+  //Sets the max output to full
+  public void setFastMode() {
+    currentMaxPower = maxOutputFast;
+    drive.setMaxOutput(maxOutputFast);
+  }
+
+  //sets it to half for controlability
+  public void setSlowMode() {
+    currentMaxPower = maxOutputSlow;
+    drive.setMaxOutput(maxOutputSlow);
+  }
+
+  public static double signPreservingSqrt(double input) {
+    return Math.copySign(Math.sqrt(Math.abs(input)), input);
+  }
 }

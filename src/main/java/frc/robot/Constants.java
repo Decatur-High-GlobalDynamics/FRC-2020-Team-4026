@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-    //Placeholder Values
+    //Port values for motors
     public static final int LeftDriveFalconMainCAN = 1;
     public static final int LeftDriveFalconSubCAN = 2;
     public static final int RightDriveFalconMainCAN = 3;
@@ -36,31 +36,30 @@ public final class Constants {
     public static final int IndexerHorizPWM = 8;
     public static final int IndexerVertPWM = 9;
 
-    //TBD
+    //These are TBD: They will be used as feedforward for pathfinding
     public static final double ks = 0;
     public static final double kv = 0;
     public static final double ka = 0;
-    //TBD
+    //This is TBD: Will be a PID constant for pathfinding
     public static final double kPDriveVel = 0;
-
-    //Width between the wheels
+    //This is the width between our left and right wheels
     public static final double kTrackWidthMeters = 0.581025;
-    //An object that can be used to go from chassis velocity (a speed and an angle) to velocities for the wheels
+    //This uses that width to convert from chassis directions (power and angle) to powers for left and right wheels
     public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackWidthMeters);
-
-    //Max speed for trajectory tracking
-    public static final double kMaxSpeedMetersPerSecond = 4;
-    //Max acceleration for trajectory tracking
+    //Our robots max speed. TBD
+    public static final double kMaxSpeedMetersPerSecond = 3;
+    //Our robots max acceleration. TBD
     public static final double kMaxAccelMetersPerSecondSquared = 3;
 
-    //These are gains for trajectory tracking, WPI said these gains were best for most bots
+    //Gains for pathfinding. These are what WPI says is good for all bots
     public static final double kRamseteB = 2;
     public static final double kRamseteZeta = 0.7;
 
-    //Gear ratio for drive. It is scaled DOWN by this much
-    public static final double kDriveGearRatio = 10.71;
+    //Our gear ratio. TBD
+    public static final double kDriveGearRatio = 1;
 
-    public static final double kEncoderDistancePerPulse = (0.1524 * Math.PI) / (2048*kDriveGearRatio);
+    //Distance per encoder pulse
+    public static final double kEncoderDistancePerPulse = (0.1524 * 2 * Math.PI) / (2048 * kDriveGearRatio);
 
     // DIO Ports
     public static final int TurretLimitDIO = 0;

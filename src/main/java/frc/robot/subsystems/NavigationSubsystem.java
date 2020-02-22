@@ -12,6 +12,7 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.SerialPort;
 
@@ -26,11 +27,10 @@ public class NavigationSubsystem extends SubsystemBase {
    * Creates a new NavigationSubsystem.
    */
   public NavigationSubsystem() {
-    //VisionPI = Constants.VisionPI;
-    //Change this to whatever constructor is nescessary
+    //Create navx
     navx = new AHRS(SerialPort.Port.kMXP);
+    //This keeps a tally of position and heading and updates them based on encoders
     odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
-    //Change these to actual values
   }
 
   //Returns the robot's pose (position and rotation) in meters
@@ -38,16 +38,21 @@ public class NavigationSubsystem extends SubsystemBase {
     return odometry.getPoseMeters();
   }
 
+  //This updates the pose based on the encoder values, and heading. Not super accurate but good for low time scales
   public void updatePoseNormally(int encoderLeft, int encoderRight) {
     odometry.update(Rotation2d.fromDegrees(getHeading()), encoderLeft, encoderRight);
   }
 
+  //Calibrates the pose based on vision/lidar/etc.
   public void calibratePose(Pose2d pose) {
     odometry.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
   }
 
   @Override
   public void periodic() {
+    SmartDashboard.putNumber("Subsystems.Navigation.xCoord", getPose().getTranslation().getX());
+    SmartDashboard.putNumber("Subsystems.Navigation.yCoord", getPose().getTranslation().getY());
+    SmartDashboard.putNumber("Subsystems.Navigation.Heading", getPose().getRotation().getDegrees());
   }
 
   public double getHeading() {

@@ -75,8 +75,10 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
-    //Configure driveTrain default command, which is tank drive with Primary Controller Joysticks (NUMBERED CONTROLLER)
-    driveTrain.setDefaultCommand(new TankDriveCommand(driveTrain,()->DriveController.getThrottle(),()->DriveController.getY()));
+    //Create a button to make a BooleanSupplier off of, for the speed mode in Tank Drive
+    final JoystickButton speedModeButton = new JoystickButton(DriveController, 8);
+    //Configure driveTrain default command, which is tank drive with Primary Controller Joysticks (NUMBERED CONTROLLER). It also uses trigger for speed mode
+    driveTrain.setDefaultCommand(new TankDriveCommand(driveTrain,()->DriveController.getY(),()->DriveController.getThrottle(), ()->speedModeButton.get()));
 
     //Configure shooter default command, which is to spin either wheel with the two Secondary joysticks
     shooter.setDefaultCommand(new SimpleShootCommand(shooter,()->SecondaryJoystick.getY(),()->SecondaryJoystick.getThrottle()));
@@ -96,7 +98,7 @@ public class RobotContainer {
     //When A is held, Intake
     new JoystickButton(SecondaryJoystick, 1).whileHeld(new SimpleIntakeCommand(this.intake));
     //When X is held, Outtake
-    new JoystickButton(SecondaryJoystick,2).whileHeld(new SimpleOuttakeCommand(this.intake));
+    //new JoystickButton(SecondaryJoystick,2).whileHeld(new SimpleOuttakeCommand(this.intake));
 
     //--------Indexer Button Bindings--------
     //When B is held, Indexer up
