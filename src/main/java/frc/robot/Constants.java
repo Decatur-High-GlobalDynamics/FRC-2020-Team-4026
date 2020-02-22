@@ -7,6 +7,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants.  This class should not be used for any other purpose.  All constants should be
@@ -16,7 +18,7 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-    //Placeholder Values
+    //Port values for motors
     public static final int LeftDriveFalconMainCAN = 1;
     public static final int LeftDriveFalconSubCAN = 2;
     public static final int RightDriveFalconMainCAN = 3;
@@ -33,5 +35,33 @@ public final class Constants {
 
     public static final int IndexerHorizPWM = 8;
     public static final int IndexerVertPWM = 9;
+
+    //These are TBD: They will be used as feedforward for pathfinding
+    public static final double ks = 0;
+    public static final double kv = 0;
+    public static final double ka = 0;
+    //This is TBD: Will be a PID constant for pathfinding
+    public static final double kPDriveVel = 0;
+    //This is the width between our left and right wheels
+    public static final double kTrackWidthMeters = 0.581025;
+    //This uses that width to convert from chassis directions (power and angle) to powers for left and right wheels
+    public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackWidthMeters);
+    //Our robots max speed. TBD
+    public static final double kMaxSpeedMetersPerSecond = 3;
+    //Our robots max acceleration. TBD
+    public static final double kMaxAccelMetersPerSecondSquared = 3;
+
+    //Gains for pathfinding. These are what WPI says is good for all bots
+    public static final double kRamseteB = 2;
+    public static final double kRamseteZeta = 0.7;
+
+    //Our gear ratio. TBD
+    public static final double kDriveGearRatio = 1;
+
+    //Distance per encoder pulse
+    public static final double kEncoderDistancePerPulse = (0.1524 * 2 * Math.PI) / (2048 * kDriveGearRatio);
+
+    // DIO Ports
+    public static final int TurretLimitDIO = 0;
 
 }

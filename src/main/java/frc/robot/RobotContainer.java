@@ -15,13 +15,17 @@ import frc.robot.commands.HorizontalIndexerOuttakeCommand;
 import frc.robot.commands.SimpleIntakeCommand;
 import frc.robot.commands.SimpleOuttakeCommand;
 import frc.robot.commands.SimpleShootCommand;
-import frc.robot.commands.SimpleTurretLeftCommand;
-import frc.robot.commands.SimpleTurretRightCommand;
+import frc.robot.commands.SimpleTurretCCWCommand;
+import frc.robot.commands.SimpleTurretCWCommand;
+import frc.robot.commands.ConstantShootCommand;
+import frc.robot.commands.TurretToLimit;
 import frc.robot.commands.VerticalIndexerDownCommand;
 import frc.robot.commands.VerticalIndexerUpCommand;
+import frc.robot.commands.UpdateNavigationCommand;
 import frc.robot.commands.drivingCommands.TankDriveCommand;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.NavigationSubsystem;
 //import frc.robot.subsystems.NavigationSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
@@ -46,6 +50,7 @@ public class RobotContainer {
   private final VerticalIndexerSubsystem verticalIndexer = new VerticalIndexerSubsystem();
   private final TurretSubsystem turret = new TurretSubsystem();
   private final HorizontalIndexerSubsystem horizontalIndexer = new HorizontalIndexerSubsystem();
+  private final NavigationSubsystem navigation = new NavigationSubsystem();
 
   public static final Joystick DriveController = new Joystick(0);
   public static final Joystick SecondaryJoystick = new Joystick(1);
@@ -57,11 +62,16 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
-    //Configure driveTrain default command, which is tank drive with Primary Controller Joysticks (NUMBERED CONTROLLER)
-    driveTrain.setDefaultCommand(new TankDriveCommand(driveTrain,()->DriveController.getThrottle(),()->DriveController.getY()));
+    //Create a button to make a BooleanSupplier off of, for the speed mode in Tank Drive
+    final JoystickButton speedModeButton = new JoystickButton(DriveController, 8);
+    //Configure driveTrain default command, which is tank drive with Primary Controller Joysticks (NUMBERED CONTROLLER). It also uses trigger for speed mode
+    driveTrain.setDefaultCommand(new TankDriveCommand(driveTrain,()->DriveController.getY(),()->DriveController.getThrottle(), ()->speedModeButton.get()));
 
     //Configure shooter default command, which is to spin either wheel with the two Secondary joysticks
     shooter.setDefaultCommand(new SimpleShootCommand(shooter,()->SecondaryJoystick.getY(),()->SecondaryJoystick.getThrottle()));
+
+    //Configure the default command to update our position based on all the stuff
+    navigation.setDefaultCommand(new UpdateNavigationCommand(navigation, ()->driveTrain.getLeftEncoder(), ()->driveTrain.getRightEncoder()));
   }
 
   /**
@@ -71,22 +81,33 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    //--------Intake Button Bindings--------
     //When A is held, Intake
     new JoystickButton(SecondaryJoystick, 1).whileHeld(new SimpleIntakeCommand(this.intake));
     //When X is held, Outtake
-    new JoystickButton(SecondaryJoystick,2).whileHeld(new SimpleOuttakeCommand(this.intake));
+    //new JoystickButton(SecondaryJoystick,2).whileHeld(new SimpleOuttakeCommand(this.intake));
+
+    //--------Indexer Button Bindings--------
     //When B is held, Indexer up
     new JoystickButton(SecondaryJoystick, 3).whileHeld(new VerticalIndexerUpCommand(this.verticalIndexer));
     //When Y is held, Indexer down
     new JoystickButton(SecondaryJoystick, 4).whileHeld(new VerticalIndexerDownCommand(this.verticalIndexer)); 
-    //When left bumper  is held, Turret left
-    new JoystickButton(SecondaryJoystick,5).whileHeld(new SimpleTurretLeftCommand(this.turret));
-    //When right bumper is held, Turret right
-    new JoystickButton(SecondaryJoystick, 6).whileHeld(new SimpleTurretRightCommand(this.turret));
-    //When left d-pad left is held, Indexer out 
+    //When left d-pad is held, Horizontal Indexer in
+    new POVButton(SecondaryJoystick,90).whileHeld(new HorizontalIndexerIntakeCommand(this.horizontalIndexer));
+    //When right d-pad is held, Horizontal Indexer out
     new POVButton(SecondaryJoystick, 270).whileHeld(new HorizontalIndexerOuttakeCommand(this.horizontalIndexer));
-    //When left d-pad right is held, Indexer in 
-    new POVButton(SecondaryJoystick, 90).whileHeld(new HorizontalIndexerIntakeCommand(this.horizontalIndexer));
+
+    //--------Turret Button Bindings--------
+    //When left bumper  is held, Turret Clockwise
+    new JoystickButton(SecondaryJoystick,5).whileHeld(new SimpleTurretCWCommand(this.turret));
+    //When right bumper is held, Turret Counterclockwise
+    new JoystickButton(SecondaryJoystick, 6).whileHeld(new SimpleTurretCCWCommand(this.turret));
+    //When button 9 is pressed, zero the shooter
+    new JoystickButton(SecondaryJoystick, 9).whenPressed(new TurretToLimit(this.turret));
+
+    //--------Shooting Button Bindings--------
+    //When button 8 (Right Trigger) is pressed, start constant shooting
+    new JoystickButton(SecondaryJoystick, 8).whileHeld(new ConstantShootCommand(this.shooter));
   }
 
 
