@@ -7,6 +7,7 @@
 
 package frc.robot.commands.drivingCommands;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -22,15 +23,19 @@ public class TankDriveCommand extends CommandBase {
   private final DoubleSupplier leftStick;
   private final DoubleSupplier rightStick;
 
+  private final BooleanSupplier speedMode;
+
   /**
    * Creates a new TankDriveCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public TankDriveCommand(DriveTrainSubsystem driveTrain, DoubleSupplier left, DoubleSupplier right) {
+  public TankDriveCommand(DriveTrainSubsystem driveTrain, DoubleSupplier left, DoubleSupplier right, BooleanSupplier trigger) {
     this.driveTrain = driveTrain;
     this.leftStick = left;
     this.rightStick = right;
+    //This is the trigger that determines whether we are at full or half speed
+    this.speedMode = trigger;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(driveTrain);
   }
@@ -43,7 +48,14 @@ public class TankDriveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    driveTrain.setMotorPowers(this.leftStick.getAsDouble(), -this.rightStick.getAsDouble());
+    driveTrain.setMotorPowers(-this.leftStick.getAsDouble(), this.rightStick.getAsDouble());
+
+    //If the trigger is held, set max power to 1 for full speed. Else 0.5
+    if (speedMode.getAsBoolean()) {
+      driveTrain.setFastMode();
+    } else {
+      driveTrain.setSlowMode();
+    }
   }
 
   // Called once the command ends or is interrupted.

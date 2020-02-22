@@ -21,9 +21,11 @@ import frc.robot.commands.ConstantShootCommand;
 import frc.robot.commands.TurretToLimit;
 import frc.robot.commands.VerticalIndexerDownCommand;
 import frc.robot.commands.VerticalIndexerUpCommand;
+import frc.robot.commands.UpdateNavigationCommand;
 import frc.robot.commands.drivingCommands.TankDriveCommand;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.NavigationSubsystem;
 //import frc.robot.subsystems.NavigationSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
@@ -48,6 +50,7 @@ public class RobotContainer {
   private final VerticalIndexerSubsystem verticalIndexer = new VerticalIndexerSubsystem();
   private final TurretSubsystem turret = new TurretSubsystem();
   private final HorizontalIndexerSubsystem horizontalIndexer = new HorizontalIndexerSubsystem();
+  private final NavigationSubsystem navigation = new NavigationSubsystem();
 
   public static final Joystick DriveController = new Joystick(0);
   public static final Joystick SecondaryJoystick = new Joystick(1);
@@ -59,11 +62,16 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
-    //Configure driveTrain default command, which is tank drive with Primary Controller Joysticks (NUMBERED CONTROLLER)
-    driveTrain.setDefaultCommand(new TankDriveCommand(driveTrain,()->DriveController.getThrottle(),()->DriveController.getY()));
+    //Create a button to make a BooleanSupplier off of, for the speed mode in Tank Drive
+    final JoystickButton speedModeButton = new JoystickButton(DriveController, 8);
+    //Configure driveTrain default command, which is tank drive with Primary Controller Joysticks (NUMBERED CONTROLLER). It also uses trigger for speed mode
+    driveTrain.setDefaultCommand(new TankDriveCommand(driveTrain,()->DriveController.getY(),()->DriveController.getThrottle(), ()->speedModeButton.get()));
 
     //Configure shooter default command, which is to spin either wheel with the two Secondary joysticks
     shooter.setDefaultCommand(new SimpleShootCommand(shooter,()->SecondaryJoystick.getY(),()->SecondaryJoystick.getThrottle()));
+
+    //Configure the default command to update our position based on all the stuff
+    navigation.setDefaultCommand(new UpdateNavigationCommand(navigation, ()->driveTrain.getLeftEncoder(), ()->driveTrain.getRightEncoder()));
   }
 
   /**
@@ -77,7 +85,7 @@ public class RobotContainer {
     //When A is held, Intake
     new JoystickButton(SecondaryJoystick, 1).whileHeld(new SimpleIntakeCommand(this.intake));
     //When X is held, Outtake
-    new JoystickButton(SecondaryJoystick, 2).whileHeld(new SimpleOuttakeCommand(this.intake));
+    //new JoystickButton(SecondaryJoystick,2).whileHeld(new SimpleOuttakeCommand(this.intake));
 
     //--------Indexer Button Bindings--------
     //When B is held, Indexer up
