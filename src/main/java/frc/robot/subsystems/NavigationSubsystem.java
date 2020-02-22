@@ -7,46 +7,55 @@
 
 package frc.robot.subsystems;
 
+import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.SerialPort;
 
 public class NavigationSubsystem extends SubsystemBase {
-    private double robotX, robotZ, robotHeading;
     //private int VisionPI; //Change this to whatever type is needed
 
+    DifferentialDriveOdometry odometry;
 
+    AHRS navx;
 
   /**
    * Creates a new NavigationSubsystem.
    */
   public NavigationSubsystem() {
-    //VisionPI = Constants.VisionPI;
-    //Change this to whatever constructor is nescessary
-    robotX = 0;
-    robotZ = 0;
-    robotHeading = 0;
-    //Change these to actual values
+    //Create navx
+    navx = new AHRS(SerialPort.Port.kMXP);
+    //This keeps a tally of position and heading and updates them based on encoders
+    odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
   }
 
-  public double getX(){
-    return robotX;
-  }
-  public double getY(){
-    return robotZ;
-  }
-  public double getHeading(){
-    return robotHeading;
+  //Returns the robot's pose (position and rotation) in meters
+  public Pose2d getPose() {
+    return odometry.getPoseMeters();
   }
 
+  //This updates the pose based on the encoder values, and heading. Not super accurate but good for low time scales
+  public void updatePoseNormally(int encoderLeft, int encoderRight) {
+    odometry.update(Rotation2d.fromDegrees(getHeading()), encoderLeft, encoderRight);
+  }
+
+  //Calibrates the pose based on vision/lidar/etc.
+  public void calibratePose(Pose2d pose) {
+    odometry.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
+  }
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
-    /*
-    robotX = VisionPI.get(x);
-    robotZ = VisionPI.get(z);
-    robotHeading = VisionPI.get(heading);
+    SmartDashboard.putNumber("Subsystems.Navigation.xCoord", getPose().getTranslation().getX());
+    SmartDashboard.putNumber("Subsystems.Navigation.yCoord", getPose().getTranslation().getY());
+    SmartDashboard.putNumber("Subsystems.Navigation.Heading", getPose().getRotation().getDegrees());
+  }
 
-    Change to whatever protocol is needed
-    */
+  public double getHeading() {
+    return navx.getYaw();
   }
 }
