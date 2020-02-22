@@ -77,26 +77,26 @@ public class DriveTrainSubsystem extends SubsystemBase {
     //Display the power we are asking for
     SmartDashboard.putNumber("Subsystems.DriveTrain.leftPowerDemand", leftPowerDesired);
     SmartDashboard.putNumber("Subsystems.DriveTrain.rightPowerDemand", rightPowerDesired);
-    double curRightPower = signPreservingSqrt(rightDriveFalconMain.get());
-    
+
+    double curRightPower = rightDriveFalconMain.get();
     double nextRightPower;
-    
     if (Math.abs(rightPowerDesired - curRightPower) <= maxPowerChangeTemp){
       nextRightPower = rightPowerDesired;
     } else {
-      nextRightPower = curRightPower + Math.signum(rightPowerDesired - curRightPower) * Math.sqrt(maxPowerChangeTemp);
+      nextRightPower = curRightPower + Math.signum(rightPowerDesired - curRightPower) * maxPowerChangeTemp;
     }
 
-    double curleftPower = signPreservingSqrt(leftDriveFalconMain.get());
+    double curleftPower = leftDriveFalconMain.get();
     double nextleftPower;
     if (Math.abs(leftPowerDesired - curleftPower) <= maxPowerChangeTemp){
       nextleftPower = leftPowerDesired;
     } else {
-      nextleftPower = curleftPower + Math.signum(leftPowerDesired - curleftPower) * Math.sqrt(maxPowerChangeTemp);
+      nextleftPower = curleftPower + Math.signum(leftPowerDesired - curleftPower) * maxPowerChangeTemp;
     }
+
     SmartDashboard.putNumber("Subsystems.DriveTrain.rightPowerGiven", nextRightPower);
     SmartDashboard.putNumber("Subsystems.DriveTrain.leftPowerGiven", nextleftPower);
-    drive.tankDrive(nextleftPower, nextRightPower);
+    drive.tankDrive(nextleftPower, nextRightPower, false);
   }
 
   public int getLeftEncoder() {
