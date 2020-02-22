@@ -63,5 +63,9 @@ public final class Constants {
 
     // DIO Ports
     public static final int TurretLimitDIO = 0;
+    public static final int IndexerLowerLimitDIO = 1;
+    public static final int IndexerMiddleLimitDIO = 2;
+    public static final int IndexerUpperLimitDIO = 3;
+
 
 }
