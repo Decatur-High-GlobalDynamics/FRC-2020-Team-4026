@@ -74,6 +74,8 @@ public class DriveTrainSubsystem extends SubsystemBase {
   //Caps the requested powers then sends them to Differential Drive
   public void setMotorPowers(double leftPowerDesired, double rightPowerDesired){
     double maxPowerChangeTemp = maxPowerChange * currentMaxPower;
+    leftPowerDesired = Math.max(Math.min(1, leftPowerDesired), -1);
+    rightPowerDesired = Math.max(Math.min(1, rightPowerDesired), -1);
     //Display the power we are asking for
     SmartDashboard.putNumber("Subsystems.DriveTrain.leftPowerDemand", leftPowerDesired);
     SmartDashboard.putNumber("Subsystems.DriveTrain.rightPowerDemand", rightPowerDesired);
