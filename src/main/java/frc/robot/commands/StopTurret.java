@@ -10,15 +10,16 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.TurretSubsystem;
 
-public class SimpleTurretCCWCommand extends CommandBase {
+
+public class StopTurret extends CommandBase {
   /**
-   * Creates a new SimpleTurretRightCommand.
+   * Creates a new StopTurret.
    */
   private final TurretSubsystem turret;
-  public SimpleTurretCCWCommand(TurretSubsystem turret) {
-    this.turret = turret;
-    addRequirements(turret);
+  public StopTurret(TurretSubsystem turret) {
     // Use addRequirements() here to declare subsystem dependencies.
+    this.turret = turret;
+    addRequirements(this.turret);
   }
 
   // Called when the command is initially scheduled.
@@ -29,11 +30,7 @@ public class SimpleTurretCCWCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (!(turret.getTicks() > 0 && turret.getPower() > 0)){
-      turret.goCounterClockwise();
-    } else {
-      turret.stop();
-    }
+    turret.stop();
   }
 
   // Called once the command ends or is interrupted.
@@ -45,6 +42,6 @@ public class SimpleTurretCCWCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (turret.getTicks() > 0 && turret.getPower() > 0);
+    return true;
   }
 }

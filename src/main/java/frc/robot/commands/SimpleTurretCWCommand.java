@@ -29,7 +29,11 @@ public class SimpleTurretCWCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    turret.goClockwise();
+    if (!(turret.getTicks() < -6000 && turret.getPower() < 0)){
+      turret.goClockwise();
+    } else {
+      turret.stop();
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -41,6 +45,6 @@ public class SimpleTurretCWCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return (turret.getTicks() < -6000 && turret.getPower() < 0);
   }
 }

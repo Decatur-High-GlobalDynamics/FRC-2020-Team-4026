@@ -17,6 +17,7 @@ import frc.robot.commands.SimpleOuttakeCommand;
 import frc.robot.commands.SimpleShootCommand;
 import frc.robot.commands.SimpleTurretCCWCommand;
 import frc.robot.commands.SimpleTurretCWCommand;
+import frc.robot.commands.StopTurret;
 import frc.robot.commands.ConstantShootCommand;
 import frc.robot.commands.TurretToLimit;
 import frc.robot.commands.TurretToPosition;
@@ -99,6 +100,8 @@ public class RobotContainer {
     new POVButton(SecondaryJoystick, 270).whileHeld(new HorizontalIndexerOuttakeCommand(this.horizontalIndexer));
 
     //--------Turret Button Bindings--------
+    //When button 2 is pressed, stop the turret
+    new JoystickButton(SecondaryJoystick, 2).whenPressed(new StopTurret(this.turret));
     //When left bumper  is held, Turret Clockwise
     new JoystickButton(SecondaryJoystick, 5).whileHeld(new SimpleTurretCWCommand(this.turret));
     //When right bumper is held, Turret Counterclockwise

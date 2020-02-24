@@ -24,16 +24,13 @@ public class TurretToLimit extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    turret.toggleReset();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (turret.shouldTurnCW()){
-      turret.goClockwise();
-    } else {
-      turret.goCounterClockwise();
-    }
+    turret.goCounterClockwise();
   }
 
   // Called once the command ends or is interrupted.
@@ -41,6 +38,7 @@ public class TurretToLimit extends CommandBase {
   public void end(boolean interrupted) {
     turret.stop();
     turret.resetEncoder();
+    turret.toggleReset();
   }
 
   // Returns true when the command should end.
