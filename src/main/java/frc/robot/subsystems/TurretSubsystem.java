@@ -39,6 +39,8 @@ public class TurretSubsystem extends SubsystemBase {
   private boolean hasBeenCalibrated=false;
 
   private final double MinPowerToMove = 0.0425;
+
+  private final int stallThresh = 30;
   
   private final PidParameters pidParams = new PidParameters(0.35, 0.05, 0.1, 0, 0, 0.15, 10);
 
@@ -214,6 +216,14 @@ public class TurretSubsystem extends SubsystemBase {
 
   public void markAsCalibrated() {
     hasBeenCalibrated=true;
+  }
+
+  public double getSpeed(){
+    return turretMotor.getSelectedSensorVelocity();
+  }
+
+  public boolean isStalled(){
+    return this.getSpeed() <= stallThresh; 
   }
 
   public void stop(){
