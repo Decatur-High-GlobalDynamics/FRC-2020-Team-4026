@@ -109,7 +109,7 @@ public class RobotContainer {
     //When button 9 is pressed, zero the shooter
     new JoystickButton(SecondaryJoystick, 9).whenPressed(new TurretToLimit(this.turret));
     //When down d-pad is pressed, go to target position
-    new JoystickButton(SecondaryJoystick, 180).whenPressed(new TurretToPosition(this.turret));
+    new JoystickButton(SecondaryJoystick, 180).whenPressed(new TurretToPosition(this.turret, -3000));
 
     //--------Shooting Button Bindings--------
     //When button 8 (Right Trigger) is pressed, start constant shooting
