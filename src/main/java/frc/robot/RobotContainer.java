@@ -89,7 +89,7 @@ public class RobotContainer {
     //When A is held, Intake
     //new JoystickButton(SecondaryJoystick, 1).whileHeld(new SimpleIntakeCommand(this.intake));
     //When X is held, Outtake
-    //new JoystickButton(SecondaryJoystick,2).whileHeld(new SimpleOuttakeCommand(this.intake));
+    new JoystickButton(SecondaryJoystick,2).whileHeld(new SimpleOuttakeCommand(this.intake));
 
     //--------Indexer Button Bindings--------
     //When B is held, Indexer up
@@ -97,9 +97,9 @@ public class RobotContainer {
     //When Y is held, Indexer down
     new JoystickButton(SecondaryJoystick, 4).whileHeld(new VerticalIndexerDownCommand(this.verticalIndexer)); 
     //When left d-pad is held, Horizontal Indexer in
-    new JoystickButton(SecondaryJoystick, 2).whileHeld(new HorizontalIndexerIntakeCommand(this.horizontalIndexer));
+    new JoystickButton(SecondaryJoystick, 1).whileHeld(new HorizontalIndexerIntakeCommand(this.horizontalIndexer));
     //When left d-pad held, Intake
-    new JoystickButton(SecondaryJoystick, 2).whileHeld(new SimpleIntakeCommand(this.intake));
+    new JoystickButton(SecondaryJoystick, 1).whileHeld(new SimpleIntakeCommand(this.intake));
     //When right d-pad is held, Horizontal Indexer out
     new POVButton(SecondaryJoystick, 270).whileHeld(new HorizontalIndexerOuttakeCommand(this.horizontalIndexer));
 
