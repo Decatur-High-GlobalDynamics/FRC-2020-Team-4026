@@ -222,10 +222,6 @@ public class TurretSubsystem extends SubsystemBase {
      // Tell motor to hold the position
      startRotatingToEncoderPosition((long)MathUtil.clamp(getTicks(), minEncoderRange,0));
   }
-  
-  public void toPosition(int targetTicks){
-    turretMotor.set(ControlMode.Position, targetTicks);
-  }
 
   public boolean isMotorBusy() {
     if ( turretMotor.getControlMode() == ControlMode.Position )

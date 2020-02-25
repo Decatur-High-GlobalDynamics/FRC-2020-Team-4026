@@ -28,7 +28,7 @@ public class TurretToPosition extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    turret.toPosition(targetPos);
+    turret.startRotatingToEncoderPosition(targetPos);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
