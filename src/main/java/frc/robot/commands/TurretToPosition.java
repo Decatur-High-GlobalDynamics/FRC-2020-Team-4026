@@ -26,25 +26,24 @@ public class TurretToPosition extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    targetRad = SmartDashboard.getNumber("Commands.TurretToPosition.targetRad", 0);
-    turret.rotateToPosition(targetRad);
+    turret.toPosition(-3000);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SmartDashboard.putNumber("Commands.TurretToPosition.targetRad", targetRad);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     turret.stop();
+    new StopTurret(turret);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return turret.getRadians() > Math.abs(targetRad);
+    return turret.getTicks() < -3000;
   }
 }
