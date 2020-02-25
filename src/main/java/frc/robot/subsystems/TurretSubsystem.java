@@ -99,11 +99,11 @@ public class TurretSubsystem extends SubsystemBase {
       return false;
     }
 
-    if (this.getTicks() > 0 && turretMotor.getMotorOutputPercent() > 0) {
+    if (this.getTicks() > 0 && powerToCheck > 0) {
       return false;
     }
 
-    if (this.getTicks() < minEncoderRange && turretMotor.getMotorOutputPercent() < 0){
+    if (this.getTicks() < minEncoderRange && powerToCheck < 0){
       return false;
     }
 
