@@ -102,10 +102,10 @@ public class RobotContainer {
     //--------Turret Button Bindings--------
     //When button 2 is pressed, stop the turret
     new JoystickButton(SecondaryJoystick, 2).whenPressed(new StopTurret(this.turret));
-    //When left bumper  is held, Turret Clockwise
-    new JoystickButton(SecondaryJoystick, 5).whileHeld(new SimpleTurretCWCommand(this.turret));
-    //When right bumper is held, Turret Counterclockwise
-    new JoystickButton(SecondaryJoystick, 6).whileHeld(new SimpleTurretCCWCommand(this.turret));
+    //When left bumper  is held, Turret Counterclockwise
+    new JoystickButton(SecondaryJoystick, 5).whileHeld(new SimpleTurretCCWCommand(this.turret));
+    //When right bumper is held, Turret Clockwise
+    new JoystickButton(SecondaryJoystick, 6).whileHeld(new SimpleTurretCWCommand(this.turret));
     //When button 9 is pressed, zero the shooter
     new JoystickButton(SecondaryJoystick, 9).whenPressed(new TurretToLimit(this.turret));
     //When down d-pad is pressed, go to target position

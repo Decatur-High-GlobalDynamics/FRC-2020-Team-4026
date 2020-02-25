@@ -15,6 +15,8 @@ public class TurretToLimit extends CommandBase {
    * Creates a new TurretCWToLimit.
    */
   private final TurretSubsystem turret;
+  private double calibrationTurnPower = 0.1;
+
   public TurretToLimit(TurretSubsystem turret) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.turret = turret;
@@ -24,26 +26,27 @@ public class TurretToLimit extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    turret.toggleReset();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    turret.goCounterClockwise();
+    turret.goCounterClockwise(calibrationTurnPower);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     turret.stop();
-    turret.resetEncoder();
-    turret.toggleReset();
+    if (!interrupted) {
+      turret.resetEncoder();
+      turret.markAsCalibrated();
+    }
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return turret.getTurretLimit();
+    return turret.getTurretLimitSwitch();
   }
 }

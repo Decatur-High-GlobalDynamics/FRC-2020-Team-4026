@@ -7,7 +7,6 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.TurretSubsystem;
 
@@ -18,6 +17,7 @@ public class TurretToPosition extends CommandBase {
   private final TurretSubsystem turret;
   private double targetRad;
   public TurretToPosition(TurretSubsystem turret) {
+    System.err.println("Creating TurretToPosition");
     // Use addRequirements() here to declare subsystem dependencies.
     this.turret = turret;
     addRequirements(this.turret);
@@ -38,12 +38,11 @@ public class TurretToPosition extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     turret.stop();
-    new StopTurret(turret);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return turret.getTicks() < -3000;
+    return !turret.isMotorBusy();
   }
 }
