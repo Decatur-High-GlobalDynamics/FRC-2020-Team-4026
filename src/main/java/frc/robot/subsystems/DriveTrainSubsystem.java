@@ -57,7 +57,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
     
     setSlowMode();
 
-    drive.setRightSideInverted(false);
+    drive.setRightSideInverted(true);
   }
 
   @Override
