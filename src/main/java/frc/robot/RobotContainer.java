@@ -13,12 +13,13 @@ import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.HorizontalIndexerIntakeCommand;
 import frc.robot.commands.HorizontalIndexerOuttakeCommand;
 import frc.robot.commands.SimpleIntakeCommand;
-import frc.robot.commands.SimpleOuttakeCommand;
 import frc.robot.commands.SimpleShootCommand;
 import frc.robot.commands.SimpleTurretCCWCommand;
 import frc.robot.commands.SimpleTurretCWCommand;
+import frc.robot.commands.StopTurret;
 import frc.robot.commands.ConstantShootCommand;
 import frc.robot.commands.TurretToLimit;
+import frc.robot.commands.TurretToPosition;
 import frc.robot.commands.VerticalIndexerDownCommand;
 import frc.robot.commands.VerticalIndexerUpCommand;
 import frc.robot.commands.UpdateNavigationCommand;
@@ -93,17 +94,21 @@ public class RobotContainer {
     //When Y is held, Indexer down
     new JoystickButton(SecondaryJoystick, 4).whileHeld(new VerticalIndexerDownCommand(this.verticalIndexer)); 
     //When left d-pad is held, Horizontal Indexer in
-    new POVButton(SecondaryJoystick,90).whileHeld(new HorizontalIndexerIntakeCommand(this.horizontalIndexer));
+    new POVButton(SecondaryJoystick, 90).whileHeld(new HorizontalIndexerIntakeCommand(this.horizontalIndexer));
     //When right d-pad is held, Horizontal Indexer out
     new POVButton(SecondaryJoystick, 270).whileHeld(new HorizontalIndexerOuttakeCommand(this.horizontalIndexer));
 
     //--------Turret Button Bindings--------
-    //When left bumper  is held, Turret Clockwise
-    new JoystickButton(SecondaryJoystick,5).whileHeld(new SimpleTurretCWCommand(this.turret));
-    //When right bumper is held, Turret Counterclockwise
-    new JoystickButton(SecondaryJoystick, 6).whileHeld(new SimpleTurretCCWCommand(this.turret));
+    //When button 2 is pressed, stop the turret
+    new JoystickButton(SecondaryJoystick, 2).whenPressed(new StopTurret(this.turret));
+    //When left bumper  is held, Turret Counterclockwise
+    new JoystickButton(SecondaryJoystick, 5).whileHeld(new SimpleTurretCCWCommand(this.turret));
+    //When right bumper is held, Turret Clockwise
+    new JoystickButton(SecondaryJoystick, 6).whileHeld(new SimpleTurretCWCommand(this.turret));
     //When button 9 is pressed, zero the shooter
     new JoystickButton(SecondaryJoystick, 9).whenPressed(new TurretToLimit(this.turret));
+    //When down d-pad is pressed, go to target position
+    new JoystickButton(SecondaryJoystick, 180).whenPressed(new TurretToPosition(this.turret, -3000));
 
     //--------Shooting Button Bindings--------
     //When button 8 (Right Trigger) is pressed, start constant shooting
