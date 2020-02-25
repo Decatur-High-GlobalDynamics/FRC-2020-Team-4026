@@ -16,17 +16,19 @@ public class TurretToPosition extends CommandBase {
    */
   private final TurretSubsystem turret;
   private double targetRad;
-  public TurretToPosition(TurretSubsystem turret) {
+  private int targetPos;
+  public TurretToPosition(TurretSubsystem turret, int targetPos) {
     System.err.println("Creating TurretToPosition");
     // Use addRequirements() here to declare subsystem dependencies.
     this.turret = turret;
     addRequirements(this.turret);
+    this.targetPos = targetPos;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    turret.toPosition(-3000);
+    turret.toPosition(targetPos);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
