@@ -45,11 +45,8 @@ public class DriveStraightCommand extends CommandBase {
     double desiredSpeed = joystick.getAsDouble();
     //This is the offset for motors for turning
     double turnOffset = 0;
-    if (Math.abs(nav.getAccumulatedHeading() - desiredHeading) > 0.5) {
-      turnOffset = pTurn * (nav.getAccumulatedHeading() - desiredHeading);
-    }
 
-    driveTrain.setMotorPowers(desiredSpeed + turnOffset, desiredSpeed - turnOffset);
+    driveTrain.setMotorPowers(-(desiredSpeed) + turnOffset, desiredSpeed + turnOffset);
   }
 
   // Called once the command ends or is interrupted.
