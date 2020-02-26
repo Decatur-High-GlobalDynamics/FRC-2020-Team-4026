@@ -8,6 +8,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
@@ -50,10 +51,15 @@ public class DriveTrainSubsystem extends SubsystemBase {
     leftDriveFalconSub.follow(leftDriveFalconMain);
     rightDriveFalconSub.follow(rightDriveFalconMain);
 
+    leftDriveFalconMain.setNeutralMode(NeutralMode.Brake);
+    leftDriveFalconSub.setNeutralMode(NeutralMode.Brake);
+    rightDriveFalconMain.setNeutralMode(NeutralMode.Brake);
+    rightDriveFalconSub.setNeutralMode(NeutralMode.Brake);
+
     //This wraps the motors
     drive = new DifferentialDrive(leftDriveFalconMain, rightDriveFalconMain);
 
-    drive.setDeadband(0);
+    drive.setDeadband(0.01);
     
     setSlowMode();
 
