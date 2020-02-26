@@ -37,10 +37,4 @@ public class SimpleTurretCCWCommand extends CommandBase {
   public void end(boolean interrupted) {
     turret.stop();
   }
-
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return false;
-  }
 }
