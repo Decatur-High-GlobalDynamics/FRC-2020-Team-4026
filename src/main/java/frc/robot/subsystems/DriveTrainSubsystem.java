@@ -50,6 +50,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
     leftDriveFalconSub.follow(leftDriveFalconMain);
     rightDriveFalconSub.follow(rightDriveFalconMain);
 
+
     //This wraps the motors
     drive = new DifferentialDrive(leftDriveFalconMain, rightDriveFalconMain);
 
@@ -57,7 +58,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
     
     setSlowMode();
 
-    drive.setRightSideInverted(true);
+    drive.setRightSideInverted(false);
   }
 
   @Override
