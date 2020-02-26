@@ -48,7 +48,7 @@ public class TankDriveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    driveTrain.setMotorPowers(-this.leftStick.getAsDouble(), -this.rightStick.getAsDouble());
+    driveTrain.setMotorPowers(-this.leftStick.getAsDouble(), this.rightStick.getAsDouble());
 
     //If the trigger is held, set max power to 1 for full speed. Else 0.5
     if (speedMode.getAsBoolean()) {
