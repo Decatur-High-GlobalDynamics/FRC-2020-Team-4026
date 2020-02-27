@@ -5,6 +5,9 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.PidParameters;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * A wrapper class for Motors that helps to consistently and easily perform the following functions:
  *   -Keep current and max speeds
@@ -24,6 +27,8 @@ public class TeamTalonSRX extends WPI_TalonSRX {
 
     protected long currentEncoderChange_perSec = 0;
     protected long maxEncoderChange_perSec = Long.MAX_VALUE;
+
+    protected PidParameters pidProfiles[] = new PidParameters[4];
 
 
     public TeamTalonSRX(String smartDashboardPrefix, int deviceNumber) {
@@ -81,6 +86,12 @@ public class TeamTalonSRX extends WPI_TalonSRX {
                 maxEncoderChange_perLoop = currentEncoderChange_perLoop;
         }
 
+        if ( isRunningPidControlMode() ) {
+            SmartDashboard.putBoolean(smartDashboardPrefix+".PID", true);
+        } else {
+            SmartDashboard.putBoolean(smartDashboardPrefix+".PID", false);
+        }
+
         SmartDashboard.putNumber(smartDashboardPrefix + ".PowerPercent", getMotorOutputPercent());
 
         SmartDashboard.putNumber(smartDashboardPrefix + ".Position-ticks", getCurrentEncoderValue());
@@ -109,8 +120,9 @@ public class TeamTalonSRX extends WPI_TalonSRX {
 
     }
 
-
     public void configureWithPidParameters(PidParameters pidParameters, int pidSlotIndex) {
+        pidProfiles[pidSlotIndex] = pidParameters;
+
         config_kF(pidSlotIndex, pidParameters.kF);
         config_kP(pidSlotIndex, pidParameters.kP);
         config_kI(pidSlotIndex, pidParameters.kI);
