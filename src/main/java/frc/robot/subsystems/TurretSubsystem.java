@@ -277,4 +277,8 @@ public class TurretSubsystem extends SubsystemBase {
     return !turretLimit.get();
   }
 
+  public boolean isRadsAllowed(double rads) {
+    return !(convertToTicks(rads) > 0 || convertToTicks(rads) < minEncoderRange);
+  }
+
 }
