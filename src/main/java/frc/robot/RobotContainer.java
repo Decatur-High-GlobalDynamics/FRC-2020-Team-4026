@@ -79,8 +79,6 @@ public class RobotContainer {
     //Configure the default command to update our position based on all the stuff
     navigation.setDefaultCommand(new UpdateNavigationCommand(navigation, ()->driveTrain.getLeftEncoder(), ()->driveTrain.getRightEncoder()));
 
-    //Configure default command for turret to point at vision target if we see it and it is within our allowable turn range
-    turret.setDefaultCommand(new PointTurretAtTargetCommand(turret, network));
   }
 
   /**
@@ -117,12 +115,12 @@ public class RobotContainer {
     new JoystickButton(SecondaryJoystick, 2).whenPressed(new StopTurret(this.turret));
     //When left bumper  is held, Turret Counterclockwise
     new JoystickButton(SecondaryJoystick, 5).whileHeld(new SimpleTurretCCWCommand(this.turret));
-    //When right bumper is held, Turret Clockwise
-    new JoystickButton(SecondaryJoystick, 6).whileHeld(new SimpleTurretCWCommand(this.turret));
     //When button 9 is pressed, zero the shooter
     new JoystickButton(SecondaryJoystick, 9).whenPressed(new TurretToLimit(this.turret));
     //When down d-pad is pressed, go to target position
     new JoystickButton(SecondaryJoystick, 180).whenPressed(new TurretToPosition(this.turret, -3000));
+    //When right bumper pressed, aim at vision target if possible
+    new JoystickButton(SecondaryJoystick, 6).whileHeld(new PointTurretAtTargetCommand(turret, network));
 
     //--------Shooting Button Bindings--------
     //When button 8 (Right Trigger) is pressed, start constant shooting
