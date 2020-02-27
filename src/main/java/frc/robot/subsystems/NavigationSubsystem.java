@@ -23,6 +23,10 @@ public class NavigationSubsystem extends SubsystemBase {
 
     AHRS navx;
 
+    double accumulatedHeading = 0;
+
+    double lastHeading = 0;
+
   /**
    * Creates a new NavigationSubsystem.
    */
@@ -53,9 +57,29 @@ public class NavigationSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Subsystems.Navigation.xCoord", getPose().getTranslation().getX());
     SmartDashboard.putNumber("Subsystems.Navigation.yCoord", getPose().getTranslation().getY());
     SmartDashboard.putNumber("Subsystems.Navigation.Heading", getPose().getRotation().getDegrees());
+
+    double difference = 0;
+    double currentHeading = getHeading();
+    double currentHeadingTemp = currentHeading;
+    if (Math.abs(currentHeading - lastHeading) > 270) {
+      if (currentHeading < 0) {
+        currentHeading = 360 - currentHeading;
+      } else {
+        currentHeading = currentHeading - 360;
+      }
+    }
+
+    difference = currentHeading - lastHeading;
+    lastHeading = currentHeadingTemp;
+
+    accumulatedHeading += difference;
   }
 
   public double getHeading() {
     return navx.getYaw();
+  }
+
+  public double getAccumulatedHeading() {
+    return accumulatedHeading;
   }
 }
