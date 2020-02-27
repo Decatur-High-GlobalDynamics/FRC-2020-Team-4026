@@ -72,10 +72,8 @@ public class TeamTalonSRX extends WPI_TalonSRX {
         long currentMeasurementTime_ms = System.currentTimeMillis();
         long currentEncoderValue = getCurrentEncoderValue();
 
-        if ( previousEncoderValue == Long.MAX_VALUE ) {
-            previousMeasurementTime_ms = currentMeasurementTime_ms;
-            previousEncoderValue = currentEncoderValue;
-        } else {
+        // Skip the delta math the first time through the loop.
+        if ( previousEncoderValue != Long.MAX_VALUE ) {
             double deltaTime = (currentMeasurementTime_ms - previousMeasurementTime_ms)/1000;
             currentEncoderChange_perLoop = currentEncoderValue - previousEncoderValue;
             currentEncoderChange_perSec = Math.round(currentEncoderChange_perLoop/deltaTime);
@@ -85,6 +83,9 @@ public class TeamTalonSRX extends WPI_TalonSRX {
             if ( maxEncoderChange_perLoop ==Long.MAX_VALUE || currentEncoderChange_perLoop > maxEncoderChange_perLoop)
                 maxEncoderChange_perLoop = currentEncoderChange_perLoop;
         }
+        previousMeasurementTime_ms = currentMeasurementTime_ms;
+        previousEncoderValue = currentEncoderValue;
+        previousEncoderValue = currentEncoderValue;
 
         if ( isRunningPidControlMode() ) {
             SmartDashboard.putBoolean(smartDashboardPrefix+".PID", true);
