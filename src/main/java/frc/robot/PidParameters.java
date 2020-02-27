@@ -92,7 +92,7 @@ public class PidParameters {
         int new_errorTolerance = (int) SmartDashboard.getNumber("Subsystems.Turret.errorTolerance", errorTolerance);
         if ( new_errorTolerance != errorTolerance ) {
             errorTolerance = new_errorTolerance;
-            if (updateMotor) motor.configAllowableClosedloopError(pidSlotIndex, errorTolerance, 20);
+            if (updateMotor) motor.configAllowableClosedloopError(pidSlotIndex, errorTolerance, 30);
         }
         SmartDashboard.putNumber("Subsystems.Turret.errorTolerance", errorTolerance);
     }

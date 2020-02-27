@@ -130,7 +130,7 @@ public class TeamTalonSRX extends WPI_TalonSRX {
         config_kD(pidSlotIndex, pidParameters.kD);
         configPeakOutputForward(pidParameters.kPeakOutput);
         configPeakOutputReverse(-pidParameters.kPeakOutput);
-        configAllowableClosedloopError(pidSlotIndex, pidParameters.errorTolerance, 20);
+        configAllowableClosedloopError(pidSlotIndex, pidParameters.errorTolerance, 30);
 
     }
 }
