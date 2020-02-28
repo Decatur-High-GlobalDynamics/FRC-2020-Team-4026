@@ -30,11 +30,8 @@ import frc.robot.commands.drivingCommands.TankDriveCommand;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.NavigationSubsystem;
-<<<<<<< HEAD
 import frc.robot.subsystems.NetworkIOSubsystem;
 //import frc.robot.subsystems.NavigationSubsystem;
-=======
->>>>>>> develop
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
 import frc.robot.subsystems.VerticalIndexerSubsystem;
