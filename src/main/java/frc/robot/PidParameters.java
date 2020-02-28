@@ -3,6 +3,10 @@ package frc.robot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class PidParameters {
+    public static double telemetryUpdateInterval_secs = 0.5;
+
+    private double lastTelemetryUpdate=0;
+
     public double kP, kI, kD, kF, kIZone, kPeakOutput;
     public int errorTolerance;
 
@@ -50,6 +54,14 @@ public class PidParameters {
     }
 
     public void periodic(String prefix, TeamTalonSRX motor, int pidSlotIndex) {
+        double now = TeamUtils.getCurrentTime();
+
+        if ( (now-lastTelemetryUpdate) > telemetryUpdateInterval_secs ) {
+            return;
+        }
+
+        lastTelemetryUpdate = now;
+
         // We update the motor immediately when the the motor is in a PID-controlled mode
         boolean updateMotor = motor.isRunningPidControlMode();
 

@@ -7,18 +7,18 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ShooterSubsystem;
 
 import java.util.function.DoubleSupplier;
 
 public class PidShootCommand extends CommandBase {
-
   ShooterSubsystem shooter;
   /**
    * Creates a new SimpleShootCommand.
    */
-  public PidShootCommand(ShooterSubsystem shooter, long topVelocity, long bottomVelocity) {
+  public PidShootCommand(ShooterSubsystem shooter, double topVelocityFraction, double bottomVelocityFraction) {
     this.shooter = shooter;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(shooter);
@@ -28,6 +28,13 @@ public class PidShootCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    double topShootingVelocityFraction = SmartDashboard.getNumber("Commands.PidShooter.topSpeedFraction", 0.5);
+    SmartDashboard.putNumber("Commands.PidShooter.topSpeedFraction", topShootingVelocityFraction);
+    double bottomShootingVelocityFraction = SmartDashboard.getNumber("Commands.PidShooter.BottomSpeedFraction", 0.5);
+    SmartDashboard.putNumber("Commands.PidShooter.BottomSpeedFraction", bottomShootingVelocityFraction;
+
+
+    shooter.setMotorVelocities(topShootingVelocityFraction, bottomShootingVelocityFraction);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

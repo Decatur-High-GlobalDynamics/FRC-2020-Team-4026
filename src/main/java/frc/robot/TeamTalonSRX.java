@@ -15,6 +15,10 @@ import java.util.List;
  *   -Lots and lots of SmartDashboard information
  */
 public class TeamTalonSRX extends WPI_TalonSRX {
+    public static double telemetryUpdateInterval_secs = 0.1;
+    private double lastTelemetryUpdate=0;
+
+
     protected final String smartDashboardPrefix;
 
     protected int numEStops=0;
@@ -69,6 +73,14 @@ public class TeamTalonSRX extends WPI_TalonSRX {
     }
 
     public void periodic() {
+        double now = TeamUtils.getCurrentTime();
+
+        if ( (now-lastTelemetryUpdate) > telemetryUpdateInterval_secs ) {
+            return;
+        }
+
+        lastTelemetryUpdate = now;
+
         long currentMeasurementTime_ms = System.currentTimeMillis();
         long currentEncoderValue = getCurrentEncoderValue();
 

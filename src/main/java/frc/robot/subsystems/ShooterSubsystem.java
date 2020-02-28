@@ -7,6 +7,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -14,6 +15,7 @@ import frc.robot.PidParameters;
 import frc.robot.TeamTalonSRX;
 
 public class ShooterSubsystem extends SubsystemBase {
+  private double maxTopRotationSpeed=10000, maxBottomRotationSpeed=10000;
   private final TeamTalonSRX shooter_bottom;
   private final TeamTalonSRX shooter_top;
   /**
@@ -42,6 +44,11 @@ public class ShooterSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Subsystems.Shooter.shooterPowerTop", shooterPowerTop);
     shooterPowerBot = -Math.abs(SmartDashboard.getNumber("Subsystems.Shooter.shooterPowerBot", shooterPowerBot));
     SmartDashboard.putNumber("Subsystems.Shooter.shooterPowerBot", shooterPowerBot);
+
+    maxTopRotationSpeed = SmartDashboard.getNumber("Subsystems.Shooter.maxTopotationSpeed", maxTopRotationSpeed);
+    SmartDashboard.putNumber("Subsystems.Shooter.maxTopotationSpeed", maxTopRotationSpeed);
+    maxBottomRotationSpeed = SmartDashboard.getNumber("Subsystems.Shooter.maxBottomotationSpeed", maxBottomRotationSpeed);
+    SmartDashboard.putNumber("Subsystems.Shooter.maxBottomRotationSpeed", maxBottomRotationSpeed);
   }
 
   public void setBottomMotor(double speed){
@@ -59,5 +66,13 @@ public class ShooterSubsystem extends SubsystemBase {
   public void stop(){
     shooter_bottom.set(0);
     shooter_top.set(0);
+  }
+
+  public void setMotorVelocities(double topSpeedFraction, double botSpeedFraction) {
+    shooter_top.configureWithPidParameters(topPidParameters, 0);
+    shooter_bottom.configureWithPidParameters(botPidParameters, 0);
+
+    shooter_top.set(ControlMode.Velocity, topSpeedFraction*maxTopRotationSpeed);
+    shooter_bottom.set(ControlMode.Velocity, botSpeedFraction*maxBottomRotationSpeed);
   }
 }
