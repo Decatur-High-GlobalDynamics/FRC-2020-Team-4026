@@ -50,7 +50,7 @@ public class TurretToLimitCommand extends CommandBase {
   public void end(boolean interrupted) {
     turret.stop();
     if(interrupted)
-      System.err.println("turret to limit interrupted");
+      System.err.println("TurretToLimit interrupted!");
     if (!interrupted) {
       turret.resetEncoder();
       turret.markAsCalibrated();
