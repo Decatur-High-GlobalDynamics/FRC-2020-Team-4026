@@ -10,28 +10,41 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.TurretSubsystem;
 
-
-public class StopTurret extends CommandBase {
+public class TurretToPositionCommand extends CommandBase {
   /**
-   * Creates a new StopTurret.
+   * Creates a new TurretToPosition.
    */
   private final TurretSubsystem turret;
-  public StopTurret(TurretSubsystem turret) {
+  private double targetRad;
+  private int targetPos;
+  public TurretToPositionCommand(TurretSubsystem turret, int targetPos) {
+    System.err.println("Creating TurretToPosition");
     // Use addRequirements() here to declare subsystem dependencies.
     this.turret = turret;
     addRequirements(this.turret);
+    this.targetPos = targetPos;
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize()  {
-    turret.stop();
+  public void initialize() {
+    turret.startRotatingToEncoderPosition(targetPos);
   }
 
+  // Called every time the scheduler runs while the command is scheduled.
+  @Override
+  public void execute() {
+  }
+
+  // Called once the command ends or is interrupted.
+  @Override
+  public void end(boolean interrupted) {
+    turret.stop();
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return !turret.isMotorBusy();
   }
 }
