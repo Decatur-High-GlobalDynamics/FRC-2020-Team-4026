@@ -21,7 +21,7 @@ public class TurretToLimit extends CommandBase {
   public TurretToLimit(TurretSubsystem turret) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.turret = turret;
-    addRequirements(this.turret);
+    addRequirements(turret);
   }
 
   // Called when the command is initially scheduled.
@@ -34,7 +34,13 @@ public class TurretToLimit extends CommandBase {
   @Override
   public void execute() {
     turret.goCounterClockwise(calibrationTurnPower);
-    if(((System.nanoTime() / 1e9) - startTime) > 15 || turret.isStalled()){
+    double currentTime = 1.0*System.nanoTime()/1e9;
+    double elapsedTime = currentTime - startTime;
+    if( elapsedTime > 15 ) {
+      System.err.println("TurretToLimit timed out");
+      cancel();
+    } else if ( elapsedTime>3 && turret.isStalled()){
+      System.err.println("TurrentToLimit: Stalled");
       this.cancel();
     }
   }
@@ -43,6 +49,8 @@ public class TurretToLimit extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     turret.stop();
+    if(interrupted)
+      System.err.println("turret to limit interrupted");
     if (!interrupted) {
       turret.resetEncoder();
       turret.markAsCalibrated();
