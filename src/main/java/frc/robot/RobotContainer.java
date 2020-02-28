@@ -88,16 +88,16 @@ public class RobotContainer {
     //When right trigger is held, drive straight
     new JoystickButton(DriveController, 8).whileHeld(new DriveStraightCommand(driveTrain, navigation, ()->DriveController.getY()));
     //--------Intake Button Bindings--------
-    //When A is held, Outtake and horiz index out
-    new JoystickButton(SecondaryJoystick, 2).whileHeld(new SimpleOuttakeCommand(this.intake).alongWith(new HorizontalIndexerOuttakeCommand(this.horizontalIndexer)));
-    //When X held, Intake and horiz index
+    //When X is held, Intake and horiz index In
+    new JoystickButton(SecondaryJoystick, 4).whileHeld(new SimpleOuttakeCommand(this.intake).alongWith(new HorizontalIndexerOuttakeCommand(this.horizontalIndexer)));
+    //When Y held, Intake and horiz index out
     new JoystickButton(SecondaryJoystick, 1).whileHeld(new SimpleIntakeCommand(this.intake).alongWith(new HorizontalIndexerIntakeCommand(this.horizontalIndexer)));
-    //When B is held, Intake Out
-    new JoystickButton(SecondaryJoystick, 3).whileHeld(new SimpleOuttakeCommand(this.intake));
+    //When A is held, Intake Out
+    new JoystickButton(SecondaryJoystick, 2).whileHeld(new SimpleOuttakeCommand(this.intake));
 
     //--------Indexer Button Bindings--------
-    //When Y is held, Horiz Indexer Out
-    new JoystickButton(SecondaryJoystick, 4).whileHeld(new HorizontalIndexerOuttakeCommand(this.horizontalIndexer));
+    //When B is held, Horiz Indexer Out
+    new JoystickButton(SecondaryJoystick, 3).whileHeld(new HorizontalIndexerOuttakeCommand(this.horizontalIndexer));
     //When Right Trigger is held, vertical up
     new JoystickButton(SecondaryJoystick, 8).whileHeld(new VerticalIndexerUpCommand(this.verticalIndexer));
     //When Left Trigger is held, Vertical Down
@@ -116,7 +116,7 @@ public class RobotContainer {
 
     //--------Shooting Button Bindings--------
     //When button 8 (Right Trigger) is pressed, start constant shooting
-    new JoystickButton(SecondaryJoystick, 8).whileHeld(new ConstantShootCommand(this.shooter));
+   // new JoystickButton(SecondaryJoystick, 8).whileHeld(new ConstantShootCommand(this.shooter));
   }
 
 
