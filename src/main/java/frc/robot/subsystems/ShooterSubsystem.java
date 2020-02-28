@@ -67,6 +67,18 @@ public class ShooterSubsystem extends SubsystemBase {
     shooter_bottom.set(0);
     shooter_top.set(0);
   }
+  public int getShooterSpeedTop(){
+    return shooter_top.getSelectedSensorVelocity();
+  }
+  public int getShooterSpeedBot(){
+    return shooter_bottom.getSelectedSensorVelocity();
+  }
+  public void setShooterVelTop(int speed){
+    this.shooter_top.set(ControlMode.Velocity, speed);
+  }
+  public void setShooterVelBot(int speed){
+    this.shooter_top.set(ControlMode.Velocity, speed);
+  }
 
   public void setMotorVelocities(double topSpeedFraction, double botSpeedFraction) {
     shooter_top.configureWithPidParameters(topPidParameters, 0);

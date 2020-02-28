@@ -19,6 +19,7 @@ import frc.robot.commands.SimpleTurretCCWCommand;
 import frc.robot.commands.SimpleTurretCWCommand;
 import frc.robot.commands.StopTurret;
 import frc.robot.commands.ConstantShootCommand;
+import frc.robot.commands.FindShooterVelocity;
 import frc.robot.commands.TurretToLimit;
 import frc.robot.commands.TurretToPosition;
 import frc.robot.commands.VerticalIndexerDownCommand;
@@ -101,7 +102,7 @@ public class RobotContainer {
     //When left d-pad is held, Horizontal Indexer in
     new JoystickButton(SecondaryJoystick, 1).whileHeld(new HorizontalIndexerIntakeCommand(this.horizontalIndexer));
     //When left d-pad held, Intake
-    new JoystickButton(SecondaryJoystick, 1).whileHeld(new SimpleIntakeCommand(this.intake));
+    new JoystickButton(SecondaryJoystick, 1).whileHeld(new FindShooterVelocity(this.shooter, 0.8));
     new POVButton(SecondaryJoystick, 90).whileHeld(new HorizontalIndexerIntakeCommand(this.horizontalIndexer));
     //When right d-pad is held, Horizontal Indexer out
     new POVButton(SecondaryJoystick, 270).whileHeld(new HorizontalIndexerOuttakeCommand(this.horizontalIndexer));
