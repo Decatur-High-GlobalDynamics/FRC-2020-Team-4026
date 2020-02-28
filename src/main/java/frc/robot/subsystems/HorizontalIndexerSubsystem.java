@@ -8,7 +8,7 @@
 package frc.robot.subsystems;
 
 
-import edu.wpi.first.wpilibj.VictorSP;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -16,12 +16,12 @@ public class HorizontalIndexerSubsystem extends SubsystemBase {
   /**
    * Creates a new HorizontalIndexerSubsystem.
    */
-  private final VictorSP horizontalIndexer;
+  private final WPI_TalonSRX horizontalIndexer;
 
   private final double intakeSpeed = -.5;
   private final double outtakeSpeed = .5;
   public HorizontalIndexerSubsystem() {
-    horizontalIndexer = new VictorSP(Constants.IndexerHorizPWM);
+    horizontalIndexer = new WPI_TalonSRX(Constants.IndexerHorizCAN);
   }
 
   @Override
