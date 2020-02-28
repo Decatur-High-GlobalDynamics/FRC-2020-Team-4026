@@ -78,7 +78,7 @@ public class RobotContainer {
     navigation.setDefaultCommand(new UpdateNavigationCommand(navigation, ()->driveTrain.getLeftEncoder(), ()->driveTrain.getRightEncoder()));
 
     //Zero the turret ASAP
-    CommandScheduler.getInstance().schedule(new TurretToLimit(turret));
+    CommandScheduler.getInstance().schedule(new TurretToLimitCommand(turret));
   }
 
   /**
