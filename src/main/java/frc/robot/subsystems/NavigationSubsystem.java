@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.SerialPort;
 
 public class NavigationSubsystem extends SubsystemBase {
-    //private int VisionPI; //Change this to whatever type is needed
+    //Change this to whatever type is needed
 
     DifferentialDriveOdometry odometry;
 

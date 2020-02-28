@@ -10,41 +10,56 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.TurretSubsystem;
 
-public class TurretToPosition extends CommandBase {
+public class TurretToLimitCommand extends CommandBase {
   /**
-   * Creates a new TurretToPosition.
+   * Creates a new TurretToLimitCommand.
    */
   private final TurretSubsystem turret;
-  private double targetRad;
-  private int targetPos;
-  public TurretToPosition(TurretSubsystem turret, int targetPos) {
-    System.err.println("Creating TurretToPosition");
+  private double calibrationTurnPower = 0.1;
+  private double startTime;
+
+  public TurretToLimitCommand(TurretSubsystem turret) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.turret = turret;
-    addRequirements(this.turret);
-    this.targetPos = targetPos;
+    addRequirements(turret);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    turret.startRotatingToEncoderPosition(targetPos);
+    startTime = 1.0 * System.nanoTime() / 1e9;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    turret.goCounterClockwise(calibrationTurnPower);
+    double currentTime = 1.0*System.nanoTime()/1e9;
+    double elapsedTime = currentTime - startTime;
+    if( elapsedTime > 15 ) {
+      System.err.println("TurretToLimit timed out");
+      cancel();
+    } else if ( elapsedTime>3 && turret.isStalled()){
+      System.err.println("TurrentToLimit: Stalled");
+      this.cancel();
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     turret.stop();
+    if(interrupted)
+      System.err.println("TurretToLimit interrupted!");
+    if (!interrupted) {
+      turret.resetEncoder();
+      turret.markAsCalibrated();
+    }
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return !turret.isMotorBusy();
+    return turret.getTurretLimitSwitch();
   }
 }

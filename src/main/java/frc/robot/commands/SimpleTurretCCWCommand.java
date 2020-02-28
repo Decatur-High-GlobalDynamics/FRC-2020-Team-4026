@@ -12,7 +12,7 @@ import frc.robot.subsystems.TurretSubsystem;
 
 public class SimpleTurretCCWCommand extends CommandBase {
   /**
-   * Creates a new SimpleTurretRightCommand.
+   * Creates a new SimpleCCWCommand.
    */
   private final TurretSubsystem turret;
   public SimpleTurretCCWCommand(TurretSubsystem turret) {
