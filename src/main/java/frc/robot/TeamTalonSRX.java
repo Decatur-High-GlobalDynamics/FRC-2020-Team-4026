@@ -74,7 +74,7 @@ public class TeamTalonSRX extends WPI_TalonSRX {
 
         // Skip the delta math the first time through the loop.
         if ( previousEncoderValue != Long.MAX_VALUE ) {
-            double deltaTime = (currentMeasurementTime_ms - previousMeasurementTime_ms)/1000;
+            double deltaTime = 1.0*(currentMeasurementTime_ms - previousMeasurementTime_ms)/1000;
             currentEncoderChange_perLoop = currentEncoderValue - previousEncoderValue;
             currentEncoderChange_perSec = Math.round(currentEncoderChange_perLoop/deltaTime);
 
@@ -95,7 +95,7 @@ public class TeamTalonSRX extends WPI_TalonSRX {
 
         SmartDashboard.putNumber(smartDashboardPrefix + ".PowerPercent", getMotorOutputPercent());
 
-        SmartDashboard.putNumber(smartDashboardPrefix + ".Position-ticks", getCurrentEncoderValue());
+        SmartDashboard.putNumber(smartDashboardPrefix + ".Position-ticks", currentEncoderValue);
         SmartDashboard.putNumber(smartDashboardPrefix + ".Position-changePerLoop", currentEncoderChange_perLoop);
         SmartDashboard.putNumber(smartDashboardPrefix + ".Position-changePerSecond", currentEncoderChange_perSec);
         SmartDashboard.putNumber(smartDashboardPrefix + ".Position-changePer100ms", currentEncoderChange_perSec/10);
