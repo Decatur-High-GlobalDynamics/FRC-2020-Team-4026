@@ -98,6 +98,7 @@ public class TurretSubsystem extends SubsystemBase {
     }
 
     if ( !hasBeenCalibrated ) {
+      System.err.println("Turret has not been calibrated! Press home on controller 2!");
       return false;
     }
 
