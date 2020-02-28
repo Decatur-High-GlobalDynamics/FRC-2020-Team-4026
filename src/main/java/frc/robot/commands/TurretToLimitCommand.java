@@ -10,15 +10,15 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.TurretSubsystem;
 
-public class TurretToLimit extends CommandBase {
+public class TurretToLimitCommand extends CommandBase {
   /**
-   * Creates a new TurretCWToLimit.
+   * Creates a new TurretToLimitCommand.
    */
   private final TurretSubsystem turret;
   private double calibrationTurnPower = 0.1;
   private double startTime;
 
-  public TurretToLimit(TurretSubsystem turret) {
+  public TurretToLimitCommand(TurretSubsystem turret) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.turret = turret;
     addRequirements(turret);
