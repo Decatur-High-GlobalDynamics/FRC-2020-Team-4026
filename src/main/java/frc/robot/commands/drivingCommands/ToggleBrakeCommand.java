@@ -17,7 +17,6 @@ public class ToggleBrakeCommand extends CommandBase {
    */
   public ToggleBrakeCommand(DriveTrainSubsystem drive) {
     this.drive = drive;
-    addRequirements(drive);
   }
 
   // Called when the command is initially scheduled.
