@@ -63,15 +63,15 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
-    //Create a button to make a BooleanSupplier off of, for the speed mode in Tank Drive
+    //Create a button to make a BooleanSupplier off of, for the speed mode in Tank Drive. This prevents creating a new object every loop.
     final JoystickButton speedModeButton = new JoystickButton(DriveController, 7);
     //Configure driveTrain default command, which is tank drive with Primary Controller Joysticks (NUMBERED CONTROLLER). It also uses left trigger for speed mode
     driveTrain.setDefaultCommand(new TankDriveCommand(driveTrain,()->DriveController.getY(),()->DriveController.getThrottle(), ()->speedModeButton.get()));
 
-    //Configure shooter default command, which is to spin either wheel with the two Secondary joysticks
+    //Configure shooter default command, which is to spin both wheels with left joystick
     shooter.setDefaultCommand(new SimpleShootCommand(shooter,()->SecondaryJoystick.getY(),()->SecondaryJoystick.getY()));
 
-    //Configure the default command to update our position based on all the stuff
+    //Configure the default command to update our position based on encoder changes, gyro changes, and eventually vision
     navigation.setDefaultCommand(new UpdateNavigationCommand(navigation, ()->driveTrain.getLeftEncoder(), ()->driveTrain.getRightEncoder()));
   }
 
@@ -83,13 +83,13 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     //--------Drivetrain Button Bindings--------
-    //When right trigger is held, drive straight
+    //When right trigger on main controller is held, drive straight
     new JoystickButton(DriveController, 8).whileHeld(new DriveStraightCommand(driveTrain, navigation, ()->DriveController.getY()));
 
     //--------Intake and Indexer Button Bindings--------
-    //When X is held, Intake and Horizontal Indexer in (Synchronized)
+    //When Y is held, Intake and Horizontal Indexer out (Synchronized)
     new JoystickButton(SecondaryJoystick, 4).whileHeld(new SimpleOuttakeCommand(this.intake).alongWith(new HorizontalIndexerOuttakeCommand(this.horizontalIndexer)));
-    //When Y held, Intake and Horizontal Indexer out (Synchronized)
+    //When X held, Intake and Horizontal Indexer in (Synchronized)
     new JoystickButton(SecondaryJoystick, 1).whileHeld(new SimpleIntakeCommand(this.intake).alongWith(new HorizontalIndexerIntakeCommand(this.horizontalIndexer)));
     //When A is held, Intake Out
     new JoystickButton(SecondaryJoystick, 2).whileHeld(new SimpleOuttakeCommand(this.intake));
@@ -99,9 +99,6 @@ public class RobotContainer {
     new JoystickButton(SecondaryJoystick, 8).whileHeld(new VerticalIndexerUpCommand(this.verticalIndexer));
     //When Left Trigger is held, Vertical Indexer down
     new JoystickButton(SecondaryJoystick, 7).whileHeld(new VerticalIndexerDownCommand(this.verticalIndexer));
-    
-    
-
 
     //--------Turret Button Bindings--------
     //When left dpad is held, Turret Clockwise
@@ -110,9 +107,6 @@ public class RobotContainer {
     new POVButton(SecondaryJoystick, 270).whileHeld(new SimpleTurretCCWCommand(this.turret));
     //When button 9 is pressed, zero the turret
     new JoystickButton(SecondaryJoystick, 9).whenPressed(new TurretToLimitCommand(this.turret));
-
-    //--------Shooting Button Bindings--------
-    //When button 8 (Right Trigger) is pressed, start constant shooting
   }
 
 
