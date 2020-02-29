@@ -32,7 +32,14 @@ public class PointTurretAtTargetCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double xAngle = (double)network.get("angles", "xAngle");
+    double xAngle;
+    try{
+     xAngle = (double)network.get("angles", "xAngle");
+    }
+    catch(NullPointerException e){
+      System.err.println("Angle not found in NetworkTables. Is the Pi Connected?");
+      xAngle = 4026;
+    }
     //This is sent if the target isn't seen
     if (xAngle == 4026) {
       turret.stop();
