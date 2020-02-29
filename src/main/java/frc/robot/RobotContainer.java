@@ -10,6 +10,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.commands.AutoShoot;
 import frc.robot.commands.HorizontalIndexerIntakeCommand;
 import frc.robot.commands.HorizontalIndexerOuttakeCommand;
 import frc.robot.commands.PidShootCommand;
@@ -98,7 +99,7 @@ public class RobotContainer {
     //When Left Trigger is held, Vertical Indexer down
     new JoystickButton(SecondaryJoystick, 7).whileHeld(new VerticalIndexerDownCommand(this.verticalIndexer));
     //When button 5 is pressed (Right Bumper), shoot at constant speed
-    new JoystickButton(SecondaryJoystick, 5).whileHeld(new PidShootCommand(this.shooter, 1, 1)); 
+    new JoystickButton(SecondaryJoystick, 6).whileHeld(new PidShootCommand(this.shooter, 1, 1)); 
     
     //--------Turret Button Bindings--------
     //When left dpad is held, Turret Clockwise
@@ -110,6 +111,7 @@ public class RobotContainer {
 
     //--------Shooting Button Bindings--------
     //When button 8 (Right Trigger) is pressed, start constant shooting
+    new JoystickButton(SecondaryJoystick, 5).whileHeld(new AutoShoot(shooter, verticalIndexer, horizontalIndexer, shooter.getMaxVelTop(), shooter.getMaxVelBot()));
   }
 
 

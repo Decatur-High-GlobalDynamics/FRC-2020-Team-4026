@@ -10,12 +10,13 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.Constants;
 import frc.robot.PidParameters;
 import frc.robot.TeamTalonSRX;
 
 public class ShooterSubsystem extends SubsystemBase {
-  private double maxTopRotationSpeed=30000, maxBottomRotationSpeed=30000;
+  private int maxTopRotationSpeed=35000, maxBottomRotationSpeed=35000;
   //Values for 80% (max power for shooting)
   private final TeamTalonSRX shooter_bottom;
   private final TeamTalonSRX shooter_top;
@@ -50,9 +51,14 @@ public class ShooterSubsystem extends SubsystemBase {
     shooterPowerBot = -Math.abs(SmartDashboard.getNumber("Subsystems.Shooter.shooterPowerBot", shooterPowerBot));
     SmartDashboard.putNumber("Subsystems.Shooter.shooterPowerBot", shooterPowerBot);
 
-    maxTopRotationSpeed = SmartDashboard.getNumber("Subsystems.Shooter.maxTopotationSpeed", maxTopRotationSpeed);
+    SmartDashboard.getNumber("Subsystem.shooter.maxRotationSpeedTop", maxTopRotationSpeed);
+    SmartDashboard.putNumber("Subsystem.Shooter.maxRotationSpeedTop", maxTopRotationSpeed);
+    SmartDashboard.getNumber("Subsystem.Shooter.maxRotationSpeedBot", maxBottomRotationSpeed);
+    SmartDashboard.putNumber("Subsystem.Shooter.maxRotaitonSpeedBot", maxBottomRotationSpeed);
+
+    maxTopRotationSpeed = (int) SmartDashboard.getNumber("Subsystems.Shooter.maxTopotationSpeed", maxTopRotationSpeed);
     SmartDashboard.putNumber("Subsystems.Shooter.maxTopotationSpeed", maxTopRotationSpeed);
-    maxBottomRotationSpeed = SmartDashboard.getNumber("Subsystems.Shooter.maxBottomotationSpeed", maxBottomRotationSpeed);
+    maxBottomRotationSpeed = (int) SmartDashboard.getNumber("Subsystems.Shooter.maxBottomotationSpeed", maxBottomRotationSpeed);
     SmartDashboard.putNumber("Subsystems.Shooter.maxBottomRotationSpeed", maxBottomRotationSpeed);
   }
 
@@ -79,12 +85,20 @@ public class ShooterSubsystem extends SubsystemBase {
     return shooter_bottom.getSelectedSensorVelocity();
   }
   public void setShooterVelTop(int speed){
+    speed = MathUtil.clamp(speed, 0, maxTopRotationSpeed);
     shooter_top.configureWithPidParameters(topPidParameters, 0);
     this.shooter_top.set(ControlMode.Velocity, speed);
   }
   public void setShooterVelBot(int speed){
+    speed = MathUtil.clamp(speed, 0, maxBottomRotationSpeed);
     shooter_bottom.configureWithPidParameters(botPidParameters, 0);
     this.shooter_bottom.set(ControlMode.Velocity, speed);
+  }
+  public int getMaxVelTop(){
+    return maxTopRotationSpeed;
+  }
+  public int getMaxVelBot(){
+    return maxBottomRotationSpeed;
   }
 
   public void setMotorVelocities(double topSpeedFraction, double botSpeedFraction) {
