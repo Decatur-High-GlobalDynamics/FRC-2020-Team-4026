@@ -102,7 +102,8 @@ public class RobotContainer {
     new JoystickButton(SecondaryJoystick, 7).whileHeld(new VerticalIndexerDownCommand(this.verticalIndexer));
     
     
-
+    //Shooter Binding (Temporary)
+    new POVButton(SecondaryJoystick, 0).whileHeld(new PidShootCommand(this.shooter,1,1));
 
     //--------Turret Button Bindings--------
     //When left dpad is held, Turret Clockwise
