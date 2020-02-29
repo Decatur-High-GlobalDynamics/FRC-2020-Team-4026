@@ -44,6 +44,9 @@ public class TurretSubsystem extends SubsystemBase {
   
   private final PidParameters pidParams = new PidParameters(0.35, 0.05, 0.1, 0, 0, 0.15, 10);
 
+  //Number of encoder ticks to go when rotating
+  private int rotationSpeed = 100;
+
   // Location (based on limitswitch = 0) of far clockwise range
   private long minEncoderRange = -7000;
 
@@ -148,6 +151,9 @@ public class TurretSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Subsystems.Turret.turretPosition-ticks", this.getTicks());
     SmartDashboard.putNumber("Subsystems.Turret.turretPosition-rads", this.getRadians());
 
+    SmartDashboard.getNumber("Subsystems.Turret.rotationSpeed", rotationSpeed);
+    SmartDashboard.putNumber("Subsystems.Turret.rotationSpeed", rotationSpeed);
+
     PidParameters previousPidParameters = pidParams.clone();
 
     pidParams.kF = SmartDashboard.getNumber("Subsystems.Turret.kF", pidParams.kF);
@@ -190,6 +196,13 @@ public class TurretSubsystem extends SubsystemBase {
     }
 
     turretMotor.set(ControlMode.PercentOutput, -power);
+  }
+
+  public void positionRotateCW(){
+    this.startRotatingToEncoderPosition(this.getTicks() - rotationSpeed);
+  }
+  public void positonRotateCCW(){
+    this.startRotatingToEncoderPosition(this.getTicks() + rotationSpeed);
   }
 
   public void goClockwise(){
@@ -252,6 +265,7 @@ public class TurretSubsystem extends SubsystemBase {
 
   public void startRotatingToEncoderPosition(long encoderPosition) {
     configureMotorWithPidParameters(pidParams);
+    encoderPosition = (long)MathUtil.clamp(encoderPosition, minEncoderRange, 0);
     turretMotor.set(ControlMode.Position, encoderPosition);
   }
 
