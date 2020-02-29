@@ -17,8 +17,6 @@ public class PointTurretAtTargetCommand extends CommandBase {
   NetworkIOSubsystem network;
   Timer cantSeeTimeout;
 
-  double oldXAngle = 0;
-
   /**
    * Creates a new PointTurretAtTarget Command.
    */
@@ -49,19 +47,9 @@ public class PointTurretAtTargetCommand extends CommandBase {
     if (xAngle == 4026) {
       if (cantSeeTimeout.get() > 2) {
         turret.stop();
-      } else {
-        xAngle = oldXAngle;
-        double xAngleInRads = xAngle * (Math.PI / 180);
-        double targetRads = turret.getRadians() - xAngleInRads;
-        if (turret.isRadsAllowed(targetRads)) {
-          turret.startRotatingToPosition(targetRads);
-        } else {
-          turret.stop();
-        }
       }
     } else {
       cantSeeTimeout.reset();
-      oldXAngle = xAngle;
       double xAngleInRads = xAngle * (Math.PI / 180);
       double targetRads = turret.getRadians() - xAngleInRads;
       if (turret.isRadsAllowed(targetRads)) {
