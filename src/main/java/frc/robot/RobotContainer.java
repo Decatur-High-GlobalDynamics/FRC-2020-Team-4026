@@ -18,7 +18,14 @@ import frc.robot.commands.SimpleOuttakeCommand;
 import frc.robot.commands.SimpleShootCommand;
 import frc.robot.commands.SimpleTurretCCWCommand;
 import frc.robot.commands.SimpleTurretCWCommand;
+<<<<<<< HEAD
 import frc.robot.commands.TurretToLimitCommand;
+=======
+import frc.robot.commands.StopTurretCommand;
+import frc.robot.commands.ConstantShootCommand;
+import frc.robot.commands.TurretToLimitCommand;
+import frc.robot.commands.TurretToPositionCommand;
+>>>>>>> 655cee56783900986b2ca229e03e018de1841c37
 import frc.robot.commands.VerticalIndexerDownCommand;
 import frc.robot.commands.VerticalIndexerUpCommand;
 import frc.robot.commands.UpdateNavigationCommand;
@@ -101,7 +108,12 @@ public class RobotContainer {
     new JoystickButton(SecondaryJoystick, 5).whileHeld(new PidShootCommand(this.shooter, 1, 1)); 
     
     
+<<<<<<< HEAD
 
+=======
+    //Shooter Binding (Temporary)
+    new POVButton(SecondaryJoystick, 0).whileHeld(new PidShootCommand(this.shooter,1,1));
+>>>>>>> 655cee56783900986b2ca229e03e018de1841c37
 
     //--------Turret Button Bindings--------
     //When left dpad is held, Turret Clockwise
