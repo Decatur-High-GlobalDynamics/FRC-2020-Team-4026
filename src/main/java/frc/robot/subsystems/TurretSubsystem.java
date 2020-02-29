@@ -82,7 +82,7 @@ public class TurretSubsystem extends SubsystemBase {
 
     // Check safety limits if turret is not running TurretToLimit calibration
     Command cmd = getCurrentCommand();
-    if (cmd instanceof TurretToLimit) {
+    if (cmd instanceof TurretToLimitCommand) {
       return true;
     }
 

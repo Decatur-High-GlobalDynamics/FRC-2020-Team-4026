@@ -33,8 +33,8 @@ public final class Constants {
 
     public static final int TurretCAN = 9;
 
-    public static final int IndexerHorizPWM = 8;
-    public static final int IndexerVertPWM = 9;
+    public static final int IndexerHorizCAN = 10;
+    public static final int IndexerVertCAN = 11;
 
     //These are TBD: They will be used as feedforward for pathfinding
     public static final double ks = 0;
@@ -56,7 +56,7 @@ public final class Constants {
     public static final double kRamseteZeta = 0.7;
 
     //Our gear ratio. TBD
-    public static final double kDriveGearRatio = 1;
+    public static final double kDriveGearRatio = 10.71;
 
     //Distance per encoder pulse
     public static final double kEncoderDistancePerPulse = (0.1524 * 2 * Math.PI) / (2048 * kDriveGearRatio);
