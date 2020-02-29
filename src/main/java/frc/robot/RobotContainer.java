@@ -77,10 +77,8 @@ public class RobotContainer {
     //Configure the default command to update our position based on all the stuff
     navigation.setDefaultCommand(new UpdateNavigationCommand(navigation, ()->driveTrain.getLeftEncoder(), ()->driveTrain.getRightEncoder()));
 
-    //Zero the turret ASAP
-    CommandScheduler.getInstance().schedule(new TurretToLimitCommand(turret));
-  }
 
+  }
   /**
    * Use this method to define your button->command mappings.  Buttons can be created by
    * instantiating a {@link GenericHID} or one of its subclasses ({@link
