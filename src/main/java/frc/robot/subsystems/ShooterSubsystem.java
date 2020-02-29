@@ -22,8 +22,8 @@ public class ShooterSubsystem extends SubsystemBase {
   /**
    * Creates a new ShooterSubsystem.
    */
-  private double shooterPowerTop = 0.8;
-  private double shooterPowerBot = 0.8;
+  private double shooterPowerTop = 0.95;
+  private double shooterPowerBot = 0.95;
 
   private PidParameters topPidParameters = new PidParameters(0.35,0.00015,0.1,0.029,0,1,10);
   private PidParameters botPidParameters = new PidParameters(0.119,0.0001,0.15,0.033,0,1,10);
