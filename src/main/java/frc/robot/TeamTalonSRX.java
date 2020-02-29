@@ -5,9 +5,6 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.PidParameters;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * A wrapper class for Motors that helps to consistently and easily perform the following functions:
  *   -Keep current and max speeds

@@ -15,7 +15,6 @@ public class TurretToPositionCommand extends CommandBase {
    * Creates a new TurretToPosition.
    */
   private final TurretSubsystem turret;
-  private double targetRad;
   private int targetPos;
   public TurretToPositionCommand(TurretSubsystem turret, int targetPos) {
     System.err.println("Creating TurretToPosition");
