@@ -8,6 +8,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
@@ -33,6 +34,8 @@ public class DriveTrainSubsystem extends SubsystemBase {
   public static double maxOutputSlow = .5;
   public static double maxOutputFast = 1;
   public double currentMaxPower = maxOutputSlow;
+
+  private boolean brakeMode = false;
 
 
   public DriveTrainSubsystem() {
@@ -122,5 +125,21 @@ public class DriveTrainSubsystem extends SubsystemBase {
   //sets it to half for controlability
   public void setSlowMode() {
     currentMaxPower = maxOutputSlow;
+  }
+
+  public void toggleBrakemode() {
+    if (brakeMode) {
+      leftDriveFalconMain.setNeutralMode(NeutralMode.Coast);
+      leftDriveFalconSub.setNeutralMode(NeutralMode.Coast);
+      rightDriveFalconMain.setNeutralMode(NeutralMode.Coast);
+      rightDriveFalconSub.setNeutralMode(NeutralMode.Coast);
+    }
+    if (!brakeMode) {
+      leftDriveFalconMain.setNeutralMode(NeutralMode.Brake);
+      leftDriveFalconSub.setNeutralMode(NeutralMode.Brake);
+      rightDriveFalconMain.setNeutralMode(NeutralMode.Brake);
+      rightDriveFalconSub.setNeutralMode(NeutralMode.Brake);
+    }
+    brakeMode = !brakeMode;
   }
 }
