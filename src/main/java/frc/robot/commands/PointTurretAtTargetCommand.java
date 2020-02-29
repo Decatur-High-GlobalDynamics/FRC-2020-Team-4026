@@ -7,6 +7,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.NetworkIOSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
@@ -14,6 +15,9 @@ import frc.robot.subsystems.TurretSubsystem;
 public class PointTurretAtTargetCommand extends CommandBase {
   TurretSubsystem turret;
   NetworkIOSubsystem network;
+  Timer cantSeeTimeout;
+
+  double oldXAngle = 0;
 
   /**
    * Creates a new PointTurretAtTarget Command.
@@ -27,6 +31,7 @@ public class PointTurretAtTargetCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    cantSeeTimeout.reset();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -42,8 +47,21 @@ public class PointTurretAtTargetCommand extends CommandBase {
     }
     //This is sent if the target isn't seen
     if (xAngle == 4026) {
-      turret.stop();
+      if (cantSeeTimeout.get() > 2) {
+        turret.stop();
+      } else {
+        xAngle = oldXAngle;
+        double xAngleInRads = xAngle * (Math.PI / 180);
+        double targetRads = turret.getRadians() - xAngleInRads;
+        if (turret.isRadsAllowed(targetRads)) {
+          turret.startRotatingToPosition(targetRads);
+        } else {
+          turret.stop();
+        }
+      }
     } else {
+      cantSeeTimeout.reset();
+      oldXAngle = xAngle;
       double xAngleInRads = xAngle * (Math.PI / 180);
       double targetRads = turret.getRadians() - xAngleInRads;
       if (turret.isRadsAllowed(targetRads)) {
