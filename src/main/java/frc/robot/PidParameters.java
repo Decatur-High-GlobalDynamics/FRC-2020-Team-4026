@@ -56,7 +56,7 @@ public class PidParameters {
     public void periodic(String prefix, TeamTalonSRX motor, int pidSlotIndex) {
         double now = TeamUtils.getCurrentTime();
 
-        if ( (now-lastTelemetryUpdate) > telemetryUpdateInterval_secs ) {
+        if ( (now-lastTelemetryUpdate) < telemetryUpdateInterval_secs ) {
             return;
         }
 
@@ -93,19 +93,19 @@ public class PidParameters {
         }
         SmartDashboard.putNumber(prefix + ".PID.kD", kD);
 
-        double new_kPeakOutput = SmartDashboard.getNumber("Subsystems.Turret.kPeakOutput", kPeakOutput);
+        double new_kPeakOutput = SmartDashboard.getNumber(prefix + ".kPeakOutput", kPeakOutput);
         if ( new_kPeakOutput != kPeakOutput ) {
             kPeakOutput = new_kPeakOutput;
             if (updateMotor) motor.configPeakOutputForward(kPeakOutput);
             if (updateMotor) motor.configPeakOutputReverse(-kPeakOutput);
         }
-        SmartDashboard.putNumber("Subsystems.Turret.kPeakOutput", kPeakOutput);
+        SmartDashboard.putNumber(prefix + ".kPeakOutput", kPeakOutput);
 
-        int new_errorTolerance = (int) SmartDashboard.getNumber("Subsystems.Turret.errorTolerance", errorTolerance);
+        int new_errorTolerance = (int) SmartDashboard.getNumber(prefix + ".errorTolerance", errorTolerance);
         if ( new_errorTolerance != errorTolerance ) {
             errorTolerance = new_errorTolerance;
             if (updateMotor) motor.configAllowableClosedloopError(pidSlotIndex, errorTolerance, 30);
         }
-        SmartDashboard.putNumber("Subsystems.Turret.errorTolerance", errorTolerance);
+        SmartDashboard.putNumber(prefix + ".errorTolerance", errorTolerance);
     }
 }

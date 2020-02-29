@@ -24,8 +24,8 @@ public final class Constants {
     public static final int RightDriveFalconMainCAN = 3;
     public static final int RightDriveFalconSubCAN =4;
 
-    public static final int TopShooterMotorCAN = 5;
-    public static final int BotShooterMotorCAN = 6;
+    public static final int TopShooterMotorCAN = 6;
+    public static final int BotShooterMotorCAN = 5;
     
     public static final int ClimbCAN = 7;
 

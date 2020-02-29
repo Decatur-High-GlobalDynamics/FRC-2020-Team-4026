@@ -23,14 +23,8 @@ public class TeamTalonSRX extends WPI_TalonSRX {
 
     protected int numEStops=0;
 
-    protected long previousMeasurementTime_ms;
-    protected long previousEncoderValue = Long.MAX_VALUE;
+    protected int maxSpeed = Integer.MAX_VALUE;
 
-    protected long currentEncoderChange_perLoop = 0;
-    protected long maxEncoderChange_perLoop = Long.MAX_VALUE;
-
-    protected long currentEncoderChange_perSec = 0;
-    protected long maxEncoderChange_perSec = Long.MAX_VALUE;
 
     protected PidParameters pidProfiles[] = new PidParameters[4];
 
@@ -75,29 +69,18 @@ public class TeamTalonSRX extends WPI_TalonSRX {
     public void periodic() {
         double now = TeamUtils.getCurrentTime();
 
-        if ( (now-lastTelemetryUpdate) > telemetryUpdateInterval_secs ) {
+        if ( (now-lastTelemetryUpdate) < telemetryUpdateInterval_secs ) {
             return;
         }
 
         lastTelemetryUpdate = now;
 
-        long currentMeasurementTime_ms = System.currentTimeMillis();
         long currentEncoderValue = getCurrentEncoderValue();
+        int currentSpeed = getSelectedSensorVelocity();
 
-        // Skip the delta math the first time through the loop.
-        if ( previousEncoderValue != Long.MAX_VALUE ) {
-            double deltaTime = 1.0*(currentMeasurementTime_ms - previousMeasurementTime_ms)/1000;
-            currentEncoderChange_perLoop = currentEncoderValue - previousEncoderValue;
-            currentEncoderChange_perSec = Math.round(currentEncoderChange_perLoop/deltaTime);
+        if ( maxSpeed == Integer.MAX_VALUE || currentSpeed>maxSpeed)
+            maxSpeed = currentSpeed;
 
-            if ( maxEncoderChange_perSec ==Long.MAX_VALUE || currentEncoderChange_perSec > maxEncoderChange_perSec)
-                maxEncoderChange_perSec = currentEncoderChange_perSec;
-            if ( maxEncoderChange_perLoop ==Long.MAX_VALUE || currentEncoderChange_perLoop > maxEncoderChange_perLoop)
-                maxEncoderChange_perLoop = currentEncoderChange_perLoop;
-        }
-        previousMeasurementTime_ms = currentMeasurementTime_ms;
-        previousEncoderValue = currentEncoderValue;
-        previousEncoderValue = currentEncoderValue;
 
         if ( isRunningPidControlMode() ) {
             SmartDashboard.putBoolean(smartDashboardPrefix+".PID", true);
@@ -105,15 +88,22 @@ public class TeamTalonSRX extends WPI_TalonSRX {
             SmartDashboard.putBoolean(smartDashboardPrefix+".PID", false);
         }
 
+        if ( getControlMode() == ControlMode.Velocity ) {
+            double currentError = getClosedLoopTarget() - currentSpeed;
+            SmartDashboard.putNumber(smartDashboardPrefix + ".VelocityError", currentError);
+        } else {
+            SmartDashboard.putNumber(smartDashboardPrefix + ".VelocityError", 0);
+        }
+
         SmartDashboard.putNumber(smartDashboardPrefix + ".PowerPercent", getMotorOutputPercent());
 
         SmartDashboard.putNumber(smartDashboardPrefix + ".Position-ticks", currentEncoderValue);
-        SmartDashboard.putNumber(smartDashboardPrefix + ".Position-changePerLoop", currentEncoderChange_perLoop);
-        SmartDashboard.putNumber(smartDashboardPrefix + ".Position-changePerSecond", currentEncoderChange_perSec);
-        SmartDashboard.putNumber(smartDashboardPrefix + ".Position-changePer100ms", currentEncoderChange_perSec/10);
-        SmartDashboard.putNumber(smartDashboardPrefix + ".Position-maxChangePerLoop", maxEncoderChange_perLoop);
-        SmartDashboard.putNumber(smartDashboardPrefix + ".Position-maxChangePerSecond", maxEncoderChange_perSec);
-        SmartDashboard.putNumber(smartDashboardPrefix + ".Position-maxChangePer100ms", maxEncoderChange_perSec/10);
+        
+        SmartDashboard.putNumber(smartDashboardPrefix + ".speedPer100ms", currentSpeed);
+        SmartDashboard.putNumber(smartDashboardPrefix + ".speedPerSec", currentSpeed * 10);
+
+        SmartDashboard.putNumber(smartDashboardPrefix + ".maxSpeedPer100ms", maxSpeed);
+        SmartDashboard.putNumber(smartDashboardPrefix + ".maxSpeedPerSec", maxSpeed * 10);
 
         SmartDashboard.putString(smartDashboardPrefix + "Mode", getControlMode().toString());
         SmartDashboard.putNumber(smartDashboardPrefix + "EmergencyStops", numEStops);

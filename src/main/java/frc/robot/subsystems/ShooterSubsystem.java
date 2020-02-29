@@ -15,21 +15,26 @@ import frc.robot.PidParameters;
 import frc.robot.TeamTalonSRX;
 
 public class ShooterSubsystem extends SubsystemBase {
-  private double maxTopRotationSpeed=10000, maxBottomRotationSpeed=10000;
+  private double maxTopRotationSpeed=30000, maxBottomRotationSpeed=30000;
+  //Values for 80% (max power for shooting)
   private final TeamTalonSRX shooter_bottom;
   private final TeamTalonSRX shooter_top;
   /**
    * Creates a new ShooterSubsystem.
    */
-  private double shooterPowerTop = -0.8;
-  private double shooterPowerBot = -0.8;
+  private double shooterPowerTop = 0.8;
+  private double shooterPowerBot = 0.8;
 
-  private PidParameters topPidParameters = new PidParameters(0,0,0,0,0,1,10);
-  private PidParameters botPidParameters = new PidParameters(0,0,0,0,0,1,10);
+  private PidParameters topPidParameters = new PidParameters(0.35,0.00015,0.1,0.029,0,1,10);
+  private PidParameters botPidParameters = new PidParameters(0.119,0.0001,0.15,0.033,0,1,10);
 
   public ShooterSubsystem() {
     shooter_bottom = new TeamTalonSRX("Subsystems.Shooter.Bottom", Constants.BotShooterMotorCAN);
     shooter_top = new TeamTalonSRX("Subsystems.Shooter.Top", Constants.TopShooterMotorCAN);
+    shooter_top.setSensorPhase(true);
+    shooter_bottom.setSensorPhase(true);
+    shooter_bottom.setInverted(true);
+    shooter_top.setInverted(false);
   }
 
   @Override
@@ -52,10 +57,10 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void setBottomMotor(double speed){
-    this.shooter_bottom.set(speed);
+    this.shooter_bottom.set(Math.abs(speed));
   }
   public void setTopMotor(double speed){
-    this.shooter_top.set(speed);
+    this.shooter_top.set(Math.abs(speed));
   }
   public double getShooterPowerTop(){
     return shooterPowerTop;
@@ -74,17 +79,16 @@ public class ShooterSubsystem extends SubsystemBase {
     return shooter_bottom.getSelectedSensorVelocity();
   }
   public void setShooterVelTop(int speed){
+    shooter_top.configureWithPidParameters(topPidParameters, 0);
     this.shooter_top.set(ControlMode.Velocity, speed);
   }
   public void setShooterVelBot(int speed){
-    this.shooter_top.set(ControlMode.Velocity, speed);
+    shooter_bottom.configureWithPidParameters(botPidParameters, 0);
+    this.shooter_bottom.set(ControlMode.Velocity, speed);
   }
 
   public void setMotorVelocities(double topSpeedFraction, double botSpeedFraction) {
-    shooter_top.configureWithPidParameters(topPidParameters, 0);
-    shooter_bottom.configureWithPidParameters(botPidParameters, 0);
-
-    shooter_top.set(ControlMode.Velocity, topSpeedFraction*maxTopRotationSpeed);
-    shooter_bottom.set(ControlMode.Velocity, botSpeedFraction*maxBottomRotationSpeed);
+    setShooterVelTop((int) (topSpeedFraction * maxTopRotationSpeed));
+    setShooterVelBot((int) (botSpeedFraction * maxBottomRotationSpeed));
   }
 }

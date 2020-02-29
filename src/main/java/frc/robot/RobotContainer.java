@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.HorizontalIndexerIntakeCommand;
 import frc.robot.commands.HorizontalIndexerOuttakeCommand;
+import frc.robot.commands.PidShootCommand;
 import frc.robot.commands.SimpleIntakeCommand;
 import frc.robot.commands.SimpleOuttakeCommand;
 import frc.robot.commands.SimpleShootCommand;
@@ -100,9 +101,10 @@ public class RobotContainer {
     //When Y is held, Indexer down
     new JoystickButton(SecondaryJoystick, 3).whileHeld(new VerticalIndexerDownCommand(this.verticalIndexer)); 
     //When left d-pad is held, Horizontal Indexer in
-    new JoystickButton(SecondaryJoystick, 1).whileHeld(new HorizontalIndexerIntakeCommand(this.horizontalIndexer));
+    //new JoystickButton(SecondaryJoystick, 1).whileHeld(new HorizontalIndexerIntakeCommand(this.horizontalIndexer));
+    new JoystickButton(SecondaryJoystick, 1).whileHeld(new PidShootCommand(this.shooter, 1, 1)); 
     //When left d-pad held, Intake
-    new JoystickButton(SecondaryJoystick, 1).whileHeld(new FindShooterVelocity(this.shooter, 0.8));
+    //new JoystickButton(SecondaryJoystick, 1).whenPressed(new FindShooterVelocity(this.shooter, 0.1));
     new POVButton(SecondaryJoystick, 90).whileHeld(new HorizontalIndexerIntakeCommand(this.horizontalIndexer));
     //When right d-pad is held, Horizontal Indexer out
     new POVButton(SecondaryJoystick, 270).whileHeld(new HorizontalIndexerOuttakeCommand(this.horizontalIndexer));

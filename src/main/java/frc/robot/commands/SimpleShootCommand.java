@@ -37,7 +37,7 @@ public class SimpleShootCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooter.setBottomMotor(-this.bottomThrottle.getAsDouble());
+    shooter.setBottomMotor(this.bottomThrottle.getAsDouble());
     shooter.setTopMotor(this.topThrottle.getAsDouble());
   }
 
