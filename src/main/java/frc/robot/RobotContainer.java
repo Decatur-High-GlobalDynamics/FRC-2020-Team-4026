@@ -10,6 +10,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.commands.ConstantShootCommand;
 import frc.robot.commands.HorizontalIndexerIntakeCommand;
 import frc.robot.commands.HorizontalIndexerOuttakeCommand;
 import frc.robot.commands.PidShootCommand;
@@ -110,6 +111,7 @@ public class RobotContainer {
 
     //--------Shooting Button Bindings--------
     //When button 8 (Right Trigger) is pressed, start constant shooting
+    new POVButton(SecondaryJoystick,0).whileHeld(new ConstantShootCommand(this.shooter));
   }
 
 
