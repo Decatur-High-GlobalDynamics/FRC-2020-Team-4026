@@ -21,7 +21,7 @@ public class PointTurretAtTargetCommand extends CommandBase {
   public PointTurretAtTargetCommand(TurretSubsystem turret, NetworkIOSubsystem network) {
     this.turret = turret;
     this.network = network;
-    addRequirements(turret);
+    addRequirements(turret,network);
   }
 
   // Called when the command is initially scheduled.
