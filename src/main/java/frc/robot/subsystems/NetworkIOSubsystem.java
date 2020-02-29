@@ -7,8 +7,6 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -25,6 +23,7 @@ public class NetworkIOSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    
   }
 
   //This is a function to send data down network table.

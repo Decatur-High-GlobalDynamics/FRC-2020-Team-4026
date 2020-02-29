@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.Constants;
 import frc.robot.PidParameters;
-import frc.robot.commands.TurretToLimit;
+import frc.robot.commands.TurretToLimitCommand;
 
 public class TurretSubsystem extends SubsystemBase {
   /**
@@ -93,7 +93,7 @@ public class TurretSubsystem extends SubsystemBase {
 
     // Check safety limits if turret is not running TurretToLimit calibration
     Command cmd = getCurrentCommand();
-    if (cmd instanceof TurretToLimit) {
+    if (cmd instanceof TurretToLimitCommand) {
       return true;
     }
 
