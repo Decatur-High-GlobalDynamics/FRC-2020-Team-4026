@@ -179,7 +179,7 @@ public class TurretSubsystem extends SubsystemBase {
       SmartDashboard.putNumber("Subsystems.Turret.targetPosition", 0);
       SmartDashboard.putNumber("Subsystems.Turret.error", 0);
     }
-    if(!checkCalibration()){
+    if(!hasBeenCalibrated && !(this.getCurrentCommand() instanceof TurretToLimitCommand)){
       new TurretToLimitCommand(this).schedule();
     }
   }
