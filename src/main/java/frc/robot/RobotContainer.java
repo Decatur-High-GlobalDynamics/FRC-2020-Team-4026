@@ -26,6 +26,7 @@ import frc.robot.commands.VerticalIndexerUpCommand;
 import frc.robot.commands.UpdateNavigationCommand;
 import frc.robot.commands.drivingCommands.DriveStraightCommand;
 import frc.robot.commands.drivingCommands.TankDriveCommand;
+import frc.robot.commands.drivingCommands.ToggleBrakeCommand;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.NavigationSubsystem;
@@ -89,6 +90,8 @@ public class RobotContainer {
     //--------Drivetrain Button Bindings--------
     //When right trigger is held, drive straight
     new JoystickButton(DriveController, 8).whileHeld(new DriveStraightCommand(driveTrain, navigation, ()->DriveController.getY()));
+    //When left bumper is pressed, toggle brake mode
+    new JoystickButton(DriveController, 5).whenPressed(new ToggleBrakeCommand(driveTrain));
 
     //--------Intake and Indexer Button Bindings--------
     //When X is held, Intake and Horizontal Indexer in (Synchronized)
