@@ -15,18 +15,21 @@ import frc.robot.Utils;
 
 public class DriveEncoders extends CommandBase {
 
-  public DriveTrainSubsystem drive; 
-  public Timer driveTime;
+  private DriveTrainSubsystem drive; 
+  private Timer driveTime;
 
   private int speed;
   private int userInches;
+  private int initialLeftEncoderValue;
+  private int initialRightEncoderValue;
   /**
    * Creates a new DriveEncoders.
    */
-  public DriveEncoders(int userInches, int speed) {
+  public DriveEncoders(int userInches, int speed, DriveTrainSubsystem drive) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.userInches = userInches;
     this.speed = speed;
+    this.drive = drive;
     addRequirements(drive);
   }
 
@@ -34,6 +37,8 @@ public class DriveEncoders extends CommandBase {
   @Override
   public void initialize() {
     driveTime.start();
+    initialRightEncoderValue = drive.getRightEncoder();
+    initialLeftEncoderValue = drive.getRightEncoder();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -49,7 +54,6 @@ public class DriveEncoders extends CommandBase {
     if(interrupted || driveTime.hasElapsed(userInches*Constants.inchesToMeters*4))
       System.err.println("Auto interrupted!");
     if (!interrupted) {
-      drive.resetEncoders();
       driveTime.stop();
       driveTime.reset();
     }
@@ -58,7 +62,7 @@ public class DriveEncoders extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (Utils.checkTolerance(drive.getRightEncoder()*Constants.kEncoderDistancePerPulse, userInches, Constants.driveEpsilon*Constants.kEncoderDistancePerPulse) && Utils.checkTolerance(drive.getLeftEncoder()*Constants.kEncoderDistancePerPulse, userInches, Constants.kEncoderDistancePerPulse*Constants.driveEpsilon)){
+    if (Utils.checkTolerance((drive.getRightEncoder()-initialRightEncoderValue)*Constants.kEncoderDistancePerPulse, userInches, Constants.driveEpsilon*Constants.kEncoderDistancePerPulse) && Utils.checkTolerance((drive.getLeftEncoder()-initialLeftEncoderValue)*Constants.kEncoderDistancePerPulse, userInches, Constants.kEncoderDistancePerPulse*Constants.driveEpsilon)){
       return true;
     } else {
       return false;
