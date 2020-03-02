@@ -8,18 +8,21 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class ClimberSubsystem extends SubsystemBase {
 
-  private final WPI_TalonSRX climber;
+  private final WPI_VictorSPX leftClimber;
+  private final WPI_TalonSRX rightClimber;
   /**
    * Creates a new ClimberSubsystem.
    */
   public ClimberSubsystem() {
-    climber = new WPI_TalonSRX(Constants.ClimbCAN);
+    leftClimber = new WPI_VictorSPX(Constants.LeftClimbCAN);
+    rightClimber = new WPI_TalonSRX(Constants.RightClimbCAN);
 
   }
 
@@ -28,6 +31,12 @@ public class ClimberSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
   }
   public void stop(){
-    climber.set(0);
+    leftClimber.set(0);
+    rightClimber.set(0);
+  }
+
+  public void setClimbers(double power){
+    leftClimber.set(power);
+    rightClimber.set(power);
   }
 }
