@@ -27,7 +27,8 @@ public final class Constants {
     public static final int TopShooterMotorCAN = 5;
     public static final int BotShooterMotorCAN = 6;
     
-    public static final int ClimbCAN = 7;
+    public static final int LeftClimbCAN = 7;
+    public static final int RightClimbCAN = 12;
 
     public static final int IntakeCAN = 8;
 
