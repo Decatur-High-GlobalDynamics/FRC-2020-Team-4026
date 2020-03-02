@@ -142,4 +142,10 @@ public class DriveTrainSubsystem extends SubsystemBase {
     }
     brakeMode = !brakeMode;
   }
+  public void resetEncoders(){
+    leftDriveFalconMain.getSensorCollection().setIntegratedSensorPosition(0, 0);
+    leftDriveFalconSub.getSensorCollection().setIntegratedSensorPosition(0, 0);
+    rightDriveFalconMain.getSensorCollection().setIntegratedSensorPosition(0, 0);
+    rightDriveFalconSub.getSensorCollection().setIntegratedSensorPosition(0, 0);
+  }
 }
