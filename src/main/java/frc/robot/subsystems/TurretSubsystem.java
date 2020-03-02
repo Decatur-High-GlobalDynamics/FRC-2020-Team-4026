@@ -73,6 +73,8 @@ public class TurretSubsystem extends SubsystemBase {
     turretMotor.configForwardSoftLimitEnable(false);
 
     turretMotor.setNeutralMode(NeutralMode.Brake);
+
+
   }
   
   private void configureMotorWithPidParameters(PidParameters _pidParams) {
@@ -98,6 +100,7 @@ public class TurretSubsystem extends SubsystemBase {
     }
 
     if ( !hasBeenCalibrated ) {
+      System.err.println("Turret has not been calibrated! Press home on controller 2!");
       return false;
     }
 
@@ -176,6 +179,9 @@ public class TurretSubsystem extends SubsystemBase {
       SmartDashboard.putNumber("Subsystems.Turret.targetPosition", 0);
       SmartDashboard.putNumber("Subsystems.Turret.error", 0);
     }
+    if(!hasBeenCalibrated && !(this.getCurrentCommand() instanceof TurretToLimitCommand)){
+      new TurretToLimitCommand(this).schedule();
+    }
   }
  
   public void goClockwise(double power){
@@ -216,6 +222,9 @@ public class TurretSubsystem extends SubsystemBase {
 
   public void markAsCalibrated() {
     hasBeenCalibrated=true;
+  }
+  public boolean checkCalibration(){
+    return hasBeenCalibrated;
   }
 
   public double getSpeed(){
