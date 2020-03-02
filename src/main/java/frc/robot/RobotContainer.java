@@ -80,13 +80,10 @@ public class RobotContainer {
 
     //Configure the default command to update our position based on all the stuff
     navigation.setDefaultCommand(new UpdateNavigationCommand(navigation, ()->driveTrain.getLeftEncoder(), ()->driveTrain.getRightEncoder()));
-<<<<<<< HEAD
     
     //Configure climber to respond to right joystick by default
     climber.setDefaultCommand(new SimpleClimberControlCommand(climber, ()->SecondaryJoystick.getThrottle()));
-  }
-=======
->>>>>>> develop
+  
 
 
   }
