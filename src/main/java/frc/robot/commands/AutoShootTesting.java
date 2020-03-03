@@ -7,13 +7,14 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.HorizontalIndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VerticalIndexerSubsystem;
 
-public class AutoShoot extends CommandBase {
+public class AutoShootTesting extends CommandBase {
   /**
    * Creates a new AutoShoot.
    */
@@ -21,16 +22,15 @@ public class AutoShoot extends CommandBase {
   private final VerticalIndexerSubsystem verticalIndexer;
   private final HorizontalIndexerSubsystem horizontalIndexer;
   private final IntakeSubsystem intake;
-  private final int targetSpeedTop;
-  private final int targetSpeedBot;
+  private int targetSpeedTop;
+  private int targetSpeedBot;
 
-  public AutoShoot(ShooterSubsystem shooter, VerticalIndexerSubsystem verticalIndexer, HorizontalIndexerSubsystem horizontalIndexer, IntakeSubsystem intake, int targetSpeedTop, int targetSpeedBot) {
+  public AutoShootTesting(ShooterSubsystem shooter, VerticalIndexerSubsystem verticalIndexer, HorizontalIndexerSubsystem horizontalIndexer, IntakeSubsystem intake) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.shooter = shooter;
     this.verticalIndexer = verticalIndexer;
     this.horizontalIndexer = horizontalIndexer;
-    this.targetSpeedTop = targetSpeedTop;
-    this.targetSpeedBot = targetSpeedBot;
+    
     this.intake = intake;
     addRequirements(shooter);
     addRequirements(verticalIndexer);
@@ -43,6 +43,8 @@ public class AutoShoot extends CommandBase {
   public void initialize() {
     //In the future, get speeds from the lookup table based on vision
     //Also, potentially rotate turret
+    targetSpeedBot = shooter.getTargetSpeedBot();
+    targetSpeedTop = (int) (targetSpeedBot * (2.5 / 6.5));
     shooter.setShooterVelBot(targetSpeedBot);
     shooter.setShooterVelTop(targetSpeedTop);
   }
@@ -58,6 +60,8 @@ public class AutoShoot extends CommandBase {
       horizontalIndexer.stop();
       verticalIndexer.stop();
     }
+    SmartDashboard.putNumber("Commands.AutoShootTestingCommand.targetSpeedTop", targetSpeedTop);
+    SmartDashboard.putNumber("Commands.AutoShootTestingCommand.targetSpeedBot", targetSpeedBot);
   }
 
   // Called once the command ends or is interrupted.

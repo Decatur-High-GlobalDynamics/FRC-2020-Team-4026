@@ -61,7 +61,6 @@ public class TurretSubsystem extends SubsystemBase {
 
     turretMotor.setNeutralMode(NeutralMode.Brake);
     turretMotor.setInverted(motorInvert);
-    turretMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 20);
     turretMotor.setSensorPhase(sensorPhase);
     turretMotor.configNominalOutputForward(MinPowerToMove);
     turretMotor.configNominalOutputReverse(-MinPowerToMove);

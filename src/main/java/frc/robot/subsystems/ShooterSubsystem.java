@@ -16,7 +16,10 @@ import frc.robot.PidParameters;
 import frc.robot.TeamTalonSRX;
 
 public class ShooterSubsystem extends SubsystemBase {
-  private int maxTopRotationSpeed=35000, maxBottomRotationSpeed=35000;
+  private int maxRotationSpeedBot=38000;
+  private int maxRotationSpeedTop=28000;
+  //private int targetSpeedTop = 10000;
+  private int targetSpeedBot = 10000;
   //Values for 80% (max power for shooting)
   private final TeamTalonSRX shooter_bottom;
   private final TeamTalonSRX shooter_top;
@@ -26,8 +29,8 @@ public class ShooterSubsystem extends SubsystemBase {
   private double shooterPowerTop = 0.95;
   private double shooterPowerBot = 0.95;
 
-  private PidParameters topPidParameters = new PidParameters(0.35,0.00015,0.1,0.029,0,1,10);
-  private PidParameters botPidParameters = new PidParameters(0.119,0.0001,0.15,0.033,0,1,10);
+  private PidParameters topPidParameters = new PidParameters(0.3,0.00015,0.1,0.031,0,1,10);
+  private PidParameters botPidParameters = new PidParameters(0.3,0.0001,0.1,0.026,0,1,10);
 
   public ShooterSubsystem() {
     shooter_bottom = new TeamTalonSRX("Subsystems.Shooter.Bottom", Constants.BotShooterMotorCAN);
@@ -51,15 +54,20 @@ public class ShooterSubsystem extends SubsystemBase {
     shooterPowerBot = -Math.abs(SmartDashboard.getNumber("Subsystems.Shooter.shooterPowerBot", shooterPowerBot));
     SmartDashboard.putNumber("Subsystems.Shooter.shooterPowerBot", shooterPowerBot);
 
-    SmartDashboard.getNumber("Subsystem.shooter.maxRotationSpeedTop", maxTopRotationSpeed);
-    SmartDashboard.putNumber("Subsystem.Shooter.maxRotationSpeedTop", maxTopRotationSpeed);
-    SmartDashboard.getNumber("Subsystem.Shooter.maxRotationSpeedBot", maxBottomRotationSpeed);
-    SmartDashboard.putNumber("Subsystem.Shooter.maxRotaitonSpeedBot", maxBottomRotationSpeed);
+    SmartDashboard.putNumber("Subsystems.Shooter.maxRotationSpeedTop", maxRotationSpeedTop);
+    SmartDashboard.putNumber("Subsystems.Shooter.maxRotaitonSpeedBot", maxRotationSpeedBot);
 
-    maxTopRotationSpeed = (int) SmartDashboard.getNumber("Subsystems.Shooter.maxTopotationSpeed", maxTopRotationSpeed);
-    SmartDashboard.putNumber("Subsystems.Shooter.maxTopotationSpeed", maxTopRotationSpeed);
-    maxBottomRotationSpeed = (int) SmartDashboard.getNumber("Subsystems.Shooter.maxBottomotationSpeed", maxBottomRotationSpeed);
-    SmartDashboard.putNumber("Subsystems.Shooter.maxBottomRotationSpeed", maxBottomRotationSpeed);
+    /*
+    targetSpeedTop = (int) SmartDashboard.getNumber("Subsystems.Shooter.targetSpeedTop", targetSpeedTop);
+    SmartDashboard.putNumber("Subsystems.Shooter.targetSpeedTop", targetSpeedTop);
+    */
+    targetSpeedBot = (int) SmartDashboard.getNumber("Subsystems.Shooter.targetSpeedBot", targetSpeedBot);
+    SmartDashboard.putNumber("Subsystems.Shooter.targetSpeedBot", targetSpeedBot);
+
+    SmartDashboard.putBoolean("Subsystems.Shooter.isShooterReady", this.isShooterReady());
+  }
+  public boolean isShooterReady(){
+    return Math.abs(shooter_top.getVelocityError()) <= 600.0 && Math.abs(shooter_bottom.getVelocityError()) <= 300.0;
   }
 
   public void setBottomMotor(double speed){
@@ -85,24 +93,34 @@ public class ShooterSubsystem extends SubsystemBase {
     return shooter_bottom.getSelectedSensorVelocity();
   }
   public void setShooterVelTop(int speed){
-    speed = MathUtil.clamp(speed, 0, maxTopRotationSpeed);
+    speed = (int) MathUtil.clamp(speed, 0, maxRotationSpeedTop);
     shooter_top.configureWithPidParameters(topPidParameters, 0);
     this.shooter_top.set(ControlMode.Velocity, speed);
   }
   public void setShooterVelBot(int speed){
-    speed = MathUtil.clamp(speed, 0, maxBottomRotationSpeed);
+    speed = (int) MathUtil.clamp(speed, 0, maxRotationSpeedBot);
     shooter_bottom.configureWithPidParameters(botPidParameters, 0);
     this.shooter_bottom.set(ControlMode.Velocity, speed);
   }
   public int getMaxVelTop(){
-    return maxTopRotationSpeed;
+    return (int) maxRotationSpeedTop;
   }
   public int getMaxVelBot(){
-    return maxBottomRotationSpeed;
+    return (int) maxRotationSpeedBot;
   }
 
   public void setMotorVelocities(double topSpeedFraction, double botSpeedFraction) {
-    setShooterVelTop((int) (topSpeedFraction * maxTopRotationSpeed));
-    setShooterVelBot((int) (botSpeedFraction * maxBottomRotationSpeed));
+    setShooterVelTop((int) (topSpeedFraction * maxRotationSpeedTop));
+    setShooterVelBot((int) (botSpeedFraction * maxRotationSpeedBot));
+  }
+  
+  /*
+  public int getTargetSpeedTop(){
+    return targetSpeedTop;
+  }
+  */
+  
+  public int getTargetSpeedBot(){
+    return targetSpeedBot;
   }
 }
