@@ -16,11 +16,8 @@ import frc.robot.commands.AutoShootTesting;
 import frc.robot.commands.ConstantShootCommand;
 import frc.robot.commands.HorizontalIndexerIntakeCommand;
 import frc.robot.commands.HorizontalIndexerOuttakeCommand;
-<<<<<<< HEAD
 import frc.robot.commands.PidShootCommand;
-=======
 import frc.robot.commands.SimpleClimberControlCommand;
->>>>>>> develop
 import frc.robot.commands.SimpleIntakeCommand;
 import frc.robot.commands.SimpleOuttakeCommand;
 import frc.robot.commands.SimpleShootCommand;
