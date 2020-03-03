@@ -139,6 +139,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return new DriveEncoders(1.8288, 0.5, driveTrain).andThen(new AutoShoot(shooter, verticalIndexer, horizontalIndexer, shooter.getShooterPowerBot()).alongWith(new PointTurretAtTargetCommand(turret, network)));
+    return new DriveEncoders(1.8288, 0.5, driveTrain).andThen(new AutoShoot(shooter, verticalIndexer, horizontalIndexer, shooter.getShooterPowerBot() * 0.8).alongWith(new PointTurretAtTargetCommand(turret, network)));
   }
 }
