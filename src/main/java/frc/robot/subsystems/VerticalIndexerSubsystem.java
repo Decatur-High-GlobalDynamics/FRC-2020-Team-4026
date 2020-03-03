@@ -8,8 +8,8 @@
 package frc.robot.subsystems;
 
 
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -18,7 +18,7 @@ public class VerticalIndexerSubsystem extends SubsystemBase {
   /**
    * Creates a new VerticalIndexerSubsystem.
    */
-  private final VictorSP verticalIndexer;
+  private final WPI_TalonSRX verticalIndexer;
 
   private DigitalInput bottomSwitch = new DigitalInput(Constants.VerticalIndexer_BottomLimit_DIO);
   private DigitalInput middleSwitch = new DigitalInput(Constants.VerticalIndexer_MiddleLimit_DIO);
@@ -27,7 +27,7 @@ public class VerticalIndexerSubsystem extends SubsystemBase {
   private final double upSpeed = .5;
   private final double downSpeed = -.5;
   public VerticalIndexerSubsystem() {
-    verticalIndexer = new VictorSP(Constants.IndexerVertPWM);
+    verticalIndexer = new WPI_TalonSRX(Constants.IndexerVertCAN);
   }
 
   @Override
