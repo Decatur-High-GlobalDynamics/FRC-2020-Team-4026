@@ -7,23 +7,17 @@
 
 package frc.robot.commands;
 
-import java.util.function.DoubleSupplier;
-
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ShooterSubsystem;
 
-public class SimpleShootCommand extends CommandBase {
-  
+public class PidShootCommand extends CommandBase {
   ShooterSubsystem shooter;
-  DoubleSupplier topThrottle;
-  DoubleSupplier bottomThrottle;
   /**
    * Creates a new SimpleShootCommand.
    */
-  public SimpleShootCommand(ShooterSubsystem shooter, DoubleSupplier top, DoubleSupplier bottom) {
+  public PidShootCommand(ShooterSubsystem shooter, double topVelocityFraction, double bottomVelocityFraction) {
     this.shooter = shooter;
-    this.topThrottle = top;
-    this.bottomThrottle = bottom;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(shooter);
 
@@ -32,13 +26,18 @@ public class SimpleShootCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    double topShootingVelocityFraction = SmartDashboard.getNumber("Commands.PidShooter.topSpeedFraction", 1);
+    SmartDashboard.putNumber("Commands.PidShooter.topSpeedFraction", topShootingVelocityFraction);
+    double bottomShootingVelocityFraction = SmartDashboard.getNumber("Commands.PidShooter.BottomSpeedFraction", 1);
+    SmartDashboard.putNumber("Commands.PidShooter.BottomSpeedFraction", bottomShootingVelocityFraction);
+
+
+    shooter.setMotorVelocities(topShootingVelocityFraction, bottomShootingVelocityFraction);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooter.setBottomMotor(this.bottomThrottle.getAsDouble());
-    shooter.setTopMotor(this.topThrottle.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.

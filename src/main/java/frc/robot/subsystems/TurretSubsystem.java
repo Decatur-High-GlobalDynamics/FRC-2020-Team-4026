@@ -10,8 +10,6 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -20,18 +18,18 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.Constants;
 import frc.robot.PidParameters;
+import frc.robot.TeamTalonSRX;
 import frc.robot.commands.TurretToLimitCommand;
 
 public class TurretSubsystem extends SubsystemBase {
   /**
    * Creates a new TurretSubsystem.
    */
-  private final TalonSRX turretMotor;
+  private final TeamTalonSRX turretMotor;
   private final DigitalInput turretLimit;
 
   private final double baseTurnSpeed = .1;
   private double maxTurnSpeed = baseTurnSpeed;
-  private int numEStops = 0;
 
   private static final boolean sensorPhase = true;
   private static final boolean motorInvert = true;
@@ -56,18 +54,17 @@ public class TurretSubsystem extends SubsystemBase {
   private final double ticksAtPiOver2Rads = -2914;
 
   public TurretSubsystem() {
-    turretMotor = new WPI_TalonSRX(Constants.TurretCAN);
+    turretMotor = new TeamTalonSRX("Subsystems.Turret.motor", Constants.TurretCAN);
     turretMotor.configFactoryDefault();
 
     turretLimit = new DigitalInput(Constants.TurretLimitDIO);
 
     turretMotor.setNeutralMode(NeutralMode.Brake);
     turretMotor.setInverted(motorInvert);
-    turretMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 20);
     turretMotor.setSensorPhase(sensorPhase);
     turretMotor.configNominalOutputForward(MinPowerToMove);
     turretMotor.configNominalOutputReverse(-MinPowerToMove);
-    configureMotorWithPidParameters(pidParams);
+    turretMotor.configureWithPidParameters(pidParams, 0);
 
     turretMotor.configReverseSoftLimitEnable(false);
     turretMotor.configForwardSoftLimitEnable(false);
@@ -77,15 +74,6 @@ public class TurretSubsystem extends SubsystemBase {
 
   }
   
-  private void configureMotorWithPidParameters(PidParameters _pidParams) {
-    turretMotor.config_kF(0, _pidParams.kF);
-    turretMotor.config_kP(0, _pidParams.kP);
-    turretMotor.config_kI(0, _pidParams.kI);
-    turretMotor.config_kD(0, _pidParams.kD);
-    turretMotor.configPeakOutputForward(_pidParams.kPeakOutput);
-    turretMotor.configPeakOutputReverse(-_pidParams.kPeakOutput);
-    turretMotor.configAllowableClosedloopError(0, _pidParams.errorTolerance, 20);
-  }
 
 
   private boolean isPowerOkay(double powerToCheck) {
@@ -121,7 +109,7 @@ public class TurretSubsystem extends SubsystemBase {
     Command cmd = getCurrentCommand();
     
     if (!isPowerOkay(turretMotor.getMotorOutputPercent())) {
-        numEStops++;
+        turretMotor.noteEmergencyStop();
         stop();
         if (cmd != null) 
           cmd.cancel();
@@ -134,23 +122,22 @@ public class TurretSubsystem extends SubsystemBase {
     else
       SmartDashboard.putString("Subsystems.Turret.Command", cmd.toString());
  
-    maxTurnSpeed = SmartDashboard.getNumber("Subsystems.Turret.maxTurnSpeed", baseTurnSpeed);
+    maxTurnSpeed = SmartDashboard.getNumber("Subsystems.Turret.maxTurnSpeed", maxTurnSpeed);
     SmartDashboard.putNumber("Subsystems.Turret.maxTurnSpeed", maxTurnSpeed);
-    SmartDashboard.putNumber("Subsystems.Turret.motorPower", turretMotor.getMotorOutputPercent());
-    
+
     SmartDashboard.putBoolean("Subsystems.Turret.limitSwitch", this.getTurretLimitSwitch());
     SmartDashboard.putBoolean("Subsystems.Turret.hasBeenCalibrate", hasBeenCalibrated);
-
-    SmartDashboard.putNumber("Subsystems.Turret.numEStops", numEStops);
 
     minEncoderRange = (long) SmartDashboard.getNumber("Subsystems.Turret.minEncoderRange", minEncoderRange);
     SmartDashboard.putNumber("Subsystems.Turret.minEncoderRange", minEncoderRange);
 
     radPerPulse = SmartDashboard.getNumber("Subsystems.Turret.radPerPulse", radPerPulse);
     SmartDashboard.putNumber("Subsystems.Turret.radPerPulse", radPerPulse);
-    SmartDashboard.putNumber("Subsystems.Turret.turretPosition-ticks", this.getTicks());
     SmartDashboard.putNumber("Subsystems.Turret.turretPosition-rads", this.getRadians());
 
+    turretMotor.periodic();
+    // Display and Update PID parameters
+    pidParams.periodic("Subsystems.Turret", turretMotor, 0);
     PidParameters previousPidParameters = pidParams.clone();
 
     pidParams.kF = SmartDashboard.getNumber("Subsystems.Turret.kF", pidParams.kF);
@@ -167,7 +154,7 @@ public class TurretSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Subsystems.Turret.errorTolerance", pidParams.errorTolerance);
     // If the pidParameters have changed, load them into motor
     if ( ! previousPidParameters.equals(pidParams) ) {
-      configureMotorWithPidParameters(pidParams);
+      turretMotor.configureWithPidParameters(pidParams,0);
     }
 
     SmartDashboard.putNumber("Subsystems.Turret.sensorPosition", turretMotor.getSelectedSensorPosition(0));
@@ -191,7 +178,7 @@ public class TurretSubsystem extends SubsystemBase {
 
     turretMotor.configPeakOutputReverse(-power);
     if ( !isPowerOkay(-power) ) {
-      numEStops++;
+      turretMotor.noteEmergencyStop();
       return;
     }
 
@@ -209,7 +196,7 @@ public class TurretSubsystem extends SubsystemBase {
 
     turretMotor.configPeakOutputForward(power);
     if ( !isPowerOkay(power) ) {
-      numEStops++;
+      turretMotor.noteEmergencyStop();
       return;
     }
 
@@ -260,7 +247,7 @@ public class TurretSubsystem extends SubsystemBase {
   }
 
   public void startRotatingToEncoderPosition(long encoderPosition) {
-    configureMotorWithPidParameters(pidParams);
+    turretMotor.configureWithPidParameters(pidParams, 0);
     turretMotor.set(ControlMode.Position, encoderPosition);
   }
 
@@ -269,11 +256,9 @@ public class TurretSubsystem extends SubsystemBase {
     startRotatingToEncoderPosition(targetTicks);
   }
 
-  public void resetEncoder(){
-    turretMotor.getSensorCollection().setQuadraturePosition(0, 0);
-  }
+  public void resetEncoder(){ turretMotor.resetEncoder(); }
   public long getTicks(){
-    return turretMotor.getSensorCollection().getQuadraturePosition();
+    return turretMotor.getCurrentEncoderValue();
   }
   public double getRadians(){
     return convertToRad(getTicks());
