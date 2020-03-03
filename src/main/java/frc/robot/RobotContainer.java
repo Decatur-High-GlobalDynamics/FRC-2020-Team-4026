@@ -20,6 +20,7 @@ import frc.robot.commands.SimpleTurretCCWCommand;
 import frc.robot.commands.SimpleTurretCWCommand;
 import frc.robot.commands.StopTurretCommand;
 import frc.robot.commands.ConstantShootCommand;
+import frc.robot.commands.DriveEncoders;
 import frc.robot.commands.TurretToLimitCommand;
 import frc.robot.commands.TurretToPositionCommand;
 import frc.robot.commands.VerticalIndexerDownCommand;
@@ -32,6 +33,7 @@ import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.NavigationSubsystem;
+import frc.robot.subsystems.NetworkIOSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
 import frc.robot.subsystems.VerticalIndexerSubsystem;
@@ -59,6 +61,7 @@ public class RobotContainer {
   private final HorizontalIndexerSubsystem horizontalIndexer = new HorizontalIndexerSubsystem();
   private final NavigationSubsystem navigation = new NavigationSubsystem();
   private final ClimberSubsystem climber = new ClimberSubsystem();
+  private final NetworkIOSubsystem network = new NetworkIOSubsystem();
 
   public static final Joystick DriveController = new Joystick(0);
   public static final Joystick SecondaryJoystick = new Joystick(1);
@@ -136,7 +139,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // The robot will probably crash in autonomous
-    return null;
+    return new DriveEncoders(1.8288, 0.5, driveTrain).andThen(new AutoShoot(shooter, verticalIndexer, horizontalIndexer, shooter.getShooterPowerBot()).alongWith(new PointTurretAtTargetCommand(turret, network)));
   }
 }
