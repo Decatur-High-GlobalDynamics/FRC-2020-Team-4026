@@ -70,6 +70,8 @@ public class TurretSubsystem extends SubsystemBase {
     turretMotor.configForwardSoftLimitEnable(false);
 
     turretMotor.setNeutralMode(NeutralMode.Brake);
+
+
   }
   
 
@@ -86,6 +88,7 @@ public class TurretSubsystem extends SubsystemBase {
     }
 
     if ( !hasBeenCalibrated ) {
+      System.err.println("Turret has not been calibrated! Press home on controller 2!");
       return false;
     }
 
@@ -135,6 +138,37 @@ public class TurretSubsystem extends SubsystemBase {
     turretMotor.periodic();
     // Display and Update PID parameters
     pidParams.periodic("Subsystems.Turret", turretMotor, 0);
+    PidParameters previousPidParameters = pidParams.clone();
+
+    pidParams.kF = SmartDashboard.getNumber("Subsystems.Turret.kF", pidParams.kF);
+    SmartDashboard.putNumber("Subsystems.Turret.kF", pidParams.kF);
+    pidParams.kP = SmartDashboard.getNumber("Subsystems.Turret.kP", pidParams.kP);
+    SmartDashboard.putNumber("Subsystems.Turret.kP", pidParams.kP);
+    pidParams.kI = SmartDashboard.getNumber("Subsystems.Turret.kI", pidParams.kI);
+    SmartDashboard.putNumber("Subsystems.Turret.kI", pidParams.kI);
+    pidParams.kD = SmartDashboard.getNumber("Subsystems.Turret.kD", pidParams.kD);
+    SmartDashboard.putNumber("Subsystems.Turret.kD", pidParams.kD);
+    pidParams.kPeakOutput = SmartDashboard.getNumber("Subsystems.Turret.kPeakOutput", pidParams.kPeakOutput);
+    SmartDashboard.putNumber("Subsystems.Turret.kPeakOutput", pidParams.kPeakOutput);
+    pidParams.errorTolerance = (int) SmartDashboard.getNumber("Subsystems.Turret.errorTolerance", pidParams.errorTolerance);
+    SmartDashboard.putNumber("Subsystems.Turret.errorTolerance", pidParams.errorTolerance);
+    // If the pidParameters have changed, load them into motor
+    if ( ! previousPidParameters.equals(pidParams) ) {
+      turretMotor.configureWithPidParameters(pidParams,0);
+    }
+
+    SmartDashboard.putNumber("Subsystems.Turret.sensorPosition", turretMotor.getSelectedSensorPosition(0));
+    SmartDashboard.putString("Subsystems.Turret.Mode", turretMotor.getControlMode().toString());
+    if ( turretMotor.getControlMode() == ControlMode.Position) {
+      SmartDashboard.putNumber("Subsystems.Turret.targetPosition", turretMotor.getClosedLoopTarget(0));
+      SmartDashboard.putNumber("Subsystems.Turret.error", turretMotor.getClosedLoopError(0));
+    } else {
+      SmartDashboard.putNumber("Subsystems.Turret.targetPosition", 0);
+      SmartDashboard.putNumber("Subsystems.Turret.error", 0);
+    }
+    if(!hasBeenCalibrated && !(this.getCurrentCommand() instanceof TurretToLimitCommand)){
+      new TurretToLimitCommand(this).schedule();
+    }
   }
  
   public void goClockwise(double power){
@@ -175,6 +209,9 @@ public class TurretSubsystem extends SubsystemBase {
 
   public void markAsCalibrated() {
     hasBeenCalibrated=true;
+  }
+  public boolean checkCalibration(){
+    return hasBeenCalibrated;
   }
 
   public double getSpeed(){
