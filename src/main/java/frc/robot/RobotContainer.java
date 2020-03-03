@@ -10,6 +10,9 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.commands.AutoIntakeIndex;
+import frc.robot.commands.AutoShoot;
+import frc.robot.commands.AutoShootTesting;
 import frc.robot.commands.ConstantShootCommand;
 import frc.robot.commands.HorizontalIndexerIntakeCommand;
 import frc.robot.commands.HorizontalIndexerOuttakeCommand;
@@ -87,7 +90,7 @@ public class RobotContainer {
 
     //--------Intake and Indexer Button Bindings--------
     //When X is held, Intake and Horizontal Indexer in (Synchronized)
-    new JoystickButton(SecondaryJoystick, 4).whileHeld(new SimpleOuttakeCommand(this.intake).alongWith(new HorizontalIndexerOuttakeCommand(this.horizontalIndexer)));
+    //new JoystickButton(SecondaryJoystick, 4).whileHeld(new SimpleOuttakeCommand(this.intake).alongWith(new HorizontalIndexerOuttakeCommand(this.horizontalIndexer)));
     //When Y held, Intake and Horizontal Indexer out (Synchronized)
     new JoystickButton(SecondaryJoystick, 1).whileHeld(new SimpleIntakeCommand(this.intake).alongWith(new HorizontalIndexerIntakeCommand(this.horizontalIndexer)));
     //When A is held, Intake Out
@@ -99,7 +102,7 @@ public class RobotContainer {
     //When Left Trigger is held, Vertical Indexer down
     new JoystickButton(SecondaryJoystick, 7).whileHeld(new VerticalIndexerDownCommand(this.verticalIndexer));
     //When button 5 is pressed (Right Bumper), shoot at constant speed
-    new JoystickButton(SecondaryJoystick, 5).whileHeld(new PidShootCommand(this.shooter, 1, 1)); 
+    new JoystickButton(SecondaryJoystick, 6).whileHeld(new PidShootCommand(this.shooter, 1, 1)); 
     
     //--------Turret Button Bindings--------
     //When left dpad is held, Turret Clockwise
@@ -111,7 +114,9 @@ public class RobotContainer {
 
     //--------Shooting Button Bindings--------
     //When button 8 (Right Trigger) is pressed, start constant shooting
-    new POVButton(SecondaryJoystick,0).whileHeld(new ConstantShootCommand(this.shooter));
+    new JoystickButton(SecondaryJoystick, 5).whileHeld(new AutoShootTesting(shooter, verticalIndexer, horizontalIndexer, intake));
+    new POVButton(SecondaryJoystick, 180).whileHeld(new ConstantShootCommand(shooter));
+    new JoystickButton(SecondaryJoystick, 4).whileHeld(new AutoIntakeIndex(intake, horizontalIndexer, verticalIndexer));
   }
 
 

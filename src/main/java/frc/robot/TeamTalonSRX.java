@@ -1,6 +1,7 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.PidParameters;
@@ -12,7 +13,7 @@ import frc.robot.PidParameters;
  *   -Lots and lots of SmartDashboard information
  */
 public class TeamTalonSRX extends WPI_TalonSRX {
-    public static double telemetryUpdateInterval_secs = 0.1;
+    public static double telemetryUpdateInterval_secs = 0.0;
     private double lastTelemetryUpdate=0;
 
 
@@ -29,6 +30,8 @@ public class TeamTalonSRX extends WPI_TalonSRX {
     public TeamTalonSRX(String smartDashboardPrefix, int deviceNumber) {
         super(deviceNumber);
         this.smartDashboardPrefix = smartDashboardPrefix;
+        //assuming quadencoder
+        this.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
     }
 
 
@@ -86,7 +89,7 @@ public class TeamTalonSRX extends WPI_TalonSRX {
         }
 
         if ( getControlMode() == ControlMode.Velocity ) {
-            double currentError = getClosedLoopTarget() - currentSpeed;
+            double currentError = getVelocityError();
             SmartDashboard.putNumber(smartDashboardPrefix + ".VelocityError", currentError);
         } else {
             SmartDashboard.putNumber(smartDashboardPrefix + ".VelocityError", 0);
@@ -118,6 +121,15 @@ public class TeamTalonSRX extends WPI_TalonSRX {
                 SmartDashboard.putNumber(smartDashboardPrefix + "Error", 0);
         }
 
+    }
+
+
+    public int getVelocityError() {
+        if (getControlMode() != ControlMode.Velocity){
+            return 0;
+        }
+        int currentSpeed = getSelectedSensorVelocity();
+        return (int) (getClosedLoopTarget() - currentSpeed);
     }
 
     public void configureWithPidParameters(PidParameters pidParameters, int pidSlotIndex) {
