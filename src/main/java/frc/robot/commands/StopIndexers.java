@@ -7,49 +7,48 @@
 
 package frc.robot.commands;
 
-import java.util.function.DoubleSupplier;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.HorizontalIndexerSubsystem;
+import frc.robot.subsystems.VerticalIndexerSubsystem;
 
-public class SimpleShootCommand extends CommandBase {
-  
-  ShooterSubsystem shooter;
-  DoubleSupplier topThrottle;
-  DoubleSupplier bottomThrottle;
+public class StopIndexers extends CommandBase {
   /**
-   * Creates a new SimpleShootCommand.
+   * Creates a new StopIndexers.
    */
-  public SimpleShootCommand(ShooterSubsystem shooter, DoubleSupplier top, DoubleSupplier bottom) {
-    this.shooter = shooter;
-    this.topThrottle = top;
-    this.bottomThrottle = bottom;
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(shooter);
+  HorizontalIndexerSubsystem horizontalIndexer;
+  VerticalIndexerSubsystem verticalIndexer;
 
+  public StopIndexers(HorizontalIndexerSubsystem horizontalIndexer, VerticalIndexerSubsystem verticalIndexer) {
+    this.horizontalIndexer = horizontalIndexer;
+    this.verticalIndexer = verticalIndexer;
+    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(horizontalIndexer, verticalIndexer);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    horizontalIndexer.stop();
+    verticalIndexer.stop();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooter.setBottomMotor(this.bottomThrottle.getAsDouble());
-    shooter.setTopMotor(this.topThrottle.getAsDouble());
+    horizontalIndexer.stop();
+    verticalIndexer.stop();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooter.stop();
+    horizontalIndexer.stop();
+    verticalIndexer.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }
