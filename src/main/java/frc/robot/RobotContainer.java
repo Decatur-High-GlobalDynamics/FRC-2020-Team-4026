@@ -12,11 +12,8 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.HorizontalIndexerIntakeCommand;
 import frc.robot.commands.HorizontalIndexerOuttakeCommand;
-<<<<<<< HEAD
 import frc.robot.commands.PointTurretAtTargetCommand;
-=======
 import frc.robot.commands.SimpleClimberControlCommand;
->>>>>>> 5b3c8fff2345c87d8b886def0f2044ebacdacfc7
 import frc.robot.commands.SimpleIntakeCommand;
 import frc.robot.commands.SimpleOuttakeCommand;
 import frc.robot.commands.SimpleShootCommand;
@@ -63,11 +60,8 @@ public class RobotContainer {
   private final TurretSubsystem turret = new TurretSubsystem();
   private final HorizontalIndexerSubsystem horizontalIndexer = new HorizontalIndexerSubsystem();
   private final NavigationSubsystem navigation = new NavigationSubsystem();
-<<<<<<< HEAD
   private final NetworkIOSubsystem network = new NetworkIOSubsystem();
-=======
   private final ClimberSubsystem climber = new ClimberSubsystem();
->>>>>>> 5b3c8fff2345c87d8b886def0f2044ebacdacfc7
 
   public static final Joystick DriveController = new Joystick(0);
   public static final Joystick SecondaryJoystick = new Joystick(1);
@@ -89,16 +83,11 @@ public class RobotContainer {
 
     //Configure the default command to update our position based on all the stuff
     navigation.setDefaultCommand(new UpdateNavigationCommand(navigation, ()->driveTrain.getLeftEncoder(), ()->driveTrain.getRightEncoder()));
-<<<<<<< HEAD
-
-  }
-=======
     
     //Configure climber to respond to right joystick by default
     climber.setDefaultCommand(new SimpleClimberControlCommand(climber, ()->SecondaryJoystick.getThrottle()));
   
 
->>>>>>> 5b3c8fff2345c87d8b886def0f2044ebacdacfc7
 
   }
   /**
