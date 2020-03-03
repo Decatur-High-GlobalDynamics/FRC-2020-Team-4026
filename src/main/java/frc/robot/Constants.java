@@ -27,7 +27,8 @@ public final class Constants {
     public static final int TopShooterMotorCAN = 5;
     public static final int BotShooterMotorCAN = 6;
     
-    public static final int ClimbCAN = 7;
+    public static final int LeftClimbCAN = 7;
+    public static final int RightClimbCAN = 12;
 
     public static final int IntakeCAN = 8;
 
@@ -59,7 +60,13 @@ public final class Constants {
     public static final double kDriveGearRatio = 10.71;
 
     //Distance per encoder pulse
-    public static final double kEncoderDistancePerPulse = (0.1524 * 2 * Math.PI) / (2048 * kDriveGearRatio);
+    public static final double kEncoderDistancePerPulse = (0.1524 * Math.PI) / (2048 * kDriveGearRatio);
+
+    //Epsilon for DriveEncoders Command (in ticks)
+    public static final double driveEpsilon = 50;
+
+    //Inches to meters
+    public static final double inchesToMeters = 0.0254; 
 
     // DIO Ports
     public static final int TurretLimitDIO = 0;
