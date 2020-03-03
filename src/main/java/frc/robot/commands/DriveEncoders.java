@@ -19,15 +19,15 @@ public class DriveEncoders extends CommandBase {
   private Timer driveTime;
 
   private int speed;
-  private int userInches;
+  private int userMeters;
   private int initialLeftEncoderValue;
   private int initialRightEncoderValue;
   /**
    * Creates a new DriveEncoders.
    */
-  public DriveEncoders(int userInches, int speed, DriveTrainSubsystem drive) {
+  public DriveEncoders(int userMeters, int speed, DriveTrainSubsystem drive) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.userInches = userInches;
+    this.userMeters = userMeters;
     this.speed = speed;
     this.drive = drive;
     addRequirements(drive);
@@ -51,7 +51,7 @@ public class DriveEncoders extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     drive.setMotorPowers(0, 0);
-    if(interrupted || driveTime.hasElapsed(userInches*Constants.inchesToMeters*4))
+    if(interrupted || driveTime.hasElapsed(userMeters*4))
       System.err.println("Auto interrupted!");
     if (!interrupted) {
       driveTime.stop();
@@ -62,7 +62,7 @@ public class DriveEncoders extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (Utils.checkTolerance((drive.getRightEncoder()-initialRightEncoderValue)*Constants.kEncoderDistancePerPulse, userInches, Constants.driveEpsilon*Constants.kEncoderDistancePerPulse) && Utils.checkTolerance((drive.getLeftEncoder()-initialLeftEncoderValue)*Constants.kEncoderDistancePerPulse, userInches, Constants.kEncoderDistancePerPulse*Constants.driveEpsilon)){
+    if (Utils.checkTolerance((drive.getRightEncoder()-initialRightEncoderValue)*Constants.kEncoderDistancePerPulse, userMeters, Constants.driveEpsilon*Constants.kEncoderDistancePerPulse) && Utils.checkTolerance((drive.getLeftEncoder()-initialLeftEncoderValue)*Constants.kEncoderDistancePerPulse, userInches, Constants.kEncoderDistancePerPulse*Constants.driveEpsilon)){
       return true;
     } else {
       return false;
