@@ -10,6 +10,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.commands.AutoIntakeIndex;
 import frc.robot.commands.AutoShoot;
 import frc.robot.commands.AutoShootTesting;
@@ -70,12 +71,21 @@ public class RobotContainer {
   public static final Joystick DriveController = new Joystick(0);
   public static final Joystick SecondaryJoystick = new Joystick(1);
 
+  enum PossibleAutos {
+    STARTING_BACKWARD_IN_FRONT_OF_TARGET,
+  }
+
+  SendableChooser<PossibleAutos> autoChoice = new SendableChooser<PossibleAutos>();
+
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
+
+    //Add options for auto choice
+    addAutoChoices();
 
     //Create a button to make a BooleanSupplier off of, for the speed mode in Tank Drive
     final JoystickButton speedModeButton = new JoystickButton(DriveController, 7);
@@ -138,6 +148,12 @@ public class RobotContainer {
     new JoystickButton(SecondaryJoystick, 4).whileHeld(new AutoIntakeIndex(intake, horizontalIndexer, verticalIndexer));
   }
 
+  private void addAutoChoices() {
+    PossibleAutos[] enumValues = PossibleAutos.values();
+    for (int i = 0; i < enumValues.length; i++) {
+      autoChoice.addOption(enumValues[i].toString(), enumValues[i]);
+    }
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -145,6 +161,9 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return new DriveEncoders(1.8288, 0.5, driveTrain).andThen(new AutoShoot(shooter, verticalIndexer, horizontalIndexer, shooter.getShooterPowerBot() * 0.8).alongWith(new PointTurretAtTargetCommand(turret, network)));
+    PossibleAutos choice = autoChoice.getSelected();
+    if (choice == PossibleAutos.STARTING_BACKWARD_IN_FRONT_OF_TARGET) {
+      return new DriveEncoders(1.8288, 0.5, driveTrain).andThen(new AutoShoot(shooter, verticalIndexer, horizontalIndexer, intake, (int)(shooter.getShooterSpeedBot() * 0.8)).alongWith(new PointTurretAtTargetCommand(turret, network)));
+    }
   }
 }
