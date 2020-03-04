@@ -18,6 +18,7 @@ import frc.robot.commands.ConstantShootCommand;
 import frc.robot.commands.HorizontalIndexerIntakeCommand;
 import frc.robot.commands.HorizontalIndexerOuttakeCommand;
 import frc.robot.commands.PidShootCommand;
+import frc.robot.commands.PointTurretStraightAhead;
 import frc.robot.commands.SimpleClimberControlCommand;
 import frc.robot.commands.SimpleIntakeCommand;
 import frc.robot.commands.SimpleOuttakeCommand;
@@ -72,7 +73,8 @@ public class RobotContainer {
   public static final Joystick SecondaryJoystick = new Joystick(1);
 
   enum PossibleAutos {
-    STARTING_BACKWARD_IN_FRONT_OF_TARGET,
+    STARTING_BACKWARD_IN_FRONT_OF_TARGET_INACCURATE,
+    STARTING_BACKWARD_IN_FRONT_OF_TARGET_ACCURATE,
   }
 
   SendableChooser<PossibleAutos> autoChoice = new SendableChooser<PossibleAutos>();
@@ -162,8 +164,11 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     PossibleAutos choice = autoChoice.getSelected();
-    if (choice == PossibleAutos.STARTING_BACKWARD_IN_FRONT_OF_TARGET) {
-      return new DriveEncoders(1.8288, 0.5, driveTrain).andThen(new AutoShoot(shooter, verticalIndexer, horizontalIndexer, intake, (int)(shooter.getShooterSpeedBot() * 0.8)).alongWith(new PointTurretAtTargetCommand(turret, network)));
+    if (choice == PossibleAutos.STARTING_BACKWARD_IN_FRONT_OF_TARGET_INACCURATE) {
+      return new DriveEncoders(1.8288, 0.5, driveTrain).andThen(new AutoShoot(shooter, verticalIndexer, horizontalIndexer, intake, (int)(shooter.getShooterSpeedBot() * 0.8)).alongWith(new PointTurretStraightAhead(turret)));
+    } else if (choice == PossibleAutos.STARTING_BACKWARD_IN_FRONT_OF_TARGET_ACCURATE) {
+      //return new DriveEncoders(1.8288, 0.5, driveTrain).andThen(new AutoShoot(shooter, verticalIndexer, horizontalIndexer, intake, (int)(shooter.getShooterSpeedBot() * 0.8)).alongWith(new PointTurretAtTargetCommand(turret, network)));
     }
+    return null;
   }
 }
