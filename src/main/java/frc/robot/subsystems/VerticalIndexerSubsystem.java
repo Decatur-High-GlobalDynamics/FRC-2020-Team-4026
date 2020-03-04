@@ -21,7 +21,9 @@ public class VerticalIndexerSubsystem extends SubsystemBase {
    */
   private final TeamTalonSRX verticalIndexer;
 
-  private DigitalInput bottomSwitch = new DigitalInput(Constants.VerticalIndexer_BottomLimit_DIO);
+  private DigitalInput bottomSwitchA = new DigitalInput(Constants.VerticalIndexer_BottomLimit_DIO_A);
+  private DigitalInput bottomSwitchB = new DigitalInput(Constants.VerticalIndexer_BottomLimit_DIO_B);
+  private DigitalInput bottomSwitchC = new DigitalInput(Constants.VerticalIndexer_BottomLimit_DIO_C);
   private DigitalInput middleSwitch = new DigitalInput(Constants.VerticalIndexer_MiddleLimit_DIO);
   private DigitalInput topSwitch = new DigitalInput(Constants.VerticalIndexer_TopLimit_DIO);
 
@@ -55,7 +57,7 @@ public class VerticalIndexerSubsystem extends SubsystemBase {
   }
   public boolean bottomSwitchIsPressed() {
     // Negative because of opposite switch polarity
-    return !bottomSwitch.get();
+    return !bottomSwitchA.get() || !bottomSwitchB.get() || !bottomSwitchC.get();
   }
 
   public int getPosition(){

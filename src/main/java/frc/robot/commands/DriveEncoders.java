@@ -51,7 +51,7 @@ public class DriveEncoders extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     drive.setMotorPowers(0, 0);
-    if(interrupted || driveTime.hasElapsed(userInches*Constants.inchesToMeters*4))
+    if(interrupted || driveTime.hasPeriodPassed(userInches*Constants.inchesToMeters*4))
       System.err.println("Auto interrupted!");
     if (!interrupted) {
       driveTime.stop();

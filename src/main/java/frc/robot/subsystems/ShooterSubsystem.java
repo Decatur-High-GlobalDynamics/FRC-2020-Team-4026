@@ -14,6 +14,7 @@ import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.Constants;
 import frc.robot.PidParameters;
 import frc.robot.TeamTalonSRX;
+import frc.robot.TeamUtils;
 
 public class ShooterSubsystem extends SubsystemBase {
   private int maxRotationSpeedBot=38000;
@@ -122,5 +123,14 @@ public class ShooterSubsystem extends SubsystemBase {
   
   public int getTargetSpeedBot(){
     return targetSpeedBot;
+  }
+
+  public double getVisionYAngle(){
+    Object result = TeamUtils.getFromNetworkTable("angles", "yAngle");
+    if (result == null){
+      return 4026.0;
+    } else {
+      return (Double) result + 35.0;
+    }
   }
 }

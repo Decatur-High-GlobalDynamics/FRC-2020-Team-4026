@@ -19,6 +19,7 @@ import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.Constants;
 import frc.robot.PidParameters;
 import frc.robot.TeamTalonSRX;
+import frc.robot.TeamUtils;
 import frc.robot.commands.TurretToLimitCommand;
 
 public class TurretSubsystem extends SubsystemBase {
@@ -269,6 +270,15 @@ public class TurretSubsystem extends SubsystemBase {
 
   public boolean getTurretLimitSwitch(){
     return !turretLimit.get();
+  }
+
+  public double getVisionXAngle(){
+    Object result = TeamUtils.getFromNetworkTable("angles", "xAngle");
+    if (result == null){
+      return 4026.0;
+    } else {
+      return (Double) result;
+    }
   }
 
 }
