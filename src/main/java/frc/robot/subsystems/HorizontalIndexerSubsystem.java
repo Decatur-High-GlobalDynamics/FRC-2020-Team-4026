@@ -9,24 +9,29 @@ package frc.robot.subsystems;
 
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.TeamTalonSRX;
 
 public class HorizontalIndexerSubsystem extends SubsystemBase {
   /**
    * Creates a new HorizontalIndexerSubsystem.
    */
-  private final WPI_TalonSRX horizontalIndexer;
+  private final TeamTalonSRX horizontalIndexer;
 
-  private final double intakeSpeed = -.5;
+  private final double intakeSpeed = -.4;
   private final double outtakeSpeed = .5;
   public HorizontalIndexerSubsystem() {
-    horizontalIndexer = new WPI_TalonSRX(Constants.IndexerHorizCAN);
+    horizontalIndexer = new TeamTalonSRX("Subsystems.HorizontalIndexer.HIndxMotor", Constants.IndexerHorizCAN);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    horizontalIndexer.periodic();
+    SmartDashboard.putNumber("Subsystems.HorizontalIndexer.Position", horizontalIndexer.getSelectedSensorPosition());
   }
   public void intake(){
       horizontalIndexer.set(intakeSpeed);

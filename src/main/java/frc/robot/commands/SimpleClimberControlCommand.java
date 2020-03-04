@@ -10,23 +10,19 @@ package frc.robot.commands;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.ClimberSubsystem;
 
-public class SimpleShootCommand extends CommandBase {
-  
-  ShooterSubsystem shooter;
-  DoubleSupplier topThrottle;
-  DoubleSupplier bottomThrottle;
+public class SimpleClimberControlCommand extends CommandBase {
   /**
-   * Creates a new SimpleShootCommand.
+   * Creates a new SimpleClimberControlCommand.
    */
-  public SimpleShootCommand(ShooterSubsystem shooter, DoubleSupplier top, DoubleSupplier bottom) {
-    this.shooter = shooter;
-    this.topThrottle = top;
-    this.bottomThrottle = bottom;
+  private ClimberSubsystem climber;
+  private DoubleSupplier power;
+  public SimpleClimberControlCommand(ClimberSubsystem climber, DoubleSupplier power) {
+    this.climber = climber;
+    this.power = power;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(shooter);
-
+    addRequirements(climber);
   }
 
   // Called when the command is initially scheduled.
@@ -37,14 +33,12 @@ public class SimpleShootCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooter.setBottomMotor(this.bottomThrottle.getAsDouble());
-    shooter.setTopMotor(this.topThrottle.getAsDouble());
+    this.climber.setClimbers(this.power.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooter.stop();
   }
 
   // Returns true when the command should end.

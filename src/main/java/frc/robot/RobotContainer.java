@@ -10,22 +10,27 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.commands.AutoIntakeIndex;
+import frc.robot.commands.AutoShoot;
+import frc.robot.commands.AutoShootTesting;
+import frc.robot.commands.ConstantShootCommand;
 import frc.robot.commands.HorizontalIndexerIntakeCommand;
 import frc.robot.commands.HorizontalIndexerOuttakeCommand;
+import frc.robot.commands.PidShootCommand;
+import frc.robot.commands.SimpleClimberControlCommand;
 import frc.robot.commands.SimpleIntakeCommand;
 import frc.robot.commands.SimpleOuttakeCommand;
 import frc.robot.commands.SimpleShootCommand;
 import frc.robot.commands.SimpleTurretCCWCommand;
 import frc.robot.commands.SimpleTurretCWCommand;
-import frc.robot.commands.StopTurretCommand;
-import frc.robot.commands.ConstantShootCommand;
 import frc.robot.commands.TurretToLimitCommand;
-import frc.robot.commands.TurretToPositionCommand;
 import frc.robot.commands.VerticalIndexerDownCommand;
 import frc.robot.commands.VerticalIndexerUpCommand;
 import frc.robot.commands.UpdateNavigationCommand;
 import frc.robot.commands.drivingCommands.DriveStraightCommand;
 import frc.robot.commands.drivingCommands.TankDriveCommand;
+import frc.robot.commands.drivingCommands.ToggleBrakeCommand;
+import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.NavigationSubsystem;
@@ -36,6 +41,9 @@ import frc.robot.subsystems.HorizontalIndexerSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+
+
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -52,6 +60,7 @@ public class RobotContainer {
   private final TurretSubsystem turret = new TurretSubsystem();
   private final HorizontalIndexerSubsystem horizontalIndexer = new HorizontalIndexerSubsystem();
   private final NavigationSubsystem navigation = new NavigationSubsystem();
+  private final ClimberSubsystem climber = new ClimberSubsystem();
 
   public static final Joystick DriveController = new Joystick(0);
   public static final Joystick SecondaryJoystick = new Joystick(1);
@@ -73,8 +82,13 @@ public class RobotContainer {
 
     //Configure the default command to update our position based on all the stuff
     navigation.setDefaultCommand(new UpdateNavigationCommand(navigation, ()->driveTrain.getLeftEncoder(), ()->driveTrain.getRightEncoder()));
-  }
+    
+    //Configure climber to respond to right joystick by default
+    climber.setDefaultCommand(new SimpleClimberControlCommand(climber, ()->SecondaryJoystick.getThrottle()));
+  
 
+
+  }
   /**
    * Use this method to define your button->command mappings.  Buttons can be created by
    * instantiating a {@link GenericHID} or one of its subclasses ({@link
@@ -85,10 +99,12 @@ public class RobotContainer {
     //--------Drivetrain Button Bindings--------
     //When right trigger is held, drive straight
     new JoystickButton(DriveController, 8).whileHeld(new DriveStraightCommand(driveTrain, navigation, ()->DriveController.getY()));
+    //When left bumper is pressed, toggle brake mode
+    new JoystickButton(DriveController, 5).whenPressed(new ToggleBrakeCommand(driveTrain));
 
     //--------Intake and Indexer Button Bindings--------
     //When X is held, Intake and Horizontal Indexer in (Synchronized)
-    new JoystickButton(SecondaryJoystick, 4).whileHeld(new SimpleOuttakeCommand(this.intake).alongWith(new HorizontalIndexerOuttakeCommand(this.horizontalIndexer)));
+    //new JoystickButton(SecondaryJoystick, 4).whileHeld(new SimpleOuttakeCommand(this.intake).alongWith(new HorizontalIndexerOuttakeCommand(this.horizontalIndexer)));
     //When Y held, Intake and Horizontal Indexer out (Synchronized)
     new JoystickButton(SecondaryJoystick, 1).whileHeld(new SimpleIntakeCommand(this.intake).alongWith(new HorizontalIndexerIntakeCommand(this.horizontalIndexer)));
     //When A is held, Intake Out
@@ -99,10 +115,9 @@ public class RobotContainer {
     new JoystickButton(SecondaryJoystick, 8).whileHeld(new VerticalIndexerUpCommand(this.verticalIndexer));
     //When Left Trigger is held, Vertical Indexer down
     new JoystickButton(SecondaryJoystick, 7).whileHeld(new VerticalIndexerDownCommand(this.verticalIndexer));
+    //When button 5 is pressed (Right Bumper), shoot at constant speed
+    new JoystickButton(SecondaryJoystick, 6).whileHeld(new PidShootCommand(this.shooter, 1, 1)); 
     
-    
-
-
     //--------Turret Button Bindings--------
     //When left dpad is held, Turret Clockwise
     new POVButton(SecondaryJoystick, 90).whileHeld(new SimpleTurretCWCommand(this.turret));
@@ -113,6 +128,9 @@ public class RobotContainer {
 
     //--------Shooting Button Bindings--------
     //When button 8 (Right Trigger) is pressed, start constant shooting
+    new JoystickButton(SecondaryJoystick, 5).whileHeld(new AutoShootTesting(shooter, verticalIndexer, horizontalIndexer, intake));
+    new POVButton(SecondaryJoystick, 180).whileHeld(new ConstantShootCommand(shooter));
+    new JoystickButton(SecondaryJoystick, 4).whileHeld(new AutoIntakeIndex(intake, horizontalIndexer, verticalIndexer));
   }
 
 
