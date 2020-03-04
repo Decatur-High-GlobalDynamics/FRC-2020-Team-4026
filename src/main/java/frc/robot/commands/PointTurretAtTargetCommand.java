@@ -51,7 +51,7 @@ public class PointTurretAtTargetCommand extends CommandBase {
     } else {
       cantSeeTimeout.reset();
       double xAngleInRads = xAngle * (Math.PI / 180);
-      double targetRads = turret.getRadians() - xAngleInRads;
+      double targetRads = turret.getRadians() + xAngleInRads;
       if (turret.isRadsAllowed(targetRads)) {
         turret.startRotatingToPosition(targetRads);
       } else {
