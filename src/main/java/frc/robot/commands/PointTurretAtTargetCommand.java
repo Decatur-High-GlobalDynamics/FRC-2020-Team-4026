@@ -17,6 +17,8 @@ public class PointTurretAtTargetCommand extends CommandBase {
   NetworkIOSubsystem network;
   Timer cantSeeTimeout;
 
+  final double kP = 0.005;
+
   /**
    * Creates a new PointTurretAtTarget Command.
    */
@@ -35,27 +37,25 @@ public class PointTurretAtTargetCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double xAngle;
+    double error;
     try{
-     xAngle = (double)network.get("angles", "xAngle");
+      error = (double)network.get("angles", "xAngle");
     }
     catch(NullPointerException e){
       System.err.println("Angle not found in NetworkTables. Is the Pi Connected?");
-      xAngle = 4026;
+      error = 4026;
     }
     //This is sent if the target isn't seen
-    if (xAngle == 4026) {
+    if (error == 4026) {
       if (cantSeeTimeout.get() > 2) {
         turret.stop();
       }
     } else {
       cantSeeTimeout.reset();
-      double xAngleInRads = xAngle * (Math.PI / 180);
-      double targetRads = turret.getRadians() + xAngleInRads;
-      if (turret.isRadsAllowed(targetRads)) {
-        turret.startRotatingToPosition(targetRads);
+      if (error > 0) {
+        turret.goClockwise(kP * Math.abs(error));
       } else {
-        turret.stop();
+        turret.goCounterClockwise(kP * Math.abs(error));
       }
     }
   }
