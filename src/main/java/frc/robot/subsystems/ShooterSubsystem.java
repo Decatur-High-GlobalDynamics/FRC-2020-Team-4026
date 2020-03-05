@@ -66,6 +66,9 @@ public class ShooterSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Subsystems.Shooter.targetSpeedBot", targetSpeedBot);
 
     SmartDashboard.putBoolean("Subsystems.Shooter.isShooterReady", this.isShooterReady());
+
+    SmartDashboard.putNumber("Subsystems.Shooter.yAngleAdjusted", this.getVisionYAngle());
+    SmartDashboard.putNumber("Subsystems.Shooter.knotDistance", this.getKnotDistance());
   }
   public boolean isShooterReady(){
     return Math.abs(shooter_top.getVelocityError()) <= 600.0 && Math.abs(shooter_bottom.getVelocityError()) <= 300.0;
@@ -130,7 +133,11 @@ public class ShooterSubsystem extends SubsystemBase {
     if (result == null){
       return 4026.0;
     } else {
-      return (Double) result + 35.0;
+      return (Double) result + 37.0;
     }
+  }
+
+  public double getKnotDistance(){
+    return (1 / Math.tan(Math.toRadians(this.getVisionYAngle()))) * 54.5;
   }
 }

@@ -26,9 +26,9 @@ public class VerticalIndexerSubsystem extends SubsystemBase {
   private DigitalInput middleSwitch = new DigitalInput(Constants.VerticalIndexer_MiddleLimit_DIO);
   private DigitalInput topSwitch = new DigitalInput(Constants.VerticalIndexer_TopLimit_DIO);
 
-  public int ticksUntilTransfered = 6000;
+  public int ticksUntilTransfered = 7000;
 
-  private final double upSpeed = .25;
+  private final double upSpeed = .30;
   private final double downSpeed = -.5;
   public VerticalIndexerSubsystem() {
     verticalIndexer = new TeamTalonSRX("Subsystems.VerticalIndexer.VIndxMotor", Constants.IndexerVertCAN);

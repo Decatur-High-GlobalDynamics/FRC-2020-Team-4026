@@ -8,8 +8,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.HorizontalIndexerSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VerticalIndexerSubsystem;
 
@@ -19,22 +17,16 @@ public class AutoShoot extends CommandBase {
    */
   private final ShooterSubsystem shooter;
   private final VerticalIndexerSubsystem verticalIndexer;
-  private final HorizontalIndexerSubsystem horizontalIndexer;
-  private final IntakeSubsystem intake;
   private int targetSpeedTop;
   private final int targetSpeedBot;
 
-  public AutoShoot(ShooterSubsystem shooter, VerticalIndexerSubsystem verticalIndexer, HorizontalIndexerSubsystem horizontalIndexer, IntakeSubsystem intake, int targetSpeedBot) {
+  public AutoShoot(ShooterSubsystem shooter, VerticalIndexerSubsystem verticalIndexer, int targetSpeedBot) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.shooter = shooter;
     this.verticalIndexer = verticalIndexer;
-    this.horizontalIndexer = horizontalIndexer;
     this.targetSpeedBot = targetSpeedBot;
-    this.intake = intake;
     addRequirements(shooter);
     addRequirements(verticalIndexer);
-    addRequirements(horizontalIndexer);
-    addRequirements(intake);
   }
 
   // Called when the command is initially scheduled.
@@ -51,11 +43,8 @@ public class AutoShoot extends CommandBase {
   @Override
   public void execute() {
     if (shooter.isShooterReady()){
-      horizontalIndexer.intake();
       verticalIndexer.up();
-      intake.inTake();
     } else {
-      horizontalIndexer.stop();
       verticalIndexer.stop();
     }
   }
@@ -65,9 +54,7 @@ public class AutoShoot extends CommandBase {
   public void end(boolean interrupted) {
     shooter.setShooterVelTop(0);
     shooter.setShooterVelBot(0);
-    horizontalIndexer.stop();
     verticalIndexer.stop();
-    intake.stop();
   }
 
   // Returns true when the command should end.

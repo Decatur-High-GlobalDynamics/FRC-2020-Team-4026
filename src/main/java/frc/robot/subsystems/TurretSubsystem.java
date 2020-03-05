@@ -39,6 +39,9 @@ public class TurretSubsystem extends SubsystemBase {
   private final double MinPowerToMove = 0.0425;
 
   private final int stallThresh = 30;
+
+  private double lastGoodAngle;
+  private int numSequentialErrors = 0;
   
   private final PidParameters pidParams = new PidParameters(0.35, 0.05, 0.1, 0, 0, 0.15, 10);
 
@@ -159,6 +162,7 @@ public class TurretSubsystem extends SubsystemBase {
     if ( ! previousPidParameters.equals(pidParams) ) {
       turretMotor.configureWithPidParameters(pidParams,0);
     }
+    SmartDashboard.putNumber("Subsystems.Turret.xAngleAdjusted", this.getVisionXAngle());
 
     SmartDashboard.putNumber("Subsystems.Turret.sensorPosition", turretMotor.getSelectedSensorPosition(0));
     SmartDashboard.putString("Subsystems.Turret.Mode", turretMotor.getControlMode().toString());
@@ -283,10 +287,16 @@ public class TurretSubsystem extends SubsystemBase {
 
   public double getVisionXAngle(){
     Object result = TeamUtils.getFromNetworkTable("angles", "xAngle");
-    if (result == null){
-      return 4026.0;
+    if (result != null && (Double) result != 4026.0){
+      lastGoodAngle = (Double) result;
+      numSequentialErrors = 0;
     } else {
-      return (Double) result;
+      numSequentialErrors ++;
+    }
+    if (numSequentialErrors > 50){
+      return 4026;
+    } else {
+      return lastGoodAngle;
     }
   }
 

@@ -15,11 +15,14 @@ public class TurretToTarget extends CommandBase {
    * Creates a new TurretToTarget.
    */
   private final TurretSubsystem turret;
+  private final SimpleTurretCCWCommand CCWCommand;
+  private final SimpleTurretCWCommand CWCommand;
 
   public TurretToTarget(TurretSubsystem turret) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.turret = turret;
-    addRequirements(turret);
+    CWCommand = new SimpleTurretCWCommand(turret);
+    CCWCommand = new SimpleTurretCCWCommand(turret);
   }
 
   // Called when the command is initially scheduled.
@@ -29,11 +32,19 @@ public class TurretToTarget extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    if (turret.getVisionXAngle() == 4026){
-      this.end(true);
+  public void execute() { 
+    if (turret.getVisionXAngle() == 4026.0){
+      CWCommand.cancel();
+      CCWCommand.cancel();
+    } else if (turret.getVisionXAngle() < 0){
+      CWCommand.cancel();
+      CCWCommand.schedule();
+    } else if (turret.getVisionXAngle() > 0){
+      CCWCommand.cancel();
+      CWCommand.schedule();
     } else {
-      turret.startRotatingToEncoderPosition((long) (turret.getTicks() + (-50 * Math.signum(turret.getVisionXAngle()))));
+      CWCommand.cancel();
+      CCWCommand.cancel();
     }
   }
 
@@ -46,6 +57,6 @@ public class TurretToTarget extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return turret.getVisionXAngle() == 4026 || turret.getVisionXAngle() <= 0.5;
+    return Math.abs(turret.getVisionXAngle()) <= 10;
   }
 }
