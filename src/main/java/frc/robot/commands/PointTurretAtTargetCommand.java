@@ -9,12 +9,11 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.NetworkIOSubsystem;
+import frc.robot.Utils;
 import frc.robot.subsystems.TurretSubsystem;
 
 public class PointTurretAtTargetCommand extends CommandBase {
   TurretSubsystem turret;
-  NetworkIOSubsystem network;
   Timer cantSeeTimeout;
 
   final double kP = 0.005;
@@ -22,9 +21,8 @@ public class PointTurretAtTargetCommand extends CommandBase {
   /**
    * Creates a new PointTurretAtTarget Command.
    */
-  public PointTurretAtTargetCommand(TurretSubsystem turret, NetworkIOSubsystem network) {
+  public PointTurretAtTargetCommand(TurretSubsystem turret) {
     this.turret = turret;
-    this.network = network;
     addRequirements(turret);
   }
 
@@ -39,7 +37,7 @@ public class PointTurretAtTargetCommand extends CommandBase {
   public void execute() {
     double error;
     try{
-      error = (double)network.get("angles", "xAngle");
+      error = (double)Utils.getFromNetworkTable("angles", "xAngle");
     }
     catch(NullPointerException e){
       System.err.println("Angle not found in NetworkTables. Is the Pi Connected?");

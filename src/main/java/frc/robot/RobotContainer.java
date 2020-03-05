@@ -35,7 +35,6 @@ import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.NavigationSubsystem;
-import frc.robot.subsystems.NetworkIOSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
 import frc.robot.subsystems.VerticalIndexerSubsystem;
@@ -62,7 +61,6 @@ public class RobotContainer {
   private final TurretSubsystem turret = new TurretSubsystem();
   private final HorizontalIndexerSubsystem horizontalIndexer = new HorizontalIndexerSubsystem();
   private final NavigationSubsystem navigation = new NavigationSubsystem();
-  private final NetworkIOSubsystem network = new NetworkIOSubsystem();
   private final ClimberSubsystem climber = new ClimberSubsystem();
 
   public static final Joystick DriveController = new Joystick(0);
@@ -123,7 +121,7 @@ public class RobotContainer {
     
     //--------Turret Button Bindings--------
     //When right bumper pressed, aim at vision target if possible
-    new JoystickButton(SecondaryJoystick, 6).whileHeld(new PointTurretAtTargetCommand(turret, network));
+    new JoystickButton(SecondaryJoystick, 6).whileHeld(new PointTurretAtTargetCommand(turret));
     //When left dpad is held, Turret Clockwise
     new POVButton(SecondaryJoystick, 90).whileHeld(new SimpleTurretCWCommand(this.turret));
     //When right dpad is held, Turret Counterclockwise
