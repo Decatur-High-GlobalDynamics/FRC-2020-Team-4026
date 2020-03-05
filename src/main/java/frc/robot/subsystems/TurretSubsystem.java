@@ -19,6 +19,7 @@ import frc.robot.Constants;
 import frc.robot.PidParameters;
 import frc.robot.TeamTalonSRX;
 import frc.robot.TeamUtils;
+import frc.robot.commands.PrepareTurretCommand;
 import frc.robot.commands.TurretToLimitCommand;
 
 public class TurretSubsystem extends SubsystemBase {
@@ -262,7 +263,11 @@ public class TurretSubsystem extends SubsystemBase {
 
   public void startRotatingToEncoderPosition(long encoderPosition) {
     turretMotor.configureWithPidParameters(pidParams, 0);
-    turretMotor.set(ControlMode.Position, MathUtil.clamp(encoderPosition, minEncoderRange, 0));
+    long reqPosition = encoderPosition;
+    if (!(this.getCurrentCommand() instanceof PrepareTurretCommand)){
+      reqPosition = (long) MathUtil.clamp(reqPosition, minEncoderRange, 0);
+    }
+    turretMotor.set(ControlMode.Position, reqPosition);
   }
 
   public void startRotatingToPosition(double targetRad){
@@ -293,7 +298,7 @@ public class TurretSubsystem extends SubsystemBase {
     } else {
       numSequentialErrors ++;
     }
-    if (numSequentialErrors > 50){
+    if (numSequentialErrors > 10){
       return 4026;
     } else {
       return lastGoodAngle;

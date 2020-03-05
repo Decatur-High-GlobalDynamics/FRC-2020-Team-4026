@@ -19,9 +19,10 @@ import frc.robot.TeamUtils;
 public class ShooterSubsystem extends SubsystemBase {
   private int maxRotationSpeedBot=38000;
   private int maxRotationSpeedTop=28000;
-  //private int targetSpeedTop = 10000;
+  //Use 24500 for bot at init line
+  
   private int targetSpeedBot = 10000;
-  //Values for 80% (max power for shooting)
+  //Values for 95% (max power for shooting)
   private final TeamTalonSRX shooter_bottom;
   private final TeamTalonSRX shooter_top;
   /**

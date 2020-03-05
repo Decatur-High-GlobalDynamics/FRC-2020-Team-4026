@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.AutoIntakeIndex;
-import frc.robot.commands.AutoShootTesting;
+import frc.robot.commands.AutoShoot;
 import frc.robot.commands.ConstantShootCommand;
 import frc.robot.commands.HorizontalIndexerIntakeCommand;
 import frc.robot.commands.HorizontalIndexerOuttakeCommand;
@@ -23,7 +23,6 @@ import frc.robot.commands.SimpleShootCommand;
 import frc.robot.commands.SimpleTurretCCWCommand;
 import frc.robot.commands.SimpleTurretCWCommand;
 import frc.robot.commands.TurretToLimitCommand;
-import frc.robot.commands.TurretToTarget;
 import frc.robot.commands.VerticalIndexerDownCommand;
 import frc.robot.commands.VerticalIndexerUpCommand;
 import frc.robot.commands.UpdateNavigationCommand;
@@ -125,10 +124,9 @@ public class RobotContainer {
     //When button 9 is pressed, zero the turret
     new JoystickButton(SecondaryJoystick, 9).whenPressed(new TurretToLimitCommand(this.turret));
 
-    new JoystickButton(SecondaryJoystick, 10).whileHeld(new TurretToTarget(turret));
     //--------Shooting Button Bindings--------
     //When button 8 (Right Trigger) is pressed, start constant shooting
-    new JoystickButton(SecondaryJoystick, 5).whileHeld(new AutoShootTesting(shooter, verticalIndexer));
+    new JoystickButton(SecondaryJoystick, 5).whileHeld(new AutoShoot(shooter, verticalIndexer, 24500));
     new POVButton(SecondaryJoystick, 180).whileHeld(new ConstantShootCommand(shooter));
     new JoystickButton(SecondaryJoystick, 4).whileHeld(new AutoIntakeIndex(intake, horizontalIndexer, verticalIndexer));
   }

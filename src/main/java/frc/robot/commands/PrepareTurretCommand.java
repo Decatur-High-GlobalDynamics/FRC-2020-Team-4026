@@ -10,42 +10,27 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.TurretSubsystem;
 
-public class TurretToTarget extends CommandBase {
+public class PrepareTurretCommand extends CommandBase {
   /**
-   * Creates a new TurretToTarget.
+   * Creates a new PrepareTurretCommand.
    */
   private final TurretSubsystem turret;
-  private final SimpleTurretCCWCommand CCWCommand;
-  private final SimpleTurretCWCommand CWCommand;
 
-  public TurretToTarget(TurretSubsystem turret) {
-    // Use addRequirements() here to declare subsystem dependencies.
+  public PrepareTurretCommand(TurretSubsystem turret) {
     this.turret = turret;
-    CWCommand = new SimpleTurretCWCommand(turret);
-    CCWCommand = new SimpleTurretCCWCommand(turret);
+    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(turret);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    turret.startRotatingToPosition(3 * Math.PI / 2);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() { 
-    if (turret.getVisionXAngle() == 4026.0){
-      CWCommand.cancel();
-      CCWCommand.cancel();
-    } else if (turret.getVisionXAngle() < 0){
-      CWCommand.cancel();
-      CCWCommand.schedule();
-    } else if (turret.getVisionXAngle() > 0){
-      CCWCommand.cancel();
-      CWCommand.schedule();
-    } else {
-      CWCommand.cancel();
-      CCWCommand.cancel();
-    }
+  public void execute() {
   }
 
   // Called once the command ends or is interrupted.
@@ -57,6 +42,6 @@ public class TurretToTarget extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(turret.getVisionXAngle()) <= 10;
+    return !turret.isMotorBusy();
   }
 }
