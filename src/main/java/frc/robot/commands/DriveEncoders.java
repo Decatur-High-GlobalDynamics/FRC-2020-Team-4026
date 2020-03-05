@@ -51,7 +51,7 @@ public class DriveEncoders extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     drive.setMotorPowers(0, 0);
-    if(interrupted || driveTime.hasElapsed(userInches*Constants.inchesToMeters*4))
+    if(interrupted || driveTime.hasPeriodPassed(userInches*Constants.inchesToMeters*4))
       System.err.println("Auto interrupted!");
     if (!interrupted) {
       driveTime.stop();
@@ -62,7 +62,7 @@ public class DriveEncoders extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if ((driveTime.hasElapsed(userInches*Constants.inchesToMeters*4)) || (Utils.checkTolerance((drive.getRightEncoder()-initialRightEncoderValue)*Constants.kEncoderDistancePerPulse, userInches, Constants.driveEpsilon*Constants.kEncoderDistancePerPulse) && Utils.checkTolerance((drive.getLeftEncoder()-initialLeftEncoderValue)*Constants.kEncoderDistancePerPulse, userInches, Constants.kEncoderDistancePerPulse*Constants.driveEpsilon))){
+    if ((driveTime.hasPeriodPassed(userInches*Constants.inchesToMeters*4)) || (Utils.checkTolerance((drive.getRightEncoder()-initialRightEncoderValue)*Constants.kEncoderDistancePerPulse, userInches, Constants.driveEpsilon*Constants.kEncoderDistancePerPulse) && Utils.checkTolerance((drive.getLeftEncoder()-initialLeftEncoderValue)*Constants.kEncoderDistancePerPulse, userInches, Constants.kEncoderDistancePerPulse*Constants.driveEpsilon))){
       return true;
     } else {
       return false;
