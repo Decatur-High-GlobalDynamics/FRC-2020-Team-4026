@@ -8,7 +8,6 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -42,6 +41,9 @@ public class TurretSubsystem extends SubsystemBase {
   private final int stallThresh = 30;
   
   private final PidParameters pidParams = new PidParameters(0.35, 0.05, 0.1, 0, 0, 0.15, 10);
+
+  //Number of encoder ticks to go when rotating
+  private int rotationSpeed = 100;
 
   // Location (based on limitswitch = 0) of far clockwise range
   private long minEncoderRange = -7000;
@@ -184,6 +186,13 @@ public class TurretSubsystem extends SubsystemBase {
     }
 
     turretMotor.set(ControlMode.PercentOutput, -power);
+  }
+
+  public void positionRotateCW(){
+    this.startRotatingToEncoderPosition(this.getTicks() - rotationSpeed);
+  }
+  public void positonRotateCCW(){
+    this.startRotatingToEncoderPosition(this.getTicks() + rotationSpeed);
   }
 
   public void goClockwise(){

@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.AutoIntakeIndex;
-import frc.robot.commands.AutoShoot;
 import frc.robot.commands.AutoShootTesting;
 import frc.robot.commands.ConstantShootCommand;
 import frc.robot.commands.HorizontalIndexerIntakeCommand;
@@ -41,7 +40,6 @@ import frc.robot.subsystems.HorizontalIndexerSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 
 
