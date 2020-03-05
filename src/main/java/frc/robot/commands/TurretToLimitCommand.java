@@ -37,13 +37,13 @@ public class TurretToLimitCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    turret.stop();
     if(interrupted)
       System.err.println("TurretToLimit interrupted!");
     if (!interrupted) {
       turret.resetEncoder();
       turret.markAsCalibrated();
     }
+    turret.startRotatingToPosition(Math.PI/2);
   }
 
   // Returns true when the command should end.

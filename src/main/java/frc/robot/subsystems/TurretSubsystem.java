@@ -43,7 +43,7 @@ public class TurretSubsystem extends SubsystemBase {
   private final PidParameters pidParams = new PidParameters(0.35, 0.05, 0.1, 0, 0, 0.15, 10);
 
   //Number of encoder ticks to go when rotating
-  private int rotationSpeed = 100;
+  private int rotationSpeed = 500;
 
   // Location (based on limitswitch = 0) of far clockwise range
   private long minEncoderRange = -7000;
@@ -234,9 +234,9 @@ public class TurretSubsystem extends SubsystemBase {
 
   public void stop(){
     // Set a little power in the opposite direction that we were heading
-     turretMotor.set(ControlMode.PercentOutput, -0.01*Math.signum(turretMotor.getMotorOutputPercent()));
+     turretMotor.set(ControlMode.PercentOutput, -0.004026*Math.signum(turretMotor.getMotorOutputPercent()));
      // Tell motor to hold the position
-     startRotatingToEncoderPosition((long)MathUtil.clamp(getTicks(), minEncoderRange,0));
+     startRotatingToEncoderPosition((long)MathUtil.clamp(turretMotor.getSelectedSensorPosition(), minEncoderRange,0));
   }
 
   public boolean isMotorBusy() {
@@ -258,7 +258,7 @@ public class TurretSubsystem extends SubsystemBase {
 
   public void startRotatingToEncoderPosition(long encoderPosition) {
     turretMotor.configureWithPidParameters(pidParams, 0);
-    turretMotor.set(ControlMode.Position, encoderPosition);
+    turretMotor.set(ControlMode.Position, MathUtil.clamp(encoderPosition, minEncoderRange, 0));
   }
 
   public void startRotatingToPosition(double targetRad){

@@ -28,7 +28,7 @@ public class VerticalIndexerSubsystem extends SubsystemBase {
 
   public int ticksUntilTransfered = 6000;
 
-  private final double upSpeed = .35;
+  private final double upSpeed = .25;
   private final double downSpeed = -.5;
   public VerticalIndexerSubsystem() {
     verticalIndexer = new TeamTalonSRX("Subsystems.VerticalIndexer.VIndxMotor", Constants.IndexerVertCAN);
@@ -56,7 +56,10 @@ public class VerticalIndexerSubsystem extends SubsystemBase {
   }
   public boolean bottomSwitchIsPressed() {
     // Negative because of opposite switch polarity
-    return !bottomSwitchA.get() || !bottomSwitchB.get() || !bottomSwitchC.get();
+
+    // The bottomSwitchB is wired backwards because the other half
+    // of the limit switch is broken!!
+    return !bottomSwitchA.get() || bottomSwitchB.get() || !bottomSwitchC.get();
   }
 
   public int getPosition(){

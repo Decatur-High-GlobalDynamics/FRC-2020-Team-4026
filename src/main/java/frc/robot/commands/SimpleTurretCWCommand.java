@@ -29,12 +29,12 @@ public class SimpleTurretCWCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    turret.positionRotateCW();
+    turret.goClockwise();
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
+  public void end(boolean interrupted) { 
     turret.stop();
   }
 }

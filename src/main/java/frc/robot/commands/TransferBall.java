@@ -29,10 +29,13 @@ public class TransferBall extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() { 
-    verticalIndexer.up();
-    horizontalIndexer.intake();
-    ticksWhenBottomIsUnpressed = null;
+  public void initialize() {
+    // Refuse to start the vertical indexer if top switch is pressed
+    if (!verticalIndexer.topSwitchIsPressed()){
+      verticalIndexer.up();
+      horizontalIndexer.intake();
+      ticksWhenBottomIsUnpressed = null;
+    }
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -53,9 +56,12 @@ public class TransferBall extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if (verticalIndexer.topSwitchIsPressed()){
+      return true;
+    }
     if (ticksWhenBottomIsUnpressed==null){
       return false;
     }
-    return Math.abs(verticalIndexer.getPosition() - ticksWhenBottomIsUnpressed) >= verticalIndexer.ticksUntilTransfered || verticalIndexer.topSwitchIsPressed();
+    return Math.abs(verticalIndexer.getPosition() - ticksWhenBottomIsUnpressed) >= verticalIndexer.ticksUntilTransfered;
   }
 }

@@ -31,7 +31,7 @@ public class ShooterSubsystem extends SubsystemBase {
   private double shooterPowerBot = 0.95;
 
   private PidParameters topPidParameters = new PidParameters(0.3,0.00015,0.1,0.031,0,1,10);
-  private PidParameters botPidParameters = new PidParameters(0.3,0.0001,0.1,0.026,0,1,10);
+  private PidParameters botPidParameters = new PidParameters(0.1,0.00005,0.1,0.026,250,1,10);
 
   public ShooterSubsystem() {
     shooter_bottom = new TeamTalonSRX("Subsystems.Shooter.Bottom", Constants.BotShooterMotorCAN);
