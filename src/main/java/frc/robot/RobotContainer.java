@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.commands.AutoIntakeIndex;
 import frc.robot.commands.AutoShoot;
 import frc.robot.commands.AutoShootTesting;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.ConstantShootCommand;
 import frc.robot.commands.HorizontalIndexerIntakeCommand;
 import frc.robot.commands.HorizontalIndexerOuttakeCommand;
@@ -116,6 +117,9 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     //Create button variables
+    Button PrimaryRightTrigger = new JoystickButton(DriveController, 8);
+    Button PrimaryLeftBumper = new JoystickButton(DriveController,5);
+
     Button SecondaryX = new JoystickButton(SecondaryJoystick,1);
     Button SecondaryA = new JoystickButton(SecondaryJoystick,2);
     Button SecondaryB = new JoystickButton(SecondaryJoystick,3);
@@ -133,9 +137,9 @@ public class RobotContainer {
 
     //--------Drivetrain Button Bindings--------
     //When right trigger on main controller is held, drive straight
-    new JoystickButton(DriveController, 8).whileHeld(new DriveStraightCommand(driveTrain, navigation, ()->DriveController.getY()));
+    PrimaryRightTrigger.whileHeld(new DriveStraightCommand(driveTrain, navigation, ()->DriveController.getY()));
     //When left bumper is pressed, toggle brake mode
-    new JoystickButton(DriveController, 5).whenPressed(new ToggleBrakeCommand(driveTrain));
+    PrimaryLeftBumper.whenPressed(new ToggleBrakeCommand(driveTrain));
 
     //--------Intake and Indexer Button Bindings--------
     //When Y is held, Intake and Horizontal Indexer out (Synchronized)
@@ -172,6 +176,7 @@ public class RobotContainer {
     for (int i = 0; i < enumValues.length; i++) {
       autoChoice.addOption(enumValues[i].toString(), enumValues[i]);
     }
+    SmartDashboard.putData(autoChoice);
   }
 
   /**
