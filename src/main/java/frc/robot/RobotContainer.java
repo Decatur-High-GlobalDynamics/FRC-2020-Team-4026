@@ -10,6 +10,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.commands.AutoIntakeIndex;
 import frc.robot.commands.AutoShoot;
 import frc.robot.commands.AutoShootTesting;
@@ -17,12 +18,16 @@ import frc.robot.commands.ConstantShootCommand;
 import frc.robot.commands.HorizontalIndexerIntakeCommand;
 import frc.robot.commands.HorizontalIndexerOuttakeCommand;
 import frc.robot.commands.PidShootCommand;
+import frc.robot.commands.PointTurretStraightAhead;
 import frc.robot.commands.SimpleClimberControlCommand;
 import frc.robot.commands.SimpleIntakeCommand;
 import frc.robot.commands.SimpleOuttakeCommand;
 import frc.robot.commands.SimpleShootCommand;
 import frc.robot.commands.SimpleTurretCCWCommand;
 import frc.robot.commands.SimpleTurretCWCommand;
+import frc.robot.commands.StopTurretCommand;
+import frc.robot.commands.ConstantShootCommand;
+import frc.robot.commands.DriveEncoders;
 import frc.robot.commands.TurretToLimitCommand;
 import frc.robot.commands.VerticalIndexerDownCommand;
 import frc.robot.commands.VerticalIndexerUpCommand;
@@ -34,6 +39,7 @@ import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.NavigationSubsystem;
+import frc.robot.subsystems.NetworkIOSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
 import frc.robot.subsystems.VerticalIndexerSubsystem;
@@ -62,9 +68,17 @@ public class RobotContainer {
   private final HorizontalIndexerSubsystem horizontalIndexer = new HorizontalIndexerSubsystem();
   private final NavigationSubsystem navigation = new NavigationSubsystem();
   private final ClimberSubsystem climber = new ClimberSubsystem();
+  private final NetworkIOSubsystem network = new NetworkIOSubsystem();
 
   public static final Joystick DriveController = new Joystick(0);
   public static final Joystick SecondaryJoystick = new Joystick(1);
+
+  enum PossibleAutos {
+    STARTING_BACKWARD_IN_FRONT_OF_TARGET_INACCURATE,
+    STARTING_BACKWARD_IN_FRONT_OF_TARGET_ACCURATE,
+  }
+
+  SendableChooser<PossibleAutos> autoChoice = new SendableChooser<PossibleAutos>();
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -74,6 +88,10 @@ public class RobotContainer {
     configureButtonBindings();
 
     //Create a button to make a BooleanSupplier off of, for the speed mode in Tank Drive. This prevents creating a new object every loop.
+    //Add options for auto choice
+    addAutoChoices();
+
+    //Create a button to make a BooleanSupplier off of, for the speed mode in Tank Drive
     final JoystickButton speedModeButton = new JoystickButton(DriveController, 7);
     //Configure driveTrain default command, which is tank drive with Primary Controller Joysticks (NUMBERED CONTROLLER). It also uses left trigger for speed mode
     driveTrain.setDefaultCommand(new TankDriveCommand(driveTrain,()->DriveController.getY(),()->DriveController.getThrottle(), ()->speedModeButton.get()));
@@ -149,6 +167,12 @@ public class RobotContainer {
     SecondaryX.whileHeld(new AutoIntakeIndex(intake, horizontalIndexer, verticalIndexer));
   }
 
+  private void addAutoChoices() {
+    PossibleAutos[] enumValues = PossibleAutos.values();
+    for (int i = 0; i < enumValues.length; i++) {
+      autoChoice.addOption(enumValues[i].toString(), enumValues[i]);
+    }
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -156,7 +180,12 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // The robot will probably crash in autonomous
+    PossibleAutos choice = autoChoice.getSelected();
+    if (choice == PossibleAutos.STARTING_BACKWARD_IN_FRONT_OF_TARGET_INACCURATE) {
+      return new DriveEncoders(1.8288, 0.5, driveTrain).andThen(new AutoShoot(shooter, verticalIndexer, horizontalIndexer, intake, (int)(shooter.getShooterSpeedBot() * 0.8)).alongWith(new PointTurretStraightAhead(turret)));
+    } else if (choice == PossibleAutos.STARTING_BACKWARD_IN_FRONT_OF_TARGET_ACCURATE) {
+      //return new DriveEncoders(1.8288, 0.5, driveTrain).andThen(new AutoShoot(shooter, verticalIndexer, horizontalIndexer, intake, (int)(shooter.getShooterSpeedBot() * 0.8)).alongWith(new PointTurretAtTargetCommand(turret, network)));
+    }
     return null;
   }
 }
