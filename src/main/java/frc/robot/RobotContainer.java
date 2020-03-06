@@ -35,6 +35,7 @@ import frc.robot.commands.VerticalIndexerDownCommand;
 import frc.robot.commands.VerticalIndexerUpCommand;
 import frc.robot.commands.UpdateNavigationCommand;
 import frc.robot.commands.drivingCommands.DriveStraightCommand;
+import frc.robot.commands.drivingCommands.MaxPowerShootCommand;
 import frc.robot.commands.drivingCommands.TankDriveCommand;
 import frc.robot.commands.drivingCommands.ToggleBrakeCommand;
 import frc.robot.subsystems.ClimberSubsystem;
@@ -99,13 +100,13 @@ public class RobotContainer {
     driveTrain.setDefaultCommand(new TankDriveCommand(driveTrain,()->DriveController.getY(),()->DriveController.getThrottle(), ()->speedModeButton.get()));
 
     //Configure shooter default command, which is to spin both wheels with left joystick
-    shooter.setDefaultCommand(new SimpleShootCommand(shooter,()->SecondaryJoystick.getY(),()->SecondaryJoystick.getY()));
+   // shooter.setDefaultCommand(new SimpleShootCommand(shooter,()->SecondaryJoystick.getY(),()->SecondaryJoystick.getY()));
 
     //Configure the default command to update our position based on encoder changes, gyro changes, and eventually vision
     navigation.setDefaultCommand(new UpdateNavigationCommand(navigation, ()->driveTrain.getLeftEncoder(), ()->driveTrain.getRightEncoder()));
     
     //Configure climber to respond to right joystick by default
-    climber.setDefaultCommand(new SimpleClimberControlCommand(climber, ()->SecondaryJoystick.getThrottle()));
+    climber.setDefaultCommand(new SimpleClimberControlCommand(climber, ()->SecondaryJoystick.getY(),()->SecondaryJoystick.getThrottle()));
   
 
 
@@ -165,6 +166,9 @@ public class RobotContainer {
     //When button 9 is pressed, zero the turret
     SecondaryHome.whenPressed(new TurretToLimitCommand(this.turret));
 
+
+
+    SecondaryDPadUp.whileHeld(new MaxPowerShootCommand(shooter));
     //--------Shooting Button Bindings--------
     //When button 8 (Right Trigger) is pressed, start constant shooting
     //new JoystickButton(SecondaryJoystick, 5).whileHeld(new AutoShootTesting(shooter, verticalIndexer, horizontalIndexer, intake));
