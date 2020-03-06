@@ -187,7 +187,7 @@ public class RobotContainer {
     PossibleAutos choice = autoChoice.getSelected();
     if (choice == PossibleAutos.STARTING_BACKWARD_IN_FRONT_OF_TARGET_INACCURATE) {
      // return (new DriveEncoders(1.8288, 0.5, driveTrain)).andThen(new AutoShoot(shooter, verticalIndexer, (int)(shooter.getShooterSpeedBot() * 0.8)));
-     return (new TurretToLimitCommand(turret)).andThen(new DriveEncoders(1.8288, .5, driveTrain)).andThen((new ConstantShootCommand(shooter)).alongWith(new VerticalIndexerUpCommand(verticalIndexer)));
+     return (new TurretToLimitCommand(turret)).andThen(new DriveEncoders(1.8288, .5, driveTrain)).andThen(((new ConstantShootCommand(shooter)).alongWith(new VerticalIndexerUpCommand(this.verticalIndexer)).alongWith(new HorizontalIndexerIntakeCommand(this.horizontalIndexer))).withTimeout(3));
     } else if (choice == PossibleAutos.STARTING_BACKWARD_IN_FRONT_OF_TARGET_ACCURATE) {
       //return new DriveEncoders(1.8288, 0.5, driveTrain).andThen(new AutoShoot(shooter, verticalIndexer, horizontalIndexer, intake, (int)(shooter.getShooterSpeedBot() * 0.8)).alongWith(new PointTurretAtTargetCommand(turret, network)));
     }

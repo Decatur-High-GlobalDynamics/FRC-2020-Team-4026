@@ -32,7 +32,7 @@ public class VerticalIndexerSubsystem extends SubsystemBase {
 
   private String currCmd;
 
-  private final double upSpeed = .35;
+  private final double upSpeed = .65;
   private final double downSpeed = -.35;
   public VerticalIndexerSubsystem() {
     verticalIndexer = new TeamTalonSRX("Subsystems.VerticalIndexer.VIndxMotor", Constants.IndexerVertCAN);
