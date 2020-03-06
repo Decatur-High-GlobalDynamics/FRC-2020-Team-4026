@@ -44,7 +44,7 @@ public class TurretSubsystem extends SubsystemBase {
   private double lastGoodAngle;
   private int numSequentialErrors = 0;
 
-  public boolean isTurretToLimitRunning = false;
+  private boolean isTurretToLimitRunning = false;
   
   private final PidParameters pidParams = new PidParameters(0.35, 0.05, 0.1, 0, 0, 0.15, 10);
 
@@ -204,6 +204,10 @@ public class TurretSubsystem extends SubsystemBase {
 
   public void goClockwise(){
     goClockwise(maxTurnSpeed);
+  }
+
+  public void toggleTurretCalibrating(){
+    isTurretToLimitRunning = !isTurretToLimitRunning;
   }
 
   public void goCounterClockwise(double power){
