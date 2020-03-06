@@ -29,7 +29,7 @@ public class PointTurretStraightAhead extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    turret.startRotatingToPosition(Math.PI/2);
+    turret.startRotatingToEncoderPosition(-2914);
   }
 
   // Called once the command ends or is interrupted.

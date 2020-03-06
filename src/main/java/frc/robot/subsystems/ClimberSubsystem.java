@@ -22,6 +22,9 @@ public class ClimberSubsystem extends SubsystemBase {
 
   private final DigitalInput leftLimit;
   private final DigitalInput rightLimit;
+
+  private final DigitalInput leftHookLimit;
+  private final DigitalInput rightHookLimit;
   /**
    * Creates a new ClimberSubsystem.
    */
@@ -32,6 +35,9 @@ public class ClimberSubsystem extends SubsystemBase {
     leftLimit = new DigitalInput(Constants.Climber_LeftLimitDIO);
     rightLimit = new DigitalInput(Constants.Climber_RightLimitDIO);
 
+    rightHookLimit = new DigitalInput(Constants.Hook_RightDIO);
+    leftHookLimit = new DigitalInput(Constants.Hook_LeftDIO);
+
   }
 
   @Override
@@ -40,6 +46,9 @@ public class ClimberSubsystem extends SubsystemBase {
 
     SmartDashboard.putBoolean("Subsystem.Climber.leftLimit", leftLimit.get());
     SmartDashboard.putBoolean("Subsystems.Climber.rightLimit", rightLimit.get());
+
+    SmartDashboard.putBoolean("Subsystems.Climber.leftHookLimit",leftHookLimit.get());
+    SmartDashboard.putBoolean("Subsystems.Climber.rightHookLimit",rightHookLimit.get());
   }
   public void stop(){
     leftClimber.set(0);
@@ -48,6 +57,6 @@ public class ClimberSubsystem extends SubsystemBase {
 
   public void setClimbers(double power){
     leftClimber.set(-power);
-    rightClimber.set(power);
+    rightClimber.set((power)*.9);
   }
 }

@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.commands.AutoIntakeIndex;
 import frc.robot.commands.AutoShoot;
 import frc.robot.commands.AutoShootTesting;
+import frc.robot.commands.AutoShootWithHorizontal;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.ConstantShootCommand;
 import frc.robot.commands.HorizontalIndexerIntakeCommand;
@@ -46,6 +47,7 @@ import frc.robot.subsystems.TurretSubsystem;
 import frc.robot.subsystems.VerticalIndexerSubsystem;
 import frc.robot.subsystems.HorizontalIndexerSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
@@ -188,17 +190,16 @@ public class RobotContainer {
     if (choice == PossibleAutos.STARTING_BACKWARD_IN_FRONT_OF_TARGET_INACCURATE) {
 
       Command turretToLimit = new TurretToLimitCommand(turret);
+      Command turretForward = new PointTurretStraightAhead(turret);
       Command driveForward = new DriveEncoders(1.8288, .5, driveTrain);
-      Command shoot = new ConstantShootCommand(shooter);
-      Command verticalIndexUp = new VerticalIndexerUpCommand(this.verticalIndexer);
-      Command horizontalIndexerIntake = new HorizontalIndexerIntakeCommand(this.horizontalIndexer);
+      Command shoot = new AutoShootWithHorizontal(shooter, verticalIndexer, horizontalIndexer, (int)(shooter.getMaxVelBot() * 0.80));
+      Command waitUntilStopped = new WaitUntilCommand(this.driveTrain::isStopped);
+      Command waitUntilIdle = new WaitUntilCommand(this.verticalIndexer::isIdle);
 
      // return (new DriveEncoders(1.8288, 0.5, driveTrain)).andThen(new AutoShoot(shooter, verticalIndexer, (int)(shooter.getShooterSpeedBot() * 0.8)));
-     return (turretToLimit.alongWith(driveForward))
+     return (turretToLimit.andThen(turretForward).alongWith(driveForward))
             .andThen(
-              (shoot.alongWith(verticalIndexUp).
-                alongWith(horizontalIndexerIntake)
-              ).withTimeout(3)
+              (shoot.withTimeout(5))
             );
     } else if (choice == PossibleAutos.STARTING_BACKWARD_IN_FRONT_OF_TARGET_ACCURATE) {
       //return new DriveEncoders(1.8288, 0.5, driveTrain).andThen(new AutoShoot(shooter, verticalIndexer, horizontalIndexer, intake, (int)(shooter.getShooterSpeedBot() * 0.8)).alongWith(new PointTurretAtTargetCommand(turret, network)));

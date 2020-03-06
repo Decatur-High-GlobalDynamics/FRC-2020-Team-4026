@@ -43,9 +43,9 @@ public class TurretToLimitCommand extends CommandBase {
     if (!interrupted) {
       turret.resetEncoder();
       turret.markAsCalibrated();
+     // turret.startRotatingToPosition(Math.PI/2);
     }
     turret.toggleTurretCalibrating();
-    turret.startRotatingToPosition(Math.PI/2);
   }
 
   // Returns true when the command should end.

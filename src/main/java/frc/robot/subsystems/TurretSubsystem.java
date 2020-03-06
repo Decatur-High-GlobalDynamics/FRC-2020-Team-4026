@@ -35,7 +35,7 @@ public class TurretSubsystem extends SubsystemBase {
   private static final boolean sensorPhase = true;
   private static final boolean motorInvert = true;
   
-  private boolean hasBeenCalibrated=false;
+  private boolean hasBeenCalibrated=true;
 
   private final double MinPowerToMove = 0.0425;
 

@@ -7,10 +7,10 @@
 
 package frc.robot.subsystems;
 
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -34,8 +34,14 @@ public class VerticalIndexerSubsystem extends SubsystemBase {
 
   private final double upSpeed = .65;
   private final double downSpeed = -.35;
+
+  private double epsilonIdleTime = 1;
+
+  private Timer idleTimerSeconds = new Timer();
   public VerticalIndexerSubsystem() {
     verticalIndexer = new TeamTalonSRX("Subsystems.VerticalIndexer.VIndxMotor", Constants.IndexerVertCAN);
+    idleTimerSeconds.reset();
+    idleTimerSeconds.start();
   }
 
   @Override
@@ -48,6 +54,8 @@ public class VerticalIndexerSubsystem extends SubsystemBase {
     ticksUntilTransfered = (int) SmartDashboard.getNumber("Subsystems.VerticalIndexer.TicksUntilTransferred", ticksUntilTransfered);
     SmartDashboard.putNumber("Subsystems.VerticalIndexer.TicksUntilTransferred", ticksUntilTransfered);
     SmartDashboard.putNumber("Subsystems.VerticalIndexer.currentPosition", verticalIndexer.getSelectedSensorPosition());
+    epsilonIdleTime = SmartDashboard.getNumber("Subsystems.DriveTrain.epsilonIdleTime", epsilonIdleTime);
+    SmartDashboard.putNumber("Subsystems.DriveTrain.epsilonIdleTime", epsilonIdleTime);
     if (this.getCurrentCommand() == null){
       currCmd = "null";
     } else { 
@@ -55,6 +63,17 @@ public class VerticalIndexerSubsystem extends SubsystemBase {
     }
     SmartDashboard.putString("Subsystems.VerticalIndexer.currCommand", currCmd);
     
+    if (topSwitchIsPressed() || verticalIndexer.get() == 0) {
+      idleTimerSeconds.reset();
+    }
+  }
+
+  public boolean isIdleForSeconds(double maxIdleSeconds) {
+    return idleTimerSeconds.get() > maxIdleSeconds;
+  }
+
+  public boolean isIdle() {
+    return idleTimerSeconds.get() > epsilonIdleTime;
   }
 
   public boolean topSwitchIsPressed() {

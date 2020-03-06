@@ -37,6 +37,8 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
   private boolean brakeMode = false;
 
+  private double epsilonIsStopped = 100;
+
 
   public DriveTrainSubsystem() {
     rightDriveFalconMain = new WPI_TalonFX(Constants.RightDriveFalconMainCAN);
@@ -75,6 +77,8 @@ public class DriveTrainSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Subsystems.DriveTrain.maxOutputSlow", maxOutputSlow);
     maxOutputFast = SmartDashboard.getNumber("Subsystems.DriveTrain.maxOutputFast", maxOutputFast);
     SmartDashboard.putNumber("Subsystems.DriveTrain.maxOutputFast", maxOutputFast);
+    epsilonIsStopped = SmartDashboard.getNumber("Subsystems.DriveTrain.epsilonIsStopped", epsilonIsStopped);
+    SmartDashboard.putNumber("Subsystems.DriveTrain.epsilonIsStopped", epsilonIsStopped);
   }
 
   //Caps the requested powers then sends them to Differential Drive
@@ -141,5 +145,9 @@ public class DriveTrainSubsystem extends SubsystemBase {
       rightDriveFalconSub.setNeutralMode(NeutralMode.Brake);
     }
     brakeMode = !brakeMode;
+  }
+
+  public boolean isStopped() {
+    return leftDriveFalconMain.getSelectedSensorVelocity() < 100 && rightDriveFalconMain.getSelectedSensorVelocity() < 100;
   }
 }

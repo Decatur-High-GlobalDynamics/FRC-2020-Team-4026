@@ -75,5 +75,9 @@ public final class Constants {
     public static final int Climber_LeftLimitDIO = 6;
     public static final int Climber_RightLimitDIO = 7;
 
+    public static final int Hook_LeftDIO = 9;
+    public static final int Hook_RightDIO = 8;
+
+
 
 }
