@@ -19,7 +19,7 @@ public class NetworkIOSubsystem extends SubsystemBase {
    */
   public NetworkIOSubsystem() {
     inst = NetworkTableInstance.getDefault();
-    CameraServer.getInstance().startAutomaticCapture();
+    //CameraServer.getInstance().startAutomaticCapture();
 
   }
 

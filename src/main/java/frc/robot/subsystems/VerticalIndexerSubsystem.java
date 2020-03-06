@@ -8,6 +8,7 @@
 package frc.robot.subsystems;
 
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -27,8 +28,10 @@ public class VerticalIndexerSubsystem extends SubsystemBase {
 
   public int ticksUntilTransfered = 6000;
 
+  private String currCmd;
+
   private final double upSpeed = .35;
-  private final double downSpeed = -.5;
+  private final double downSpeed = -.35;
   public VerticalIndexerSubsystem() {
     verticalIndexer = new TeamTalonSRX("Subsystems.VerticalIndexer.VIndxMotor", Constants.IndexerVertCAN);
   }
@@ -43,6 +46,13 @@ public class VerticalIndexerSubsystem extends SubsystemBase {
     ticksUntilTransfered = (int) SmartDashboard.getNumber("Subsystems.VerticalIndexer.TicksUntilTransferred", ticksUntilTransfered);
     SmartDashboard.putNumber("Subsystems.VerticalIndexer.TicksUntilTransferred", ticksUntilTransfered);
     SmartDashboard.putNumber("Subsystems.VerticalIndexer.currentPosition", verticalIndexer.getSelectedSensorPosition());
+    if (this.getCurrentCommand() == null){
+      currCmd = "null";
+    } else { 
+      currCmd = this.getCurrentCommand().toString();
+    }
+    SmartDashboard.putString("Subsystems.VerticalIndexer.currCommand", currCmd);
+    
   }
 
   public boolean topSwitchIsPressed() {
@@ -63,10 +73,10 @@ public class VerticalIndexerSubsystem extends SubsystemBase {
   }
 
   public void up(){
-      verticalIndexer.set(upSpeed);
+      verticalIndexer.set(ControlMode.PercentOutput,upSpeed);
   }
   public void down(){
-      verticalIndexer.set(downSpeed);
+      verticalIndexer.set(ControlMode.PercentOutput,downSpeed);
   }
   public void stop(){
   verticalIndexer.set(0);

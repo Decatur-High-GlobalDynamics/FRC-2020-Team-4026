@@ -27,6 +27,7 @@ public class DriveEncoders extends CommandBase {
    */
   public DriveEncoders(double userMeters, double speed, DriveTrainSubsystem drive) {
     // Use addRequirements() here to declare subsystem dependencies.
+    this.driveTime = new Timer();
     this.userMeters = userMeters;
     this.speed = speed;
     this.drive = drive;
