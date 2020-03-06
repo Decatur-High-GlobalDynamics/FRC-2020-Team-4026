@@ -72,6 +72,8 @@ public final class Constants {
     public static final int VerticalIndexer_TopLimit_DIO = 3;
     public static final int VerticalIndexer_BottomLimit_DIO_A = 4;
     public static final int VerticalIndexer_BottomLimit_DIO_C = 5;
+    public static final int Climber_LeftLimitDIO = 6;
+    public static final int Climber_RightLimitDIO = 7;
 
 
 }

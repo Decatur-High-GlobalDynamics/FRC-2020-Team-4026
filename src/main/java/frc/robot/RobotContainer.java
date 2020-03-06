@@ -144,7 +144,7 @@ public class RobotContainer {
     //When Y is held, Intake and Horizontal Indexer out (Synchronized)
     SecondaryY.whileHeld(new SimpleOuttakeCommand(this.intake).alongWith(new HorizontalIndexerOuttakeCommand(this.horizontalIndexer)));
     //When X held, Intake and Horizontal Indexer in (Synchronized)
-   // SecondaryX.whileHeld(new SimpleIntakeCommand(this.intake).alongWith(new HorizontalIndexerIntakeCommand(this.horizontalIndexer)));
+    SecondaryX.whileHeld(new SimpleIntakeCommand(this.intake).alongWith(new HorizontalIndexerIntakeCommand(this.horizontalIndexer)));
     //When A is held, Intake Out
     SecondaryA.whileHeld(new SimpleOuttakeCommand(this.intake));
     //When B is held, Horizontal Indexer out
@@ -167,7 +167,7 @@ public class RobotContainer {
     //When button 8 (Right Trigger) is pressed, start constant shooting
     //new JoystickButton(SecondaryJoystick, 5).whileHeld(new AutoShootTesting(shooter, verticalIndexer, horizontalIndexer, intake));
     //SecondaryDPadDown.whileHeld(new ConstantShootCommand(shooter));
-    SecondaryX.whileHeld(new AutoIntakeIndex(intake, horizontalIndexer, verticalIndexer));
+   // SecondaryX.whileHeld(new AutoIntakeIndex(intake, horizontalIndexer, verticalIndexer));
   }
 
   private void addAutoChoices() {
@@ -186,7 +186,8 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     PossibleAutos choice = autoChoice.getSelected();
     if (choice == PossibleAutos.STARTING_BACKWARD_IN_FRONT_OF_TARGET_INACCURATE) {
-      return new DriveEncoders(1.8288, 0.5, driveTrain).alongWith(new TurretToLimitCommand(turret)).andThen(new PointTurretStraightAhead(turret)).andThen(new AutoShoot(shooter, verticalIndexer, (int)(shooter.getShooterSpeedBot() * 0.8)));
+     // return (new DriveEncoders(1.8288, 0.5, driveTrain)).andThen(new AutoShoot(shooter, verticalIndexer, (int)(shooter.getShooterSpeedBot() * 0.8)));
+     return (new TurretToLimitCommand(turret)).andThen(new DriveEncoders(1.8288, .5, driveTrain)).andThen((new ConstantShootCommand(shooter)).alongWith(new VerticalIndexerUpCommand(verticalIndexer)));
     } else if (choice == PossibleAutos.STARTING_BACKWARD_IN_FRONT_OF_TARGET_ACCURATE) {
       //return new DriveEncoders(1.8288, 0.5, driveTrain).andThen(new AutoShoot(shooter, verticalIndexer, horizontalIndexer, intake, (int)(shooter.getShooterSpeedBot() * 0.8)).alongWith(new PointTurretAtTargetCommand(turret, network)));
     }

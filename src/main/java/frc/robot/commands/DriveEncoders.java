@@ -69,8 +69,9 @@ public class DriveEncoders extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (Utils.checkTolerance((Math.abs(drive.getRightEncoder()-initialRightEncoderValue))*Constants.kEncoderDistancePerPulse, Math.abs(userMeters), Constants.driveEpsilon*Constants.kEncoderDistancePerPulse) && Utils.checkTolerance((Math.abs(drive.getLeftEncoder()-initialLeftEncoderValue))*Constants.kEncoderDistancePerPulse, Math.abs(userMeters), Constants.kEncoderDistancePerPulse*Constants.driveEpsilon)){
-      return true;
+  //  if (Utils.checkTolerance((Math.abs(drive.getRightEncoder()-initialRightEncoderValue))*Constants.kEncoderDistancePerPulse, Math.abs(userMeters), Constants.driveEpsilon*Constants.kEncoderDistancePerPulse) && Utils.checkTolerance((Math.abs(drive.getLeftEncoder()-initialLeftEncoderValue))*Constants.kEncoderDistancePerPulse, Math.abs(userMeters), Constants.kEncoderDistancePerPulse*Constants.driveEpsilon)){
+    if((Math.abs(drive.getRightEncoder()-initialRightEncoderValue)*Constants.kEncoderDistancePerPulse)>=userMeters && (Math.abs(drive.getLeftEncoder()-initialLeftEncoderValue)*Constants.kEncoderDistancePerPulse)>=userMeters ){
+    return true;
     } else {
       return false;
     }
