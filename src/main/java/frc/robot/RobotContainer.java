@@ -39,6 +39,7 @@ import frc.robot.subsystems.TurretSubsystem;
 import frc.robot.subsystems.VerticalIndexerSubsystem;
 import frc.robot.subsystems.HorizontalIndexerSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -96,6 +97,22 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    //Create button variables
+    Button SecondaryX = new JoystickButton(SecondaryJoystick,1);
+    Button SecondaryA = new JoystickButton(SecondaryJoystick,2);
+    Button SecondaryB = new JoystickButton(SecondaryJoystick,3);
+    Button SecondaryY = new JoystickButton(SecondaryJoystick,4);
+    Button SecondaryRightBumper = new JoystickButton(SecondaryJoystick,5);
+    Button SecondaryLeftBumper = new JoystickButton(SecondaryJoystick,6);
+    Button SecondaryLeftTrigger = new JoystickButton(SecondaryJoystick,7);
+    Button SecondaryRightTrigger = new JoystickButton(SecondaryJoystick,8);
+    Button SecondaryHome = new JoystickButton(SecondaryJoystick,9);
+
+    Button SecondaryDPadUp = new POVButton(SecondaryJoystick, 0);
+    Button SecondaryDPadRight = new POVButton(SecondaryJoystick,90);
+    Button SecondaryDPadDown = new POVButton(SecondaryJoystick,180);
+    Button SecondaryDPadLeft = new POVButton(SecondaryJoystick,270);
+
     //--------Drivetrain Button Bindings--------
     //When right trigger on main controller is held, drive straight
     new JoystickButton(DriveController, 8).whileHeld(new DriveStraightCommand(driveTrain, navigation, ()->DriveController.getY()));
@@ -104,27 +121,26 @@ public class RobotContainer {
 
     //--------Intake and Indexer Button Bindings--------
     //When Y is held, Intake and Horizontal Indexer out (Synchronized)
-    new JoystickButton(SecondaryJoystick, 4).whileHeld(new SimpleOuttakeCommand(this.intake).alongWith(new HorizontalIndexerOuttakeCommand(this.horizontalIndexer)));
+    SecondaryY.whileHeld(new SimpleOuttakeCommand(this.intake).alongWith(new HorizontalIndexerOuttakeCommand(this.horizontalIndexer)));
     //When X held, Intake and Horizontal Indexer in (Synchronized)
-    new JoystickButton(SecondaryJoystick, 1).whileHeld(new SimpleIntakeCommand(this.intake).alongWith(new HorizontalIndexerIntakeCommand(this.horizontalIndexer)));
+    SecondaryX.whileHeld(new SimpleIntakeCommand(this.intake).alongWith(new HorizontalIndexerIntakeCommand(this.horizontalIndexer)));
     //When A is held, Intake Out
-    new JoystickButton(SecondaryJoystick, 2).whileHeld(new SimpleOuttakeCommand(this.intake));
+    SecondaryA.whileHeld(new SimpleOuttakeCommand(this.intake));
     //When B is held, Horizontal Indexer out
-    new JoystickButton(SecondaryJoystick, 3).whileHeld(new HorizontalIndexerOuttakeCommand(this.horizontalIndexer));
+    SecondaryB.whileHeld(new HorizontalIndexerOuttakeCommand(this.horizontalIndexer));
     //When Right Trigger is held, Vertical Indexer up
-    new JoystickButton(SecondaryJoystick, 8).whileHeld(new VerticalIndexerUpCommand(this.verticalIndexer));
+    SecondaryRightTrigger.whileHeld(new VerticalIndexerUpCommand(this.verticalIndexer));
     //When Left Trigger is held, Vertical Indexer down
-    new JoystickButton(SecondaryJoystick, 7).whileHeld(new VerticalIndexerDownCommand(this.verticalIndexer));
+    SecondaryLeftTrigger.whileHeld(new VerticalIndexerDownCommand(this.verticalIndexer));
     //When button 5 is pressed (Right Bumper), shoot at constant speed
-    new JoystickButton(SecondaryJoystick, 6).whileHeld(new PidShootCommand(this.shooter, 1, 1)); 
-    
+    SecondaryRightBumper.whileHeld(new PidShootCommand(this.shooter, 1, 1)); 
     //--------Turret Button Bindings--------
-    //When left dpad is held, Turret Clockwise
-    new POVButton(SecondaryJoystick, 90).whileHeld(new SimpleTurretCWCommand(this.turret));
-    //When right dpad is held, Turret Counterclockwise
-    new POVButton(SecondaryJoystick, 270).whileHeld(new SimpleTurretCCWCommand(this.turret));
+    //When right dpad is held, Turret Clockwise
+    SecondaryDPadRight.whileHeld(new SimpleTurretCWCommand(this.turret));
+    //When left dpad is held, Turret Counterclockwise
+    SecondaryDPadLeft.whileHeld(new SimpleTurretCCWCommand(this.turret));
     //When button 9 is pressed, zero the turret
-    new JoystickButton(SecondaryJoystick, 9).whenPressed(new TurretToLimitCommand(this.turret));
+    SecondaryHome.whenPressed(new TurretToLimitCommand(this.turret));
 
     //--------Shooting Button Bindings--------
     //When button 8 (Right Trigger) is pressed, start constant shooting
