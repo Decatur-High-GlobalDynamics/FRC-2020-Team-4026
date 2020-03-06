@@ -189,7 +189,7 @@ public class RobotContainer {
     PossibleAutos choice = autoChoice.getSelected();
     if (choice == PossibleAutos.STARTING_BACKWARD_IN_FRONT_OF_TARGET_INACCURATE) {
 
-      Command driveForward = new DriveEncoders(1.8288, .5, driveTrain);
+      Command driveForward = new DriveEncoders(1.2192, .5, driveTrain);
       Command shoot = new AutoShootWithHorizontal(shooter, verticalIndexer, horizontalIndexer, (int)(shooter.getMaxVelBot() * 0.80));
       
 
