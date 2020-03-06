@@ -64,6 +64,11 @@ public class DriveTrainSubsystem extends SubsystemBase {
     setSlowMode();
 
     drive.setRightSideInverted(false);
+
+    leftDriveFalconMain.setNeutralMode(NeutralMode.Coast);
+    leftDriveFalconSub.setNeutralMode(NeutralMode.Coast);
+    rightDriveFalconMain.setNeutralMode(NeutralMode.Coast);
+    rightDriveFalconSub.setNeutralMode(NeutralMode.Coast);
   }
 
   @Override
