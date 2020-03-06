@@ -34,6 +34,7 @@ import frc.robot.commands.TurretToLimitCommand;
 import frc.robot.commands.VerticalIndexerDownCommand;
 import frc.robot.commands.VerticalIndexerUpCommand;
 import frc.robot.commands.UpdateNavigationCommand;
+import frc.robot.commands.drivingCommands.DisableRampingCommand;
 import frc.robot.commands.drivingCommands.DriveStraightCommand;
 import frc.robot.commands.drivingCommands.MaxPowerShootCommand;
 import frc.robot.commands.drivingCommands.TankDriveCommand;
@@ -120,7 +121,8 @@ public class RobotContainer {
   private void configureButtonBindings() {
     //Create button variables
     Button PrimaryRightTrigger = new JoystickButton(DriveController, 8);
-    Button PrimaryLeftBumper = new JoystickButton(DriveController,5);
+    Button PrimaryLeftBumper = new JoystickButton(DriveController,6);
+    Button PrimaryRightBumper = new JoystickButton(DriveController, 6);
 
     Button SecondaryX = new JoystickButton(SecondaryJoystick,1);
     Button SecondaryA = new JoystickButton(SecondaryJoystick,2);
@@ -140,8 +142,10 @@ public class RobotContainer {
     //--------Drivetrain Button Bindings--------
     //When right trigger on main controller is held, drive straight
     PrimaryRightTrigger.whileHeld(new DriveStraightCommand(driveTrain, navigation, ()->DriveController.getY()));
-    //When left bumper is pressed, toggle brake mode
-    PrimaryLeftBumper.whenPressed(new ToggleBrakeCommand(driveTrain));
+    //When left bumper held, enable brake mode
+    PrimaryLeftBumper.whileHeld(new ToggleBrakeCommand(driveTrain));
+    //When right bumper held, disable ramping
+    PrimaryRightBumper.whileHeld(new DisableRampingCommand(driveTrain));
 
     //--------Intake and Indexer Button Bindings--------
     //When Y is held, Intake and Horizontal Indexer out (Synchronized)
