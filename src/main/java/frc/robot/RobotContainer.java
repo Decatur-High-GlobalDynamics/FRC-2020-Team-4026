@@ -103,15 +103,9 @@ public class RobotContainer {
     new JoystickButton(DriveController, 5).whenPressed(new ToggleBrakeCommand(driveTrain));
 
     //--------Intake and Indexer Button Bindings--------
-<<<<<<< HEAD
     //When Y is held, Intake and Horizontal Indexer out (Synchronized)
     new JoystickButton(SecondaryJoystick, 4).whileHeld(new SimpleOuttakeCommand(this.intake).alongWith(new HorizontalIndexerOuttakeCommand(this.horizontalIndexer)));
     //When X held, Intake and Horizontal Indexer in (Synchronized)
-=======
-    //When X is held, Intake and Horizontal Indexer in (Synchronized)
-    //new JoystickButton(SecondaryJoystick, 4).whileHeld(new SimpleOuttakeCommand(this.intake).alongWith(new HorizontalIndexerOuttakeCommand(this.horizontalIndexer)));
-    //When Y held, Intake and Horizontal Indexer out (Synchronized)
->>>>>>> develop
     new JoystickButton(SecondaryJoystick, 1).whileHeld(new SimpleIntakeCommand(this.intake).alongWith(new HorizontalIndexerIntakeCommand(this.horizontalIndexer)));
     //When A is held, Intake Out
     new JoystickButton(SecondaryJoystick, 2).whileHeld(new SimpleOuttakeCommand(this.intake));
@@ -121,13 +115,9 @@ public class RobotContainer {
     new JoystickButton(SecondaryJoystick, 8).whileHeld(new VerticalIndexerUpCommand(this.verticalIndexer));
     //When Left Trigger is held, Vertical Indexer down
     new JoystickButton(SecondaryJoystick, 7).whileHeld(new VerticalIndexerDownCommand(this.verticalIndexer));
-<<<<<<< HEAD
-
-=======
     //When button 5 is pressed (Right Bumper), shoot at constant speed
     new JoystickButton(SecondaryJoystick, 6).whileHeld(new PidShootCommand(this.shooter, 1, 1)); 
     
->>>>>>> develop
     //--------Turret Button Bindings--------
     //When left dpad is held, Turret Clockwise
     new POVButton(SecondaryJoystick, 90).whileHeld(new SimpleTurretCWCommand(this.turret));
@@ -135,15 +125,12 @@ public class RobotContainer {
     new POVButton(SecondaryJoystick, 270).whileHeld(new SimpleTurretCCWCommand(this.turret));
     //When button 9 is pressed, zero the turret
     new JoystickButton(SecondaryJoystick, 9).whenPressed(new TurretToLimitCommand(this.turret));
-<<<<<<< HEAD
-=======
 
     //--------Shooting Button Bindings--------
     //When button 8 (Right Trigger) is pressed, start constant shooting
     new JoystickButton(SecondaryJoystick, 5).whileHeld(new AutoShootTesting(shooter, verticalIndexer, horizontalIndexer, intake));
     new POVButton(SecondaryJoystick, 180).whileHeld(new ConstantShootCommand(shooter));
     new JoystickButton(SecondaryJoystick, 4).whileHeld(new AutoIntakeIndex(intake, horizontalIndexer, verticalIndexer));
->>>>>>> develop
   }
 
 
