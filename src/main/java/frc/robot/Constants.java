@@ -67,9 +67,11 @@ public final class Constants {
 
     // DIO Ports
     public static final int TurretLimitDIO = 0;
-    public static final int VerticalIndexer_BottomLimit_DIO = 1;
+    public static final int VerticalIndexer_BottomLimit_DIO_B = 1;
     public static final int VerticalIndexer_MiddleLimit_DIO = 2;
     public static final int VerticalIndexer_TopLimit_DIO = 3;
+    public static final int VerticalIndexer_BottomLimit_DIO_A = 4;
+    public static final int VerticalIndexer_BottomLimit_DIO_C = 5;
 
 
 }

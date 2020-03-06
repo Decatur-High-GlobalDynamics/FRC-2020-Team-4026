@@ -10,45 +10,38 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.TurretSubsystem;
 
-public class TurretToLimitCommand extends CommandBase {
+public class PrepareTurretCommand extends CommandBase {
   /**
-   * Creates a new TurretToLimitCommand.
+   * Creates a new PrepareTurretCommand.
    */
   private final TurretSubsystem turret;
-  private double calibrationTurnPower = 0.1;
 
-  public TurretToLimitCommand(TurretSubsystem turret) {
-    // Use addRequirements() here to declare subsystem dependencies.
+  public PrepareTurretCommand(TurretSubsystem turret) {
     this.turret = turret;
+    // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(turret);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    turret.startRotatingToPosition(3 * Math.PI / 2);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    turret.goCounterClockwise(calibrationTurnPower);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    if(interrupted)
-      System.err.println("TurretToLimit interrupted!");
-    if (!interrupted) {
-      turret.resetEncoder();
-      turret.markAsCalibrated();
-    }
-    turret.startRotatingToPosition(Math.PI/2);
+    turret.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return turret.getTurretLimitSwitch();
+    return !turret.isMotorBusy();
   }
 }
