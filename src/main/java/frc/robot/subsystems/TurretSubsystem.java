@@ -142,6 +142,8 @@ public class TurretSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Subsystems.Turret.radPerPulse", radPerPulse);
     SmartDashboard.putNumber("Subsystems.Turret.turretPosition-rads", this.getRadians());
 
+    SmartDashboard.putBoolean("Subsystems.Turret.isTurretCalibrating", isTurretCalibrating);
+
     turretMotor.periodic();
     // Display and Update PID parameters
     pidParams.periodic("Subsystems.Turret", turretMotor, 0);

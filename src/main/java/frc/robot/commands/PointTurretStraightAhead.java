@@ -41,6 +41,6 @@ public class PointTurretStraightAhead extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Utils.checkTolerance(Math.PI/2, turret.getRadians(), 1/(36*Math.PI));
+    return Utils.checkTolerance(Math.PI/2, turret.getRadians(), 1/(36*Math.PI)) || !turret.checkCalibration();
   }
 }
