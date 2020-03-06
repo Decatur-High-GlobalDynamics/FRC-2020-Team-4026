@@ -123,7 +123,7 @@ public class RobotContainer {
     //When Y is held, Intake and Horizontal Indexer out (Synchronized)
     SecondaryY.whileHeld(new SimpleOuttakeCommand(this.intake).alongWith(new HorizontalIndexerOuttakeCommand(this.horizontalIndexer)));
     //When X held, Intake and Horizontal Indexer in (Synchronized)
-    SecondaryX.whileHeld(new SimpleIntakeCommand(this.intake).alongWith(new HorizontalIndexerIntakeCommand(this.horizontalIndexer)));
+   // SecondaryX.whileHeld(new SimpleIntakeCommand(this.intake).alongWith(new HorizontalIndexerIntakeCommand(this.horizontalIndexer)));
     //When A is held, Intake Out
     SecondaryA.whileHeld(new SimpleOuttakeCommand(this.intake));
     //When B is held, Horizontal Indexer out
@@ -144,9 +144,9 @@ public class RobotContainer {
 
     //--------Shooting Button Bindings--------
     //When button 8 (Right Trigger) is pressed, start constant shooting
-    new JoystickButton(SecondaryJoystick, 5).whileHeld(new AutoShootTesting(shooter, verticalIndexer, horizontalIndexer, intake));
-    new POVButton(SecondaryJoystick, 180).whileHeld(new ConstantShootCommand(shooter));
-    new JoystickButton(SecondaryJoystick, 4).whileHeld(new AutoIntakeIndex(intake, horizontalIndexer, verticalIndexer));
+    //new JoystickButton(SecondaryJoystick, 5).whileHeld(new AutoShootTesting(shooter, verticalIndexer, horizontalIndexer, intake));
+    //SecondaryDPadDown.whileHeld(new ConstantShootCommand(shooter));
+    SecondaryX.whileHeld(new AutoIntakeIndex(intake, horizontalIndexer, verticalIndexer));
   }
 
 
