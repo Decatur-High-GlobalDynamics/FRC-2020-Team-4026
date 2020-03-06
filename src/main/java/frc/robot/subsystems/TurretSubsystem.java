@@ -44,7 +44,7 @@ public class TurretSubsystem extends SubsystemBase {
   private double lastGoodAngle;
   private int numSequentialErrors = 0;
 
-  private boolean isTurretToLimitRunning = false;
+  private boolean isTurretCalibrating = false;
   
   private final PidParameters pidParams = new PidParameters(0.35, 0.05, 0.1, 0, 0, 0.15, 10);
 
@@ -79,8 +79,6 @@ public class TurretSubsystem extends SubsystemBase {
     turretMotor.configForwardSoftLimitEnable(false);
 
     turretMotor.setNeutralMode(NeutralMode.Brake);
-
-
   }
   
 
@@ -92,7 +90,7 @@ public class TurretSubsystem extends SubsystemBase {
 
     // Check safety limits if turret is not running TurretToLimit calibration
     Command cmd = getCurrentCommand();
-    if (isTurretToLimitRunning) {
+    if (isTurretCalibrating) {
       return true;
     }
 
@@ -176,7 +174,7 @@ public class TurretSubsystem extends SubsystemBase {
       SmartDashboard.putNumber("Subsystems.Turret.targetPosition", 0);
       SmartDashboard.putNumber("Subsystems.Turret.error", 0);
     }
-    if(!hasBeenCalibrated && !(isTurretToLimitRunning) ){
+    if(!hasBeenCalibrated && !(isTurretCalibrating) ){
      // new TurretToLimitCommand(this).schedule();
     }
   }
@@ -207,7 +205,7 @@ public class TurretSubsystem extends SubsystemBase {
   }
 
   public void toggleTurretCalibrating(){
-    isTurretToLimitRunning = !isTurretToLimitRunning;
+    isTurretCalibrating = !isTurretCalibrating;
   }
 
   public void goCounterClockwise(double power){
