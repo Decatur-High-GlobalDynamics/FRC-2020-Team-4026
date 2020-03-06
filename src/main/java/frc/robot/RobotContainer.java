@@ -139,8 +139,10 @@ public class RobotContainer {
     //--------Drivetrain Button Bindings--------
     //When right trigger on main controller is held, drive straight
     PrimaryRightTrigger.whileHeld(new DriveStraightCommand(driveTrain, navigation, ()->DriveController.getY()));
-    //When left bumper is pressed, toggle brake mode
-    PrimaryLeftBumper.whenPressed(new ToggleBrakeCommand(driveTrain));
+    //When left bumper held, enable brake mode
+    PrimaryLeftBumper.whileHeld(new ToggleBrakeCommand(driveTrain));
+    //When right bumper held, disable ramping
+    PrimaryRightBumper.whileHeld(new DisableRampingCommand(driveTrain));
 
     //--------Intake and Indexer Button Bindings--------
     //When Y is held, Intake and Horizontal Indexer out (Synchronized)
