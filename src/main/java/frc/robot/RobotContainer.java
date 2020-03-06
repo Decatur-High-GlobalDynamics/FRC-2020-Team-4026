@@ -10,18 +10,20 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.commands.AutoIntakeIndex;
+import frc.robot.commands.AutoShoot;
+import frc.robot.commands.AutoShootTesting;
+import frc.robot.commands.ConstantShootCommand;
 import frc.robot.commands.HorizontalIndexerIntakeCommand;
 import frc.robot.commands.HorizontalIndexerOuttakeCommand;
+import frc.robot.commands.PidShootCommand;
 import frc.robot.commands.SimpleClimberControlCommand;
 import frc.robot.commands.SimpleIntakeCommand;
 import frc.robot.commands.SimpleOuttakeCommand;
 import frc.robot.commands.SimpleShootCommand;
 import frc.robot.commands.SimpleTurretCCWCommand;
 import frc.robot.commands.SimpleTurretCWCommand;
-import frc.robot.commands.StopTurretCommand;
-import frc.robot.commands.ConstantShootCommand;
 import frc.robot.commands.TurretToLimitCommand;
-import frc.robot.commands.TurretToPositionCommand;
 import frc.robot.commands.VerticalIndexerDownCommand;
 import frc.robot.commands.VerticalIndexerUpCommand;
 import frc.robot.commands.UpdateNavigationCommand;
@@ -101,9 +103,15 @@ public class RobotContainer {
     new JoystickButton(DriveController, 5).whenPressed(new ToggleBrakeCommand(driveTrain));
 
     //--------Intake and Indexer Button Bindings--------
+<<<<<<< HEAD
     //When Y is held, Intake and Horizontal Indexer out (Synchronized)
     new JoystickButton(SecondaryJoystick, 4).whileHeld(new SimpleOuttakeCommand(this.intake).alongWith(new HorizontalIndexerOuttakeCommand(this.horizontalIndexer)));
     //When X held, Intake and Horizontal Indexer in (Synchronized)
+=======
+    //When X is held, Intake and Horizontal Indexer in (Synchronized)
+    //new JoystickButton(SecondaryJoystick, 4).whileHeld(new SimpleOuttakeCommand(this.intake).alongWith(new HorizontalIndexerOuttakeCommand(this.horizontalIndexer)));
+    //When Y held, Intake and Horizontal Indexer out (Synchronized)
+>>>>>>> develop
     new JoystickButton(SecondaryJoystick, 1).whileHeld(new SimpleIntakeCommand(this.intake).alongWith(new HorizontalIndexerIntakeCommand(this.horizontalIndexer)));
     //When A is held, Intake Out
     new JoystickButton(SecondaryJoystick, 2).whileHeld(new SimpleOuttakeCommand(this.intake));
@@ -113,7 +121,13 @@ public class RobotContainer {
     new JoystickButton(SecondaryJoystick, 8).whileHeld(new VerticalIndexerUpCommand(this.verticalIndexer));
     //When Left Trigger is held, Vertical Indexer down
     new JoystickButton(SecondaryJoystick, 7).whileHeld(new VerticalIndexerDownCommand(this.verticalIndexer));
+<<<<<<< HEAD
 
+=======
+    //When button 5 is pressed (Right Bumper), shoot at constant speed
+    new JoystickButton(SecondaryJoystick, 6).whileHeld(new PidShootCommand(this.shooter, 1, 1)); 
+    
+>>>>>>> develop
     //--------Turret Button Bindings--------
     //When left dpad is held, Turret Clockwise
     new POVButton(SecondaryJoystick, 90).whileHeld(new SimpleTurretCWCommand(this.turret));
@@ -121,6 +135,15 @@ public class RobotContainer {
     new POVButton(SecondaryJoystick, 270).whileHeld(new SimpleTurretCCWCommand(this.turret));
     //When button 9 is pressed, zero the turret
     new JoystickButton(SecondaryJoystick, 9).whenPressed(new TurretToLimitCommand(this.turret));
+<<<<<<< HEAD
+=======
+
+    //--------Shooting Button Bindings--------
+    //When button 8 (Right Trigger) is pressed, start constant shooting
+    new JoystickButton(SecondaryJoystick, 5).whileHeld(new AutoShootTesting(shooter, verticalIndexer, horizontalIndexer, intake));
+    new POVButton(SecondaryJoystick, 180).whileHeld(new ConstantShootCommand(shooter));
+    new JoystickButton(SecondaryJoystick, 4).whileHeld(new AutoIntakeIndex(intake, horizontalIndexer, verticalIndexer));
+>>>>>>> develop
   }
 
 
