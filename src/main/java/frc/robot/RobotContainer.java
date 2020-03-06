@@ -186,8 +186,20 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     PossibleAutos choice = autoChoice.getSelected();
     if (choice == PossibleAutos.STARTING_BACKWARD_IN_FRONT_OF_TARGET_INACCURATE) {
+
+      Command turretToLimit = new TurretToLimitCommand(turret);
+      Command driveForward = new DriveEncoders(1.8288, .5, driveTrain);
+      Command shoot = new ConstantShootCommand(shooter);
+      Command verticalIndexUp = new VerticalIndexerUpCommand(this.verticalIndexer);
+      Command horizontalIndexerIntake = new HorizontalIndexerIntakeCommand(this.horizontalIndexer);
+
      // return (new DriveEncoders(1.8288, 0.5, driveTrain)).andThen(new AutoShoot(shooter, verticalIndexer, (int)(shooter.getShooterSpeedBot() * 0.8)));
-     return (new TurretToLimitCommand(turret)).andThen(new DriveEncoders(1.8288, .5, driveTrain)).andThen(((new ConstantShootCommand(shooter)).alongWith(new VerticalIndexerUpCommand(this.verticalIndexer)).alongWith(new HorizontalIndexerIntakeCommand(this.horizontalIndexer))).withTimeout(3));
+     return (turretToLimit.alongWith(driveForward))
+            .andThen(
+              (shoot.alongWith(verticalIndexUp).
+                alongWith(horizontalIndexerIntake)
+              ).withTimeout(3)
+            );
     } else if (choice == PossibleAutos.STARTING_BACKWARD_IN_FRONT_OF_TARGET_ACCURATE) {
       //return new DriveEncoders(1.8288, 0.5, driveTrain).andThen(new AutoShoot(shooter, verticalIndexer, horizontalIndexer, intake, (int)(shooter.getShooterSpeedBot() * 0.8)).alongWith(new PointTurretAtTargetCommand(turret, network)));
     }
