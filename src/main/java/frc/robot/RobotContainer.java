@@ -199,10 +199,12 @@ public class RobotContainer {
 
       Command driveForward = new DriveEncoders(1.2192, .5, driveTrain);
       Command shoot = new AutoShootWithHorizontal(shooter, verticalIndexer, horizontalIndexer, (int)(shooter.getMaxVelBot() * 0.80));
-      
+      Command spinUpShooter = new ConstantShootCommand(shooter);
 
      // return (new DriveEncoders(1.8288, 0.5, driveTrain)).andThen(new AutoShoot(shooter, verticalIndexer, (int)(shooter.getShooterSpeedBot() * 0.8)));
-     return (driveForward)
+     return (driveForward
+              .raceWith(spinUpShooter)
+            )
             .andThen(
               (shoot.withTimeout(10))
             );
