@@ -59,4 +59,10 @@ public class ClimberSubsystem extends SubsystemBase {
     leftClimber.set(-power);
     rightClimber.set((power)*.9);
   }
+  public void setLeftClimber(double power){
+    leftClimber.set(-power);
+  }
+  public void setRightClimber(double power){
+    rightClimber.set(power);
+  }
 }

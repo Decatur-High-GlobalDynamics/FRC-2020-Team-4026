@@ -5,30 +5,21 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands;
-
-import java.util.function.DoubleSupplier;
+package frc.robot.commands.drivingCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ShooterSubsystem;
 
-public class SimpleShootCommand extends CommandBase {
-  
-  ShooterSubsystem shooter;
-  DoubleSupplier topThrottle;
-  DoubleSupplier bottomThrottle;
+public class MaxPowerShootCommand extends CommandBase {
+  private final ShooterSubsystem shooter;
   /**
-   * Creates a new SimpleShootCommand.
+   * Creates a new MaxPowerShootCommand.
    */
-  public SimpleShootCommand(ShooterSubsystem shooter, DoubleSupplier top, DoubleSupplier bottom) {
+  public MaxPowerShootCommand(ShooterSubsystem shooter) {
     this.shooter = shooter;
-    this.topThrottle = top;
-    this.bottomThrottle = bottom;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(shooter);
-
   }
-  
 
   // Called when the command is initially scheduled.
   @Override
@@ -38,14 +29,15 @@ public class SimpleShootCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooter.setBottomMotor(this.bottomThrottle.getAsDouble());
-    shooter.setTopMotor(this.topThrottle.getAsDouble());
+    shooter.setBottomMotor(1);
+    shooter.setTopMotor(1);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooter.stop();
+    shooter.setBottomMotor(0);
+    shooter.setTopMotor(0);
   }
 
   // Returns true when the command should end.
