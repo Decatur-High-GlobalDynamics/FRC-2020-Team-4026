@@ -197,11 +197,16 @@ public class RobotContainer {
     PossibleAutos choice = autoChoice.getSelected();
     if (choice == PossibleAutos.STARTING_BACKWARD_IN_FRONT_OF_TARGET_INACCURATE) {
 
+      //This command drives forward 4 feet when run
       Command driveForward = new DriveEncoders(1.2192, .5, driveTrain);
+      //This shoots when shooter speed is over 80%
       Command shoot = new AutoShootWithHorizontal(shooter, verticalIndexer, horizontalIndexer, (int)(shooter.getMaxVelBot() * 0.80));
+      //This spins up the shooter when run
       Command spinUpShooter = new ConstantShootCommand(shooter);
 
      // return (new DriveEncoders(1.8288, 0.5, driveTrain)).andThen(new AutoShoot(shooter, verticalIndexer, (int)(shooter.getShooterSpeedBot() * 0.8)));
+
+     //This drives and spins up, and when driving finishes, shoots for 10 seconds
      return (driveForward
               .raceWith(spinUpShooter)
             )
