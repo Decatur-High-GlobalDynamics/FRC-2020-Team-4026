@@ -14,9 +14,9 @@ import frc.robot.subsystems.TurretSubsystem;
 
 public class PointTurretAtTargetCommand extends CommandBase {
   TurretSubsystem turret;
-  Timer cantSeeTimeout;
+  Timer timeoutForNoVision;
 
-  final double kP = 0.005;
+  final double kProportionConstant = 0.005;
 
   /**
    * Creates a new PointTurretAtTarget Command.
@@ -29,31 +29,35 @@ public class PointTurretAtTargetCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    cantSeeTimeout.reset();
+    timeoutForNoVision.reset();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double error;
+    double angleToTarget;
     try{
-      error = (double)Utils.getFromNetworkTable("angles", "xAngle");
+      //Get the value of field xAngle in table angles from the network table
+      angleToTarget = (double)Utils.getFromNetworkTable("angles", "xAngle");
     }
     catch(NullPointerException e){
       System.err.println("Angle not found in NetworkTables. Is the Pi Connected?");
-      error = 4026;
+      //4026 is the condition if vision isn't working or can't see the target
+      angleToTarget = 4026;
     }
     //This is sent if the target isn't seen
-    if (error == 4026) {
-      if (cantSeeTimeout.get() > 2) {
-        turret.stop();
-      }
+    if (angleToTarget == 4026) {
+      turret.stop();
     } else {
-      cantSeeTimeout.reset();
-      if (error > 0) {
-        turret.goClockwise(kP * Math.abs(error));
+      //If angle is more than 0, it is on our right so we go clockwise in a proportion of the angle we are off
+      if (angleToTarget > 0) {
+        turret.goClockwise(kProportionConstant * Math.abs(angleToTarget));
+      //If angle is less than 0, it is on our left so we go counter clockwise in a proportion of our angle
+      } else if (angleToTarget < 0) {
+        turret.goCounterClockwise(kProportionConstant * Math.abs(angleToTarget));
+      //
       } else {
-        turret.goCounterClockwise(kP * Math.abs(error));
+        turret.stop();
       }
     }
   }
