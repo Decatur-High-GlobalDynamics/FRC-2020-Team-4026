@@ -149,7 +149,7 @@ public class RobotContainer {
 
     //--------Intake and Indexer Button Bindings--------
     //When Y is held, Intake and Horizontal Indexer out (Synchronized)
-    SecondaryY.whileHeld(new SimpleOuttakeCommand(this.intake).alongWith(new HorizontalIndexerOuttakeCommand(this.horizontalIndexer)));
+    SecondaryY.whileHeld(new AutoIntakeIndex(intake, horizontalIndexer, verticalIndexer));
     //When X held, Intake and Horizontal Indexer in (Synchronized)
     SecondaryX.whileHeld(new SimpleIntakeCommand(this.intake).alongWith(new HorizontalIndexerIntakeCommand(this.horizontalIndexer)));
     //When A is held, Intake Out
@@ -203,6 +203,8 @@ public class RobotContainer {
       Command shoot = new AutoShootWithHorizontal(shooter, verticalIndexer, horizontalIndexer, (int)(shooter.getMaxVelBot() * 0.80));
       //This spins up the shooter when run
       Command spinUpShooter = new ConstantShootCommand(shooter);
+      //This drives back 8 feet
+      Command driveBack = new DriveEncoders(-2.4384, -1, driveTrain);
 
      // return (new DriveEncoders(1.8288, 0.5, driveTrain)).andThen(new AutoShoot(shooter, verticalIndexer, (int)(shooter.getShooterSpeedBot() * 0.8)));
 
@@ -211,7 +213,10 @@ public class RobotContainer {
               .raceWith(spinUpShooter)
             )
             .andThen(
-              (shoot.withTimeout(10))
+              (shoot.withTimeout(5))
+              .andThen(
+                driveBack
+              )
             );
     } else if (choice == PossibleAutos.STARTING_BACKWARD_IN_FRONT_OF_TARGET_ACCURATE) {
       //return new DriveEncoders(1.8288, 0.5, driveTrain).andThen(new AutoShoot(shooter, verticalIndexer, horizontalIndexer, intake, (int)(shooter.getShooterSpeedBot() * 0.8)).alongWith(new PointTurretAtTargetCommand(turret, network)));

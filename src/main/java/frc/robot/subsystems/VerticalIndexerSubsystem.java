@@ -28,11 +28,11 @@ public class VerticalIndexerSubsystem extends SubsystemBase {
   private DigitalInput middleSwitch = new DigitalInput(Constants.VerticalIndexer_MiddleLimit_DIO);
   private DigitalInput topSwitch = new DigitalInput(Constants.VerticalIndexer_TopLimit_DIO);
 
-  public int ticksUntilTransfered = 7000;
+  public int ticksUntilTransfered = 6500;
 
   private String currCmd;
 
-  private final double upSpeed = .65;
+  private final double upSpeed = .35;
   private final double downSpeed = -.35;
 
   private double epsilonIdleTime = 1;
