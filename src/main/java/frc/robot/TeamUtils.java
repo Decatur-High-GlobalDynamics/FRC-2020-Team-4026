@@ -37,5 +37,11 @@ public class TeamUtils {
         }
         return value.getValue();
     }
-    
+    public static boolean checkTolerance(double valueA, double valueB, double epsilon ){
+        if (Math.abs(valueA-valueB) <= epsilon)
+            return true;
+        else {
+            return false;
+        }
+    }
 }

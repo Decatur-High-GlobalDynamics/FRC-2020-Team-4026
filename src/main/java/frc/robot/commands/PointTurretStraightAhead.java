@@ -8,7 +8,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Utils;
+import frc.robot.TeamUtils;
 import frc.robot.subsystems.TurretSubsystem;
 
 public class PointTurretStraightAhead extends CommandBase {
@@ -41,6 +41,6 @@ public class PointTurretStraightAhead extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Utils.checkTolerance(Math.PI/2, turret.getRadians(), 1/(36*Math.PI)) || !turret.checkCalibration();
+    return TeamUtils.checkTolerance(Math.PI/2, turret.getRadians(), 1/(36*Math.PI)) || !turret.checkCalibration();
   }
 }
