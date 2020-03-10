@@ -7,28 +7,19 @@
 
 package frc.robot.commands;
 
-import java.util.function.DoubleSupplier;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.TeamUtils;
+import frc.robot.subsystems.TurretSubsystem;
 
-public class SimpleShootCommand extends CommandBase {
-  
-  ShooterSubsystem shooter;
-  DoubleSupplier topThrottle;
-  DoubleSupplier bottomThrottle;
+public class PointTurretStraightAhead extends CommandBase {
+  TurretSubsystem turret;
   /**
-   * Creates a new SimpleShootCommand.
+   * Creates a new PointTurretStraightAhead.
    */
-  public SimpleShootCommand(ShooterSubsystem shooter, DoubleSupplier top, DoubleSupplier bottom) {
-    this.shooter = shooter;
-    this.topThrottle = top;
-    this.bottomThrottle = bottom;
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(shooter);
-
+  public PointTurretStraightAhead(TurretSubsystem turret) {
+    this.turret = turret;
+    addRequirements(turret);
   }
-  
 
   // Called when the command is initially scheduled.
   @Override
@@ -38,19 +29,18 @@ public class SimpleShootCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooter.setBottomMotor(this.bottomThrottle.getAsDouble());
-    shooter.setTopMotor(this.topThrottle.getAsDouble());
+    turret.startRotatingToEncoderPosition(-2914);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooter.stop();
+    turret.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return TeamUtils.checkTolerance(Math.PI/2, turret.getRadians(), 1/(36*Math.PI)) || !turret.checkCalibration();
   }
 }

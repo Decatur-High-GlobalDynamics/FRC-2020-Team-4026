@@ -17,10 +17,12 @@ public class SimpleClimberControlCommand extends CommandBase {
    * Creates a new SimpleClimberControlCommand.
    */
   private ClimberSubsystem climber;
-  private DoubleSupplier power;
-  public SimpleClimberControlCommand(ClimberSubsystem climber, DoubleSupplier power) {
+  private DoubleSupplier leftPower;
+  private DoubleSupplier rightPower;
+  public SimpleClimberControlCommand(ClimberSubsystem climber, DoubleSupplier leftPower, DoubleSupplier rightPower) {
     this.climber = climber;
-    this.power = power;
+    this.leftPower = leftPower;
+    this.rightPower= rightPower;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(climber);
   }
@@ -33,7 +35,8 @@ public class SimpleClimberControlCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    this.climber.setClimbers(this.power.getAsDouble());
+    this.climber.setLeftClimber(this.leftPower.getAsDouble());
+    this.climber.setRightClimber(this.rightPower.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.

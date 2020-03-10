@@ -17,13 +17,10 @@ public class AutoIntakeIndex extends CommandBase {
   /**
    * Creates a new AutoIntakeIndex.
    */
-  private final HorizontalIndexerSubsystem horizontalIndexer;
   private final VerticalIndexerSubsystem verticalIndexer;
-  private final IntakeSubsystem intake;
 
   private boolean ballAtBot;
   private boolean ballAtTop;
-  private boolean ballLeftBot;
 
   private String currentState;
 
@@ -33,9 +30,7 @@ public class AutoIntakeIndex extends CommandBase {
 
   public AutoIntakeIndex(IntakeSubsystem intake, HorizontalIndexerSubsystem horizontalIndexer, VerticalIndexerSubsystem verticalIndexer) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.horizontalIndexer = horizontalIndexer;
     this.verticalIndexer = verticalIndexer;
-    this.intake = intake;
 
     intakeCommand = new SimpleIntakeCommand(intake);
     horizontalIntakeCommand = new HorizontalIndexerIntakeCommand(horizontalIndexer);
@@ -51,7 +46,6 @@ public class AutoIntakeIndex extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    ballLeftBot = ballAtBot && !verticalIndexer.middleSwitchIsPressed();
     ballAtBot = verticalIndexer.bottomSwitchIsPressed();
     ballAtTop = verticalIndexer.topSwitchIsPressed();
 

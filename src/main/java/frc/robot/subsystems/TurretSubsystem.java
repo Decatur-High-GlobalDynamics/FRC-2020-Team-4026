@@ -8,7 +8,6 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -19,6 +18,8 @@ import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.Constants;
 import frc.robot.PidParameters;
 import frc.robot.TeamTalonSRX;
+import frc.robot.TeamUtils;
+import frc.robot.commands.PrepareTurretCommand;
 import frc.robot.commands.TurretToLimitCommand;
 
 public class TurretSubsystem extends SubsystemBase {
@@ -34,13 +35,21 @@ public class TurretSubsystem extends SubsystemBase {
   private static final boolean sensorPhase = true;
   private static final boolean motorInvert = true;
   
-  private boolean hasBeenCalibrated=false;
+  private boolean hasBeenCalibrated=true;
 
   private final double MinPowerToMove = 0.0425;
 
   private final int stallThresh = 30;
+
+  private double lastGoodAngle;
+  private int numSequentialErrors = 0;
+
+  private boolean isTurretCalibrating = false;
   
   private final PidParameters pidParams = new PidParameters(0.35, 0.05, 0.1, 0, 0, 0.15, 10);
+
+  //Number of encoder ticks to go when rotating
+  private int rotationSpeed = 500;
 
   // Location (based on limitswitch = 0) of far clockwise range
   private long minEncoderRange = -7000;
@@ -70,8 +79,6 @@ public class TurretSubsystem extends SubsystemBase {
     turretMotor.configForwardSoftLimitEnable(false);
 
     turretMotor.setNeutralMode(NeutralMode.Brake);
-
-
   }
   
 
@@ -83,7 +90,7 @@ public class TurretSubsystem extends SubsystemBase {
 
     // Check safety limits if turret is not running TurretToLimit calibration
     Command cmd = getCurrentCommand();
-    if (cmd instanceof TurretToLimitCommand) {
+    if (isTurretCalibrating) {
       return true;
     }
 
@@ -135,6 +142,8 @@ public class TurretSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Subsystems.Turret.radPerPulse", radPerPulse);
     SmartDashboard.putNumber("Subsystems.Turret.turretPosition-rads", this.getRadians());
 
+    SmartDashboard.putBoolean("Subsystems.Turret.isTurretCalibrating", isTurretCalibrating);
+
     turretMotor.periodic();
     // Display and Update PID parameters
     pidParams.periodic("Subsystems.Turret", turretMotor, 0);
@@ -156,6 +165,7 @@ public class TurretSubsystem extends SubsystemBase {
     if ( ! previousPidParameters.equals(pidParams) ) {
       turretMotor.configureWithPidParameters(pidParams,0);
     }
+    SmartDashboard.putNumber("Subsystems.Turret.xAngleAdjusted", this.getVisionXAngle());
 
     SmartDashboard.putNumber("Subsystems.Turret.sensorPosition", turretMotor.getSelectedSensorPosition(0));
     SmartDashboard.putString("Subsystems.Turret.Mode", turretMotor.getControlMode().toString());
@@ -166,8 +176,8 @@ public class TurretSubsystem extends SubsystemBase {
       SmartDashboard.putNumber("Subsystems.Turret.targetPosition", 0);
       SmartDashboard.putNumber("Subsystems.Turret.error", 0);
     }
-    if(!hasBeenCalibrated && !(this.getCurrentCommand() instanceof TurretToLimitCommand)){
-      new TurretToLimitCommand(this).schedule();
+    if(!hasBeenCalibrated && !(isTurretCalibrating) ){
+     // new TurretToLimitCommand(this).schedule();
     }
   }
  
@@ -185,8 +195,19 @@ public class TurretSubsystem extends SubsystemBase {
     turretMotor.set(ControlMode.PercentOutput, -power);
   }
 
+  public void positionRotateCW(){
+    this.startRotatingToEncoderPosition(this.getTicks() - rotationSpeed);
+  }
+  public void positonRotateCCW(){
+    this.startRotatingToEncoderPosition(this.getTicks() + rotationSpeed);
+  }
+
   public void goClockwise(){
     goClockwise(maxTurnSpeed);
+  }
+
+  public void toggleTurretCalibrating(){
+    isTurretCalibrating = !isTurretCalibrating;
   }
 
   public void goCounterClockwise(double power){
@@ -224,9 +245,9 @@ public class TurretSubsystem extends SubsystemBase {
 
   public void stop(){
     // Set a little power in the opposite direction that we were heading
-     turretMotor.set(ControlMode.PercentOutput, -0.01*Math.signum(turretMotor.getMotorOutputPercent()));
+     turretMotor.set(ControlMode.PercentOutput, -0.004026*Math.signum(turretMotor.getMotorOutputPercent()));
      // Tell motor to hold the position
-     startRotatingToEncoderPosition((long)MathUtil.clamp(getTicks(), minEncoderRange,0));
+     startRotatingToEncoderPosition((long)MathUtil.clamp(turretMotor.getSelectedSensorPosition(), minEncoderRange,0));
   }
 
   public boolean isMotorBusy() {
@@ -248,7 +269,11 @@ public class TurretSubsystem extends SubsystemBase {
 
   public void startRotatingToEncoderPosition(long encoderPosition) {
     turretMotor.configureWithPidParameters(pidParams, 0);
-    turretMotor.set(ControlMode.Position, encoderPosition);
+    long reqPosition = encoderPosition;
+    if (!(this.getCurrentCommand() instanceof PrepareTurretCommand)){
+      reqPosition = (long) MathUtil.clamp(reqPosition, minEncoderRange, 0);
+    }
+    turretMotor.set(ControlMode.Position, reqPosition);
   }
 
   public void startRotatingToPosition(double targetRad){
@@ -273,6 +298,21 @@ public class TurretSubsystem extends SubsystemBase {
 
   public boolean isRadsAllowed(double rads) {
     return !(convertToTicks(rads) > 0 || convertToTicks(rads) < minEncoderRange);
+  }
+  
+  public double getVisionXAngle(){
+    Object result = TeamUtils.getFromNetworkTable("angles", "xAngle");
+    if (result != null && (Double) result != 4026.0){
+      lastGoodAngle = (Double) result;
+      numSequentialErrors = 0;
+    } else {
+      numSequentialErrors ++;
+    }
+    if (numSequentialErrors > 10){
+      return 4026;
+    } else {
+      return lastGoodAngle;
+    }
   }
 
 }

@@ -26,6 +26,7 @@ public class TurretToLimitCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    turret.toggleTurretCalibrating();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -37,13 +38,14 @@ public class TurretToLimitCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    turret.stop();
     if(interrupted)
       System.err.println("TurretToLimit interrupted!");
     if (!interrupted) {
       turret.resetEncoder();
       turret.markAsCalibrated();
+     // turret.startRotatingToPosition(Math.PI/2);
     }
+    turret.toggleTurretCalibrating();
   }
 
   // Returns true when the command should end.
