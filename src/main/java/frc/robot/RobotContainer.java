@@ -72,14 +72,13 @@ public class RobotContainer {
   private final HorizontalIndexerSubsystem horizontalIndexer = new HorizontalIndexerSubsystem();
   private final NavigationSubsystem navigation = new NavigationSubsystem();
   private final ClimberSubsystem climber = new ClimberSubsystem();
-  private final NetworkIOSubsystem network = new NetworkIOSubsystem();
 
   public static final Joystick DriveController = new Joystick(0);
   public static final Joystick SecondaryJoystick = new Joystick(1);
 
   enum PossibleAutos {
-    STARTING_BACKWARD_IN_FRONT_OF_TARGET_INACCURATE,
-    STARTING_BACKWARD_IN_FRONT_OF_TARGET_ACCURATE,
+    IN_FRONT_OF_TARGET_MAX_POWER,
+    IN_FRONT_OF_TARGET_MAX_POWER_THEN_BACK,
   }
 
   SendableChooser<PossibleAutos> autoChoice = new SendableChooser<PossibleAutos>();
@@ -91,7 +90,6 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
-    //Create a button to make a BooleanSupplier off of, for the speed mode in Tank Drive. This prevents creating a new object every loop.
     //Add options for auto choice
     addAutoChoices();
 
@@ -195,7 +193,25 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     PossibleAutos choice = autoChoice.getSelected();
-    if (choice == PossibleAutos.STARTING_BACKWARD_IN_FRONT_OF_TARGET_INACCURATE) {
+    if (choice == PossibleAutos.IN_FRONT_OF_TARGET_MAX_POWER) {
+
+      //This command drives forward 4 feet when run
+      Command driveForward = new DriveEncoders(1.2192, .5, driveTrain);
+      //This shoots when shooter speed is over 80%
+      Command shoot = new AutoShootWithHorizontal(shooter, verticalIndexer, horizontalIndexer, (int)(shooter.getMaxVelBot() * 0.80));
+      //This spins up the shooter when run
+      Command spinUpShooter = new ConstantShootCommand(shooter);
+
+
+     //This drives and spins up, and when driving finishes, shoots for 5 seconds
+     return (driveForward
+              .raceWith(spinUpShooter)
+            )
+            .andThen(
+              (shoot.withTimeout(5))
+              
+            );
+    } else if (choice == PossibleAutos.IN_FRONT_OF_TARGET_MAX_POWER_THEN_BACK) {
 
       //This command drives forward 4 feet when run
       Command driveForward = new DriveEncoders(1.2192, .5, driveTrain);
@@ -206,8 +222,6 @@ public class RobotContainer {
       //This drives back 8 feet
       Command driveBack = new DriveEncoders(-2.4384, -1, driveTrain);
 
-     // return (new DriveEncoders(1.8288, 0.5, driveTrain)).andThen(new AutoShoot(shooter, verticalIndexer, (int)(shooter.getShooterSpeedBot() * 0.8)));
-
      //This drives and spins up, and when driving finishes, shoots for 10 seconds
      return (driveForward
               .raceWith(spinUpShooter)
@@ -217,10 +231,7 @@ public class RobotContainer {
               .andThen(
                 driveBack
               )
-            );
-    } else if (choice == PossibleAutos.STARTING_BACKWARD_IN_FRONT_OF_TARGET_ACCURATE) {
-      //return new DriveEncoders(1.8288, 0.5, driveTrain).andThen(new AutoShoot(shooter, verticalIndexer, horizontalIndexer, intake, (int)(shooter.getShooterSpeedBot() * 0.8)).alongWith(new PointTurretAtTargetCommand(turret, network)));
-    }
+            );    }
     return null;
   }
 }
