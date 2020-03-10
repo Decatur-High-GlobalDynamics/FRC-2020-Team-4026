@@ -9,7 +9,6 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Utils;
 import frc.robot.subsystems.TurretSubsystem;
 
 public class PointTurretAtTargetCommand extends CommandBase {
@@ -38,7 +37,7 @@ public class PointTurretAtTargetCommand extends CommandBase {
     double angleToTarget;
     try{
       //Get the value of field xAngle in table angles from the network table
-      angleToTarget = (double)Utils.getFromNetworkTable("angles", "xAngle");
+      angleToTarget = turret.getVisionXAngle();
     }
     catch(NullPointerException e){
       System.err.println("Angle not found in NetworkTables. Is the Pi Connected?");
