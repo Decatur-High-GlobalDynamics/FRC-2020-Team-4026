@@ -5,43 +5,45 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands;
+package frc.robot.commands.turretCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.VerticalIndexerSubsystem;
+import frc.robot.subsystems.TurretSubsystem;
 
-public class VerticalIndexerUpCommand extends CommandBase {
-  
-  VerticalIndexerSubsystem verticalIndexer;
+public class TurretToPositionCommand extends CommandBase {
   /**
-   * Creates a new VerticalIndexerUpCommand.
+   * Creates a new TurretToPosition.
    */
-  public VerticalIndexerUpCommand(VerticalIndexerSubsystem verticalIndexer) {
-    this.verticalIndexer = verticalIndexer;
+  private final TurretSubsystem turret;
+  private int targetPos;
+  public TurretToPositionCommand(TurretSubsystem turret, int targetPos) {
+    System.err.println("Creating TurretToPosition");
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(verticalIndexer);
+    this.turret = turret;
+    addRequirements(this.turret);
+    this.targetPos = targetPos;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    turret.startRotatingToEncoderPosition(targetPos);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    verticalIndexer.up();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    verticalIndexer.stop();
+    turret.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return !turret.isMotorBusy();
   }
 }
