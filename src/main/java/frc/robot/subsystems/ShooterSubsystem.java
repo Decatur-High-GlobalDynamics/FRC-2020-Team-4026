@@ -14,13 +14,15 @@ import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.Constants;
 import frc.robot.PidParameters;
 import frc.robot.TeamTalonSRX;
+import frc.robot.TeamUtils;
 
 public class ShooterSubsystem extends SubsystemBase {
   private int maxRotationSpeedBot=38000;
   private int maxRotationSpeedTop=28000;
-  //private int targetSpeedTop = 10000;
+  //Use 24500 for bot at init line
+  
   private int targetSpeedBot = 10000;
-  //Values for 80% (max power for shooting)
+  //Values for 95% (max power for shooting)
   private final TeamTalonSRX shooter_bottom;
   private final TeamTalonSRX shooter_top;
   /**
@@ -30,7 +32,7 @@ public class ShooterSubsystem extends SubsystemBase {
   private double shooterPowerBot = 0.95;
 
   private PidParameters topPidParameters = new PidParameters(0.3,0.00015,0.1,0.031,0,1,10);
-  private PidParameters botPidParameters = new PidParameters(0.3,0.0001,0.1,0.026,0,1,10);
+  private PidParameters botPidParameters = new PidParameters(0.1,0.00005,0.1,0.026,250,1,10);
 
   public ShooterSubsystem() {
     shooter_bottom = new TeamTalonSRX("Subsystems.Shooter.Bottom", Constants.BotShooterMotorCAN);
@@ -65,6 +67,9 @@ public class ShooterSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Subsystems.Shooter.targetSpeedBot", targetSpeedBot);
 
     SmartDashboard.putBoolean("Subsystems.Shooter.isShooterReady", this.isShooterReady());
+
+    SmartDashboard.putNumber("Subsystems.Shooter.yAngleAdjusted", this.getVisionYAngle());
+    SmartDashboard.putNumber("Subsystems.Shooter.knotDistance", this.getKnotDistance());
   }
   public boolean isShooterReady(){
     return Math.abs(shooter_top.getVelocityError()) <= 600.0 && Math.abs(shooter_bottom.getVelocityError()) <= 300.0;
@@ -122,5 +127,18 @@ public class ShooterSubsystem extends SubsystemBase {
   
   public int getTargetSpeedBot(){
     return targetSpeedBot;
+  }
+
+  public double getVisionYAngle(){
+    Object result = TeamUtils.getFromNetworkTable("angles", "yAngle");
+    if (result == null){
+      return 4026.0;
+    } else {
+      return (Double) result + 37.0;
+    }
+  }
+
+  public double getKnotDistance(){
+    return (1 / Math.tan(Math.toRadians(this.getVisionYAngle()))) * 54.5;
   }
 }

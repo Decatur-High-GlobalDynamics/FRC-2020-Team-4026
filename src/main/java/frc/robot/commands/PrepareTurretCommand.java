@@ -7,50 +7,41 @@
 
 package frc.robot.commands;
 
-import java.util.function.DoubleSupplier;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.TurretSubsystem;
 
-public class SimpleShootCommand extends CommandBase {
-  
-  ShooterSubsystem shooter;
-  DoubleSupplier topThrottle;
-  DoubleSupplier bottomThrottle;
+public class PrepareTurretCommand extends CommandBase {
   /**
-   * Creates a new SimpleShootCommand.
+   * Creates a new PrepareTurretCommand.
    */
-  public SimpleShootCommand(ShooterSubsystem shooter, DoubleSupplier top, DoubleSupplier bottom) {
-    this.shooter = shooter;
-    this.topThrottle = top;
-    this.bottomThrottle = bottom;
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(shooter);
+  private final TurretSubsystem turret;
 
+  public PrepareTurretCommand(TurretSubsystem turret) {
+    this.turret = turret;
+    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(turret);
   }
-  
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    turret.startRotatingToPosition(3 * Math.PI / 2);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooter.setBottomMotor(this.bottomThrottle.getAsDouble());
-    shooter.setTopMotor(this.topThrottle.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooter.stop();
+    turret.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return !turret.isMotorBusy();
   }
 }
