@@ -5,52 +5,50 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands;
+package frc.robot.commands.shooterCommands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.TurretSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 
-public class TurretToLimitCommand extends CommandBase {
+public class PidShootCommand extends CommandBase {
+  ShooterSubsystem shooter;
   /**
-   * Creates a new TurretToLimitCommand.
+   * Creates a new SimpleShootCommand.
    */
-  private final TurretSubsystem turret;
-  private double calibrationTurnPower = 0.1;
-
-  public TurretToLimitCommand(TurretSubsystem turret) {
+  public PidShootCommand(ShooterSubsystem shooter, double topVelocityFraction, double bottomVelocityFraction) {
+    this.shooter = shooter;
     // Use addRequirements() here to declare subsystem dependencies.
-    this.turret = turret;
-    addRequirements(turret);
+    addRequirements(shooter);
+
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    turret.toggleTurretCalibrating();
+    double topShootingVelocityFraction = SmartDashboard.getNumber("Commands.PidShooter.topSpeedFraction", 1);
+    SmartDashboard.putNumber("Commands.PidShooter.topSpeedFraction", topShootingVelocityFraction);
+    double bottomShootingVelocityFraction = SmartDashboard.getNumber("Commands.PidShooter.BottomSpeedFraction", 1);
+    SmartDashboard.putNumber("Commands.PidShooter.BottomSpeedFraction", bottomShootingVelocityFraction);
+
+
+    shooter.setMotorVelocities(topShootingVelocityFraction, bottomShootingVelocityFraction);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    turret.goCounterClockwise(calibrationTurnPower);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    if(interrupted)
-      System.err.println("TurretToLimit interrupted!");
-    if (!interrupted) {
-      turret.resetEncoder();
-      turret.markAsCalibrated();
-     // turret.startRotatingToPosition(Math.PI/2);
-    }
-    turret.toggleTurretCalibrating();
+    shooter.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return turret.getTurretLimitSwitch();
+    return false;
   }
 }
