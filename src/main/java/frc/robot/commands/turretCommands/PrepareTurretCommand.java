@@ -5,29 +5,27 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands;
+package frc.robot.commands.turretCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.TurretSubsystem;
 
-public class TurretToPositionCommand extends CommandBase {
+public class PrepareTurretCommand extends CommandBase {
   /**
-   * Creates a new TurretToPosition.
+   * Creates a new PrepareTurretCommand.
    */
   private final TurretSubsystem turret;
-  private int targetPos;
-  public TurretToPositionCommand(TurretSubsystem turret, int targetPos) {
-    System.err.println("Creating TurretToPosition");
-    // Use addRequirements() here to declare subsystem dependencies.
+
+  public PrepareTurretCommand(TurretSubsystem turret) {
     this.turret = turret;
-    addRequirements(this.turret);
-    this.targetPos = targetPos;
+    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(turret);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    turret.startRotatingToEncoderPosition(targetPos);
+    turret.startRotatingToPosition(3 * Math.PI / 2);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

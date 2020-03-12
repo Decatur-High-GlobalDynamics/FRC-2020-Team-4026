@@ -65,14 +65,19 @@ public final class Constants {
     //Epsilon for DriveEncoders Command (in ticks)
     public static final double driveEpsilon = 50;
 
-    //Inches to meters
-    public static final double inchesToMeters = 0.0254; 
-
     // DIO Ports
     public static final int TurretLimitDIO = 0;
-    public static final int VerticalIndexer_BottomLimit_DIO = 1;
+    public static final int VerticalIndexer_BottomLimit_DIO_B = 1;
     public static final int VerticalIndexer_MiddleLimit_DIO = 2;
     public static final int VerticalIndexer_TopLimit_DIO = 3;
+    public static final int VerticalIndexer_BottomLimit_DIO_A = 4;
+    public static final int VerticalIndexer_BottomLimit_DIO_C = 5;
+    public static final int Climber_LeftLimitDIO = 6;
+    public static final int Climber_RightLimitDIO = 7;
+
+    public static final int Hook_LeftDIO = 9;
+    public static final int Hook_RightDIO = 8;
+
 
 
 }

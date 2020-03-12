@@ -1,3 +1,4 @@
+
 /*----------------------------------------------------------------------------*/
 /* Copyright (c) 2019 FIRST. All Rights Reserved.                             */
 /* Open Source Software - may be modified and shared by FRC teams. The code   */
@@ -5,21 +6,21 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands;
+package frc.robot.commands.intakeCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.HorizontalIndexerSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 
-public class HorizontalIndexerOuttakeCommand extends CommandBase {
-  HorizontalIndexerSubsystem horizontalIndexer;
+public class SimpleIntakeCommand extends CommandBase {
+  IntakeSubsystem intake;
 
   /**
-   * Creates a new HorizontalIndexerOuttakeCommand.
+   * Creates a new SimpleIntakeCommand.
    */
-  public HorizontalIndexerOuttakeCommand(HorizontalIndexerSubsystem horizontalIndexer) {
-    this.horizontalIndexer = horizontalIndexer;
+  public SimpleIntakeCommand(IntakeSubsystem intake) {
+    this.intake = intake;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(horizontalIndexer);
+    addRequirements(intake);
   }
 
   // Called when the command is initially scheduled.
@@ -30,13 +31,13 @@ public class HorizontalIndexerOuttakeCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    horizontalIndexer.outtake();
+    intake.inTake();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    horizontalIndexer.stop();
+    intake.stop();
   }
 
   // Returns true when the command should end.

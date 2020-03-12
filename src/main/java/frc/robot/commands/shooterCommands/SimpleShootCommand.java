@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands;
+package frc.robot.commands.shooterCommands;
 
 import java.util.function.DoubleSupplier;
 
@@ -28,6 +28,7 @@ public class SimpleShootCommand extends CommandBase {
     addRequirements(shooter);
 
   }
+  
 
   // Called when the command is initially scheduled.
   @Override

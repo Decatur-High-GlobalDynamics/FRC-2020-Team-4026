@@ -5,45 +5,43 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands;
+package frc.robot.commands.climberCommands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.ClimberSubsystem;
 
-public class PidShootCommand extends CommandBase {
-  ShooterSubsystem shooter;
+public class SimpleClimberControlCommand extends CommandBase {
   /**
-   * Creates a new SimpleShootCommand.
+   * Creates a new SimpleClimberControlCommand.
    */
-  public PidShootCommand(ShooterSubsystem shooter, double topVelocityFraction, double bottomVelocityFraction) {
-    this.shooter = shooter;
+  private ClimberSubsystem climber;
+  private DoubleSupplier leftPower;
+  private DoubleSupplier rightPower;
+  public SimpleClimberControlCommand(ClimberSubsystem climber, DoubleSupplier leftPower, DoubleSupplier rightPower) {
+    this.climber = climber;
+    this.leftPower = leftPower;
+    this.rightPower= rightPower;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(shooter);
-
+    addRequirements(climber);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    double topShootingVelocityFraction = SmartDashboard.getNumber("Commands.PidShooter.topSpeedFraction", 1);
-    SmartDashboard.putNumber("Commands.PidShooter.topSpeedFraction", topShootingVelocityFraction);
-    double bottomShootingVelocityFraction = SmartDashboard.getNumber("Commands.PidShooter.BottomSpeedFraction", 1);
-    SmartDashboard.putNumber("Commands.PidShooter.BottomSpeedFraction", bottomShootingVelocityFraction);
-
-
-    shooter.setMotorVelocities(topShootingVelocityFraction, bottomShootingVelocityFraction);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    this.climber.setLeftClimber(this.leftPower.getAsDouble());
+    this.climber.setRightClimber(this.rightPower.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooter.stop();
   }
 
   // Returns true when the command should end.

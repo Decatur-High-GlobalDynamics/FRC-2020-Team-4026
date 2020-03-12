@@ -5,35 +5,38 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.drivingCommands;
+package frc.robot.commands.indexerCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.DriveTrainSubsystem;
+import frc.robot.subsystems.HorizontalIndexerSubsystem;
 
-public class ToggleBrakeCommand extends CommandBase {
-  DriveTrainSubsystem drive;
+public class HorizontalIndexerIntakeCommand extends CommandBase {
+  HorizontalIndexerSubsystem horizontalIndexer;
+
   /**
-   * Creates a new ToggleBrakeCommand.
+   * Creates a new HorizontalIndexerIntakeCommand.
    */
-  public ToggleBrakeCommand(DriveTrainSubsystem drive) {
-    this.drive = drive;
+  public HorizontalIndexerIntakeCommand(HorizontalIndexerSubsystem horizontalIndexer) {
+    this.horizontalIndexer = horizontalIndexer;
+    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(horizontalIndexer);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    drive.toggleBrakemode();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    horizontalIndexer.intake();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    drive.toggleBrakemode();
+    horizontalIndexer.stop();
   }
 
   // Returns true when the command should end.

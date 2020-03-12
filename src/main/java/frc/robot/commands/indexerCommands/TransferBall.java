@@ -5,65 +5,63 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands;
+package frc.robot.commands.indexerCommands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.HorizontalIndexerSubsystem;
 import frc.robot.subsystems.VerticalIndexerSubsystem;
 
-public class AutoShootTesting extends CommandBase {
+public class TransferBall extends CommandBase {
   /**
-   * Creates a new AutoShoot.
+   * Creates a new TransferBall.
    */
-  private final ShooterSubsystem shooter;
   private final VerticalIndexerSubsystem verticalIndexer;
-  private int targetSpeedTop;
-  private int targetSpeedBot;
+  private final HorizontalIndexerSubsystem horizontalIndexer;
 
-  public AutoShootTesting(ShooterSubsystem shooter, VerticalIndexerSubsystem verticalIndexer) {
+  private Integer ticksWhenBottomIsUnpressed = null;
+
+  public TransferBall(VerticalIndexerSubsystem verticalIndexer, HorizontalIndexerSubsystem horizontalIndexer) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.shooter = shooter;
     this.verticalIndexer = verticalIndexer;
-
-    addRequirements(shooter);
-    addRequirements(verticalIndexer);
+    this.horizontalIndexer = horizontalIndexer;
+    addRequirements(verticalIndexer, horizontalIndexer);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    //In the future, get speeds from the lookup table based on vision
-    //Also, potentially rotate turret
-    targetSpeedBot = shooter.getTargetSpeedBot();
-    targetSpeedTop = (int) (targetSpeedBot * (2.5 / 6.5));
-    shooter.setShooterVelBot(targetSpeedBot);
-    shooter.setShooterVelTop(targetSpeedTop);
+    // Refuse to start the vertical indexer if top switch is pressed
+    if (!verticalIndexer.topSwitchIsPressed()){
+      verticalIndexer.up();
+      horizontalIndexer.intake();
+      ticksWhenBottomIsUnpressed = null;
+    }
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (shooter.isShooterReady()){
-      verticalIndexer.up();
-    } else {
-      verticalIndexer.stop();
+    if (ticksWhenBottomIsUnpressed == null && !verticalIndexer.bottomSwitchIsPressed()) {
+      ticksWhenBottomIsUnpressed = verticalIndexer.getPosition();
     }
-    SmartDashboard.putNumber("Commands.AutoShootTestingCommand.targetSpeedTop", targetSpeedTop);
-    SmartDashboard.putNumber("Commands.AutoShootTestingCommand.targetSpeedBot", targetSpeedBot);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooter.setShooterVelTop(0);
-    shooter.setShooterVelBot(0);
     verticalIndexer.stop();
+    horizontalIndexer.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    if (verticalIndexer.topSwitchIsPressed()){
+      return true;
+    }
+    if (ticksWhenBottomIsUnpressed==null){
+      return false;
+    }
+    return Math.abs(verticalIndexer.getPosition() - ticksWhenBottomIsUnpressed) >= verticalIndexer.ticksUntilTransfered;
   }
 }

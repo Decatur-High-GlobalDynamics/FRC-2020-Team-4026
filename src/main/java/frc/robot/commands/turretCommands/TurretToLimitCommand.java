@@ -5,43 +5,52 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands;
+package frc.robot.commands.turretCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.VerticalIndexerSubsystem;
+import frc.robot.subsystems.TurretSubsystem;
 
-public class VerticalIndexerDownCommand extends CommandBase {
-  VerticalIndexerSubsystem verticalIndexer;
-
+public class TurretToLimitCommand extends CommandBase {
   /**
-   * Creates a new VerticalIndexerDownCommand.
+   * Creates a new TurretToLimitCommand.
    */
-  public VerticalIndexerDownCommand(VerticalIndexerSubsystem verticalIndexer) {
-    this.verticalIndexer = verticalIndexer;
+  private final TurretSubsystem turret;
+  private double calibrationTurnPower = 0.1;
+
+  public TurretToLimitCommand(TurretSubsystem turret) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(verticalIndexer);
+    this.turret = turret;
+    addRequirements(turret);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    turret.toggleTurretCalibrating();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    verticalIndexer.down();
+    turret.goCounterClockwise(calibrationTurnPower);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    verticalIndexer.stop();
+    if(interrupted)
+      System.err.println("TurretToLimit interrupted!");
+    if (!interrupted) {
+      turret.resetEncoder();
+      turret.markAsCalibrated();
+     // turret.startRotatingToPosition(Math.PI/2);
+    }
+    turret.toggleTurretCalibrating();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return turret.getTurretLimitSwitch();
   }
 }
