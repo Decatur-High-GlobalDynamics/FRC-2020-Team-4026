@@ -21,6 +21,7 @@ import frc.robot.commands.HorizontalIndexerIntakeCommand;
 import frc.robot.commands.HorizontalIndexerOuttakeCommand;
 import frc.robot.commands.PidShootCommand;
 import frc.robot.commands.PointTurretStraightAhead;
+import frc.robot.commands.PrepareTurretCommand;
 import frc.robot.commands.SimpleClimberControlCommand;
 import frc.robot.commands.SimpleIntakeCommand;
 import frc.robot.commands.SimpleOuttakeCommand;
@@ -131,6 +132,7 @@ public class RobotContainer {
     Button SecondaryLeftTrigger = new JoystickButton(SecondaryJoystick,7);
     Button SecondaryRightTrigger = new JoystickButton(SecondaryJoystick,8);
     Button SecondaryHome = new JoystickButton(SecondaryJoystick,9);
+    Button SecondaryStart = new JoystickButton(SecondaryJoystick,10);
 
     Button SecondaryDPadUp = new POVButton(SecondaryJoystick, 0);
     Button SecondaryDPadRight = new POVButton(SecondaryJoystick,90);
@@ -167,6 +169,8 @@ public class RobotContainer {
     SecondaryDPadLeft.whileHeld(new SimpleTurretCCWCommand(this.turret));
     //When button 9 is pressed, zero the turret
     SecondaryHome.whenPressed(new TurretToLimitCommand(this.turret));
+    //When button 10 is pressed, get the turret out of the way for climbing
+    SecondaryStart.whenPressed(new PrepareTurretCommand(this.turret));
 
 
 
