@@ -300,19 +300,14 @@ public class TurretSubsystem extends SubsystemBase {
     return !(convertToTicks(rads) > 0 || convertToTicks(rads) < minEncoderRange);
   }
   
-  public double getVisionXAngle(){
-    Object result = TeamUtils.getFromNetworkTable("angles", "xAngle");
-    if (result != null && (Double) result != 4026.0){
-      lastGoodAngle = (Double) result;
-      numSequentialErrors = 0;
+  public double getVisionXAngle() {
+    Double result = (Double) TeamUtils.getFromNetworkTable("limelight", "tx");
+    boolean hasTarget = (boolean) TeamUtils.getFromNetworkTable("limelight", "tv");
+    if (hasTarget) {
+      return result;
     } else {
-      numSequentialErrors ++;
-    }
-    if (numSequentialErrors > 10){
+      //Return an error code if we don't have the target
       return 4026;
-    } else {
-      return lastGoodAngle;
     }
   }
-
 }

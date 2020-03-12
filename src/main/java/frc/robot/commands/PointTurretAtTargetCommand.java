@@ -35,15 +35,8 @@ public class PointTurretAtTargetCommand extends CommandBase {
   @Override
   public void execute() {
     double angleToTarget;
-    try{
-      //Get the value of field xAngle in table angles from the network table
-      angleToTarget = turret.getVisionXAngle();
-    }
-    catch(NullPointerException e){
-      System.err.println("Angle not found in NetworkTables. Is the Pi Connected?");
-      //4026 is the condition if vision isn't working or can't see the target
-      angleToTarget = 4026;
-    }
+    //Get the value of vision angle from limelight
+    angleToTarget = turret.getVisionXAngle();
     //This is sent if the target isn't seen
     if (angleToTarget == 4026) {
       turret.stop();
