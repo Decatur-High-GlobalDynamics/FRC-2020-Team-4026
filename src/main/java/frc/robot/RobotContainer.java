@@ -16,6 +16,7 @@ import frc.robot.commands.AutoShoot;
 import frc.robot.commands.AutoShootTesting;
 import frc.robot.commands.AutoShootWithHorizontal;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+<<<<<<< HEAD
 import frc.robot.commands.shooterCommands.ConstantShootCommand;
 import frc.robot.commands.indexerCommands.HorizontalIndexerIntakeCommand;
 import frc.robot.commands.indexerCommands.HorizontalIndexerOuttakeCommand;
@@ -34,6 +35,27 @@ import frc.robot.commands.turretCommands.TurretToLimitCommand;
 import frc.robot.commands.indexerCommands.VerticalIndexerDownCommand;
 import frc.robot.commands.indexerCommands.VerticalIndexerUpCommand;
 import frc.robot.commands.navigationCommands.UpdateNavigationCommand;
+=======
+import frc.robot.commands.ConstantShootCommand;
+import frc.robot.commands.HorizontalIndexerIntakeCommand;
+import frc.robot.commands.HorizontalIndexerOuttakeCommand;
+import frc.robot.commands.PidShootCommand;
+import frc.robot.commands.PointTurretStraightAhead;
+import frc.robot.commands.PrepareTurretCommand;
+import frc.robot.commands.SimpleClimberControlCommand;
+import frc.robot.commands.SimpleIntakeCommand;
+import frc.robot.commands.SimpleOuttakeCommand;
+import frc.robot.commands.SimpleShootCommand;
+import frc.robot.commands.SimpleTurretCCWCommand;
+import frc.robot.commands.SimpleTurretCWCommand;
+import frc.robot.commands.StopTurretCommand;
+import frc.robot.commands.ConstantShootCommand;
+import frc.robot.commands.DriveEncoders;
+import frc.robot.commands.TurretToLimitCommand;
+import frc.robot.commands.VerticalIndexerDownCommand;
+import frc.robot.commands.VerticalIndexerUpCommand;
+import frc.robot.commands.UpdateNavigationCommand;
+>>>>>>> develop
 import frc.robot.commands.drivingCommands.DisableRampingCommand;
 import frc.robot.commands.drivingCommands.DriveStraightCommand;
 import frc.robot.commands.shooterCommands.MaxPowerShootCommand;
@@ -131,6 +153,7 @@ public class RobotContainer {
     Button SecondaryLeftTrigger = new JoystickButton(SecondaryJoystick,7);
     Button SecondaryRightTrigger = new JoystickButton(SecondaryJoystick,8);
     Button SecondaryHome = new JoystickButton(SecondaryJoystick,9);
+    Button SecondaryStart = new JoystickButton(SecondaryJoystick,10);
 
     Button SecondaryDPadUp = new POVButton(SecondaryJoystick, 0);
     Button SecondaryDPadRight = new POVButton(SecondaryJoystick,90);
@@ -167,6 +190,8 @@ public class RobotContainer {
     SecondaryDPadLeft.whileHeld(new SimpleTurretCCWCommand(this.turret));
     //When button 9 is pressed, zero the turret
     SecondaryHome.whenPressed(new TurretToLimitCommand(this.turret));
+    //When button 10 is pressed, get the turret out of the way for climbing
+    SecondaryStart.whenPressed(new PrepareTurretCommand(this.turret));
 
 
 
