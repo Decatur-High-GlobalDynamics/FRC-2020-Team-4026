@@ -5,44 +5,52 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.drivingCommands;
+package frc.robot.commands.turretCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.TurretSubsystem;
 
-public class MaxPowerShootCommand extends CommandBase {
-  private final ShooterSubsystem shooter;
+public class TurretToLimitCommand extends CommandBase {
   /**
-   * Creates a new MaxPowerShootCommand.
+   * Creates a new TurretToLimitCommand.
    */
-  public MaxPowerShootCommand(ShooterSubsystem shooter) {
-    this.shooter = shooter;
+  private final TurretSubsystem turret;
+  private double calibrationTurnPower = 0.1;
+
+  public TurretToLimitCommand(TurretSubsystem turret) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(shooter);
+    this.turret = turret;
+    addRequirements(turret);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    turret.toggleTurretCalibrating();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooter.setBottomMotor(1);
-    shooter.setTopMotor(1);
+    turret.goCounterClockwise(calibrationTurnPower);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooter.setBottomMotor(0);
-    shooter.setTopMotor(0);
+    if(interrupted)
+      System.err.println("TurretToLimit interrupted!");
+    if (!interrupted) {
+      turret.resetEncoder();
+      turret.markAsCalibrated();
+     // turret.startRotatingToPosition(Math.PI/2);
+    }
+    turret.toggleTurretCalibrating();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return turret.getTurretLimitSwitch();
   }
 }

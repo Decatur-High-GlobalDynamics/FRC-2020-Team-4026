@@ -5,21 +5,21 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands;
+package frc.robot.commands.indexerCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.HorizontalIndexerSubsystem;
 
-public class ConstantShootCommand extends CommandBase {
+public class HorizontalIndexerOuttakeCommand extends CommandBase {
+  HorizontalIndexerSubsystem horizontalIndexer;
+
   /**
-   * Creates a new ConstantShootCommand.
+   * Creates a new HorizontalIndexerOuttakeCommand.
    */
-  ShooterSubsystem shooter;
-
-  public ConstantShootCommand(ShooterSubsystem shooter) {
+  public HorizontalIndexerOuttakeCommand(HorizontalIndexerSubsystem horizontalIndexer) {
+    this.horizontalIndexer = horizontalIndexer;
     // Use addRequirements() here to declare subsystem dependencies.
-    this.shooter = shooter;
-    addRequirements(shooter);
+    addRequirements(horizontalIndexer);
   }
 
   // Called when the command is initially scheduled.
@@ -30,14 +30,13 @@ public class ConstantShootCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooter.setBottomMotor(shooter.getShooterPowerBot());
-    shooter.setTopMotor(shooter.getShooterPowerTop());
+    horizontalIndexer.outtake();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooter.stop();
+    horizontalIndexer.stop();
   }
 
   // Returns true when the command should end.

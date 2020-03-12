@@ -1,4 +1,3 @@
-
 /*----------------------------------------------------------------------------*/
 /* Copyright (c) 2019 FIRST. All Rights Reserved.                             */
 /* Open Source Software - may be modified and shared by FRC teams. The code   */
@@ -6,43 +5,43 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands;
+package frc.robot.commands.turretCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.TurretSubsystem;
 
-public class SimpleIntakeCommand extends CommandBase {
-  IntakeSubsystem intake;
-
+public class PrepareTurretCommand extends CommandBase {
   /**
-   * Creates a new SimpleIntakeCommand.
+   * Creates a new PrepareTurretCommand.
    */
-  public SimpleIntakeCommand(IntakeSubsystem intake) {
-    this.intake = intake;
+  private final TurretSubsystem turret;
+
+  public PrepareTurretCommand(TurretSubsystem turret) {
+    this.turret = turret;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(intake);
+    addRequirements(turret);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    turret.startRotatingToPosition(3 * Math.PI / 2);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    intake.inTake();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    intake.stop();
+    turret.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return !turret.isMotorBusy();
   }
 }

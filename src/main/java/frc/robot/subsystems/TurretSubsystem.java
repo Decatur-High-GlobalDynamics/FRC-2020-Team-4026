@@ -19,8 +19,8 @@ import frc.robot.Constants;
 import frc.robot.PidParameters;
 import frc.robot.TeamTalonSRX;
 import frc.robot.TeamUtils;
-import frc.robot.commands.PrepareTurretCommand;
-import frc.robot.commands.TurretToLimitCommand;
+import frc.robot.commands.turretCommands.PrepareTurretCommand;
+import frc.robot.commands.turretCommands.TurretToLimitCommand;
 
 public class TurretSubsystem extends SubsystemBase {
   /**
