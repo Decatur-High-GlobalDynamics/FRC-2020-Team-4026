@@ -58,11 +58,7 @@ public class DriveEncoders extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     drive.setMotorPowers(0, 0);
-<<<<<<< HEAD:src/main/java/frc/robot/commands/DriveEncoders.java
-    if(interrupted || driveTime.hasPeriodPassed(userInches*Constants.inchesToMeters*4))
-=======
     if(interrupted || driveTime.hasPeriodPassed(userMeters))
->>>>>>> develop:src/main/java/frc/robot/commands/drivingCommands/DriveEncoders.java
       System.err.println("Auto interrupted!");
     if (!interrupted) {
       driveTime.stop();
@@ -73,14 +69,9 @@ public class DriveEncoders extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-<<<<<<< HEAD:src/main/java/frc/robot/commands/DriveEncoders.java
-    if ((driveTime.hasPeriodPassed(userInches*Constants.inchesToMeters*4)) || (Utils.checkTolerance((drive.getRightEncoder()-initialRightEncoderValue)*Constants.kEncoderDistancePerPulse, userInches, Constants.driveEpsilon*Constants.kEncoderDistancePerPulse) && Utils.checkTolerance((drive.getLeftEncoder()-initialLeftEncoderValue)*Constants.kEncoderDistancePerPulse, userInches, Constants.kEncoderDistancePerPulse*Constants.driveEpsilon))){
-      return true;
-=======
   //  if (Utils.checkTolerance((Math.abs(drive.getRightEncoder()-initialRightEncoderValue))*Constants.kEncoderDistancePerPulse, Math.abs(userMeters), Constants.driveEpsilon*Constants.kEncoderDistancePerPulse) && Utils.checkTolerance((Math.abs(drive.getLeftEncoder()-initialLeftEncoderValue))*Constants.kEncoderDistancePerPulse, Math.abs(userMeters), Constants.kEncoderDistancePerPulse*Constants.driveEpsilon)){
     if((Math.abs(drive.getRightEncoder()-initialRightEncoderValue)*Constants.kEncoderDistancePerPulse)>=Math.abs(userMeters) && (Math.abs(drive.getLeftEncoder()-initialLeftEncoderValue)*Constants.kEncoderDistancePerPulse)>=Math.abs(userMeters) ){
     return true;
->>>>>>> develop:src/main/java/frc/robot/commands/drivingCommands/DriveEncoders.java
     } else {
       return false;
     }
