@@ -296,10 +296,6 @@ public class TurretSubsystem extends SubsystemBase {
     return !turretLimit.get();
   }
 
-<<<<<<< HEAD
-  public boolean isRadsAllowed(double rads) {
-    return !(convertToTicks(rads) > 0 || convertToTicks(rads) < minEncoderRange);
-=======
   public double getVisionXAngle(){
     Object result = TeamUtils.getFromNetworkTable("angles", "xAngle");
     if (result != null && (Double) result != 4026.0){
@@ -313,7 +309,6 @@ public class TurretSubsystem extends SubsystemBase {
     } else {
       return lastGoodAngle;
     }
->>>>>>> develop
   }
 
 }

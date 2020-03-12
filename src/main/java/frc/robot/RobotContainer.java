@@ -14,23 +14,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.commands.AutoIntakeIndex;
 import frc.robot.commands.AutoShoot;
 import frc.robot.commands.AutoShootTesting;
-<<<<<<< HEAD
-import frc.robot.commands.ConstantShootCommand;
-import frc.robot.commands.HorizontalIndexerIntakeCommand;
-import frc.robot.commands.HorizontalIndexerOuttakeCommand;
-import frc.robot.commands.PointTurretAtTargetCommand;
-import frc.robot.commands.PidShootCommand;
-import frc.robot.commands.SimpleClimberControlCommand;
-import frc.robot.commands.SimpleIntakeCommand;
-import frc.robot.commands.SimpleOuttakeCommand;
-import frc.robot.commands.SimpleShootCommand;
-import frc.robot.commands.SimpleTurretCCWCommand;
-import frc.robot.commands.SimpleTurretCWCommand;
-import frc.robot.commands.TurretToLimitCommand;
-import frc.robot.commands.VerticalIndexerDownCommand;
-import frc.robot.commands.VerticalIndexerUpCommand;
-import frc.robot.commands.UpdateNavigationCommand;
-=======
 import frc.robot.commands.AutoShootWithHorizontal;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.shooterCommands.ConstantShootCommand;
@@ -53,7 +36,6 @@ import frc.robot.commands.indexerCommands.VerticalIndexerDownCommand;
 import frc.robot.commands.indexerCommands.VerticalIndexerUpCommand;
 import frc.robot.commands.navigationCommands.UpdateNavigationCommand;
 import frc.robot.commands.drivingCommands.DisableRampingCommand;
->>>>>>> develop
 import frc.robot.commands.drivingCommands.DriveStraightCommand;
 import frc.robot.commands.shooterCommands.MaxPowerShootCommand;
 import frc.robot.commands.drivingCommands.TankDriveCommand;
@@ -181,19 +163,10 @@ public class RobotContainer {
     //When button 5 is pressed (Right Bumper), shoot at constant speed
     SecondaryRightBumper.whileHeld(new PidShootCommand(this.shooter, 1, 1)); 
     //--------Turret Button Bindings--------
-<<<<<<< HEAD
-    //When right bumper pressed, aim at vision target if possible
-    new JoystickButton(SecondaryJoystick, 6).whileHeld(new PointTurretAtTargetCommand(turret));
-    //When left dpad is held, Turret Clockwise
-    new POVButton(SecondaryJoystick, 90).whileHeld(new SimpleTurretCWCommand(this.turret));
-    //When right dpad is held, Turret Counterclockwise
-    new POVButton(SecondaryJoystick, 270).whileHeld(new SimpleTurretCCWCommand(this.turret));
-=======
     //When right dpad is held, Turret Clockwise
     SecondaryDPadRight.whileHeld(new SimpleTurretCWCommand(this.turret));
     //When left dpad is held, Turret Counterclockwise
     SecondaryDPadLeft.whileHeld(new SimpleTurretCCWCommand(this.turret));
->>>>>>> develop
     //When button 9 is pressed, zero the turret
     SecondaryHome.whenPressed(new TurretToLimitCommand(this.turret));
     //When button 10 is pressed, get the turret out of the way for climbing

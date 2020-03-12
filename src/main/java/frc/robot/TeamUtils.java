@@ -7,9 +7,6 @@ import edu.wpi.first.networktables.NetworkTableValue;
 
 public class TeamUtils {
     public static double getCurrentTime() {
-<<<<<<< HEAD
-        return 1.0 * System.nanoTime()/1e9;
-=======
         return 1.0 * System.nanoTime() / 1e9;
     }
 
@@ -46,6 +43,5 @@ public class TeamUtils {
         else {
             return false;
         }
->>>>>>> develop
     }
 }
