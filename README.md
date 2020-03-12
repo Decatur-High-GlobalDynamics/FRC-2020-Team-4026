@@ -22,8 +22,21 @@ Robot features include:
 2. Connect to the robot over either USB-B, Ethernet, or Wifi
 3. Run the >WPILib Deploy Robot Code command to deploy the code to the robot
 
-## Pull Requests
+## How To Contribute
+* Feature issues must be created before creating a feature branch
+* Feature Issues must state succinctly
+    * what you are adding/modifying (layman's term)
+    * why it is needed
+    * briefly describe at concept level how you are going to do it. (if you are implementing it)
+* Bug issues must be created before creating a bug branch
+* Bug issues must state succinctly
+    * what the bug is (layman's terms)
+    * impacted files
+    * briefly describe at concept level how you are going to do it. (if you are implementing it)
+* Do not create a branch/PR if the issue is not made or acknowledged by at least 1 other programmer
+* A branch should tackle one bug (or a few related bugs) or one feature only. Generally, branches touching more than a few files are not allowed. Communicate with the other programmers if you believe there is an exception.
 * PRs adding functionality should follow the pattern Feature-{New Feature}
+* PRs fixing bugs should follow the pattern Bug-{bug being fixed}
 * PRs adding robot functionality must be tested on the robot before they can be merged
 * PRs must pass a build before they can be merged
 * Some exceptions may be made for critical changes, such as those made at competition
