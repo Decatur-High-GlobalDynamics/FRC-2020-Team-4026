@@ -15,6 +15,7 @@ import frc.robot.commands.AutoIntakeIndex;
 import frc.robot.commands.AutoShoot;
 import frc.robot.commands.AutoShootTesting;
 import frc.robot.commands.AutoShootWithHorizontal;
+import frc.robot.commands.PointTurretAtTargetCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.shooterCommands.ConstantShootCommand;
 import frc.robot.commands.indexerCommands.HorizontalIndexerIntakeCommand;
