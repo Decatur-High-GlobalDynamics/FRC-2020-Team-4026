@@ -46,7 +46,7 @@ public class TurretSubsystem extends SubsystemBase {
 
   private boolean isTurretCalibrating = false;
   
-  private final PidParameters pidParams = new PidParameters(0.35, 0.05, 0.1, 0, 0, 0.15, 10);
+  private final PidParameters pidParams = new PidParameters(0.25, 0.001, 0.0, 0, 0, 0.15, 10);
 
   //Number of encoder ticks to go when rotating
   private int rotationSpeed = 500;
@@ -296,19 +296,18 @@ public class TurretSubsystem extends SubsystemBase {
     return !turretLimit.get();
   }
 
-  public double getVisionXAngle(){
-    Object result = TeamUtils.getFromNetworkTable("angles", "xAngle");
-    if (result != null && (Double) result != 4026.0){
-      lastGoodAngle = (Double) result;
-      numSequentialErrors = 0;
+  public boolean isRadsAllowed(double rads) {
+    return !(convertToTicks(rads) > 0 || convertToTicks(rads) < minEncoderRange);
+  }
+  
+  public double getVisionXAngle() {
+    double result = (double) TeamUtils.getFromNetworkTable("limelight", "tx");
+    boolean hasTarget = (double)TeamUtils.getFromNetworkTable("limelight", "tv") == 1;
+    if (hasTarget) {
+      return result;
     } else {
-      numSequentialErrors ++;
-    }
-    if (numSequentialErrors > 10){
+      //Return an error code if we don't have the target
       return 4026;
-    } else {
-      return lastGoodAngle;
     }
   }
-
 }
