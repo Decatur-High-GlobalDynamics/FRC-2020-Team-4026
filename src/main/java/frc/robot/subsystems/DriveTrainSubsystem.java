@@ -32,9 +32,9 @@ public class DriveTrainSubsystem extends SubsystemBase {
   //This was tested to be the lowest value where problems weren't had with the squaring thing that differential drive does
   public double maxPowerChange = 0.43;
   public double currentMaxPowerChange = maxPowerChange;
-  public static double maxOutputSlow = .5;
-  public static double maxOutputFast = 1;
-  public double currentMaxPower = maxOutputSlow;
+  public static double maxDrivetrainOutputSlowPercent = .5;
+  public static double maxDrivetrainOutputFastPercent = 1;
+  public double currentMaxDrivetrainOutputPercent = maxDrivetrainOutputSlowPercent;
   public boolean rampingOn = true;
 
   private boolean brakeMode = false;
@@ -77,14 +77,13 @@ public class DriveTrainSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     updateMaxPowerChange();
+    updateMaxDrivetrainOutputs();
 
     SmartDashboard.putNumber("Subsystems.DriveTrain.maxPowerChange", maxPowerChange);
     SmartDashboard.putNumber("Subsystems.DriveTrain.leftPower", leftDriveFalconMain.get());
     SmartDashboard.putNumber("Subsystems.DriveTrain.rightPower", rightDriveFalconMain.get());
-    maxOutputSlow = SmartDashboard.getNumber("Subsystems.DriveTrain.maxOutputSlow", maxOutputSlow);
-    SmartDashboard.putNumber("Subsystems.DriveTrain.maxOutputSlow", maxOutputSlow);
-    maxOutputFast = SmartDashboard.getNumber("Subsystems.DriveTrain.maxOutputFast", maxOutputFast);
-    SmartDashboard.putNumber("Subsystems.DriveTrain.maxOutputFast", maxOutputFast);
+    SmartDashboard.putNumber("Subsystems.DriveTrain.maxOutputSlow", maxDrivetrainOutputSlowPercent);
+    SmartDashboard.putNumber("Subsystems.DriveTrain.maxOutputFast", maxDrivetrainOutputFastPercent);
     velocityForStopMetersPerSecond = SmartDashboard.getNumber("Subsystems.DriveTrain.velocityForStopMetersPerSecond", velocityForStopMetersPerSecond);
     SmartDashboard.putNumber("Subsystems.DriveTrain.minimumSpeedForStopTicksPer100ms", velocityForStopMetersPerSecond);
 
@@ -98,6 +97,11 @@ public class DriveTrainSubsystem extends SubsystemBase {
     else currentMaxPowerChange = 1;
   }
 
+  private void updateMaxDrivetrainOutputs() {
+    maxDrivetrainOutputSlowPercent = SmartDashboard.getNumber("Subsystems.DriveTrain.maxPercentOutputSlow", maxDrivetrainOutputSlowPercent);
+    maxDrivetrainOutputFastPercent = SmartDashboard.getNumber("Subsystems.DriveTrain.maxPercentOutputFast", maxDrivetrainOutputFastPercent);
+  }
+
   //Caps the requested powers then sends them to Differential Drive
   public void setMotorPowers(double leftPowerDesired, double rightPowerDesired){
     leftPowerDesired = Math.max(Math.min(1, leftPowerDesired), -1);
@@ -105,8 +109,8 @@ public class DriveTrainSubsystem extends SubsystemBase {
     //Display the power we are asking for
     SmartDashboard.putNumber("Subsystems.DriveTrain.leftPowerDemand", leftPowerDesired);
     SmartDashboard.putNumber("Subsystems.DriveTrain.rightPowerDemand", rightPowerDesired);
-    leftPowerDesired *= currentMaxPower;
-    rightPowerDesired *= currentMaxPower;
+    leftPowerDesired *= currentMaxDrivetrainOutputPercent;
+    rightPowerDesired *= currentMaxDrivetrainOutputPercent;
 
     //Divide by current max power bcause it was divided by it earlier, and that puts it back into the unit of "requested power", instead of "raw power", which is scaled by current max power
     double curRightPower = rightDriveFalconMain.get();
@@ -140,12 +144,12 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
   //Sets the max output to full
   public void setFastMode() {
-    currentMaxPower = maxOutputFast;
+    currentMaxDrivetrainOutputPercent = maxDrivetrainOutputFastPercent;
   }
 
   //sets it to half for controlability
   public void setSlowMode() {
-    currentMaxPower = maxOutputSlow;
+    currentMaxDrivetrainOutputPercent = maxDrivetrainOutputSlowPercent;
   }
 
   public void setBrakeMode(NeutralMode mode) {
