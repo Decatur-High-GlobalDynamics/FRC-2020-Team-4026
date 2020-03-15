@@ -24,6 +24,7 @@ import frc.robot.commands.intakeCommands.SimpleIntakeCommand;
 import frc.robot.commands.intakeCommands.SimpleOuttakeCommand;
 import frc.robot.commands.turretCommands.SimpleTurretCCWCommand;
 import frc.robot.commands.turretCommands.SimpleTurretCWCommand;
+import frc.robot.commands.turretCommands.PointTurretAtTargetWithAngleCommand;
 import frc.robot.commands.turretCommands.PrepareTurretCommand;
 import frc.robot.commands.drivingCommands.DriveEncoders;
 import frc.robot.commands.turretCommands.TurretToLimitCommand;
@@ -160,7 +161,7 @@ public class RobotContainer {
     rightBumper.whileHeld(new PidShootCommand(this.shooter, 1, 1));
     //--------Turret Button Bindings--------
     //When right bumper pressed, aim at vision target if possible
-    leftBumper.whileHeld(new PointTurretAtTargetCommand(this.turret));
+    leftBumper.whileHeld(new PointTurretAtTargetWithAngleCommand(this.turret));
     //When right dpad is held, Turret Clockwise
     dPadRight.whileHeld(new SimpleTurretCWCommand(this.turret));
     //When left dpad is held, Turret Counterclockwise

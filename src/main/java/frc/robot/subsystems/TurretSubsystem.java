@@ -46,7 +46,7 @@ public class TurretSubsystem extends SubsystemBase {
 
   private boolean isTurretCalibrating = false;
   
-  private final PidParameters pidParams = new PidParameters(0.35, 0.05, 0.1, 0, 0, 0.15, 10);
+  private final PidParameters pidParams = new PidParameters(0.25, 0.001, 0.0, 0, 0, 0.15, 10);
 
   //Number of encoder ticks to go when rotating
   private int rotationSpeed = 500;
