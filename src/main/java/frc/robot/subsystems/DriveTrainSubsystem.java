@@ -120,7 +120,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
     
 
     double curleftPower = leftDriveFalconMain.get();
-    double nextleftPower = rampingOn ? getRampingAdjustedPower(curRightPower, leftPowerDesired) : leftPowerDesired;
+    double nextleftPower = rampingOn ? getRampingAdjustedPower(curleftPower, leftPowerDesired) : leftPowerDesired;
 
     SmartDashboard.putNumber("Subsystems.DriveTrain.rightPowerGiven", nextRightPower);
     SmartDashboard.putNumber("Subsystems.DriveTrain.leftPowerGiven", nextleftPower);
