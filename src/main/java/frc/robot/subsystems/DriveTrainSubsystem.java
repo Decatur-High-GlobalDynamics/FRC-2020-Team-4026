@@ -30,8 +30,8 @@ public class DriveTrainSubsystem extends SubsystemBase {
   WPI_TalonFX rightDriveFalconSub;
   WPI_TalonFX leftDriveFalconSub;
   //This was tested to be the lowest value where problems weren't had with the squaring thing that differential drive does
-  public double maxPowerChangeDefault = 0.43;
-  public double maxPowerChange = maxPowerChangeDefault;
+  public double maxPowerChange = 0.43;
+  public double currentMaxPowerChange = maxPowerChange;
   public static double maxOutputSlow = .5;
   public static double maxOutputFast = 1;
   public double currentMaxPower = maxOutputSlow;
@@ -39,7 +39,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
   private boolean brakeMode = false;
 
-  private double epsilonIsStopped = 100;
+  private double velocityForStopMetersPerSecond = 0.2;
 
 
   public DriveTrainSubsystem() {
@@ -76,19 +76,26 @@ public class DriveTrainSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    updateMaxPowerChange();
+
+    SmartDashboard.putNumber("Subsystems.DriveTrain.maxPowerChange", maxPowerChange);
     SmartDashboard.putNumber("Subsystems.DriveTrain.leftPower", leftDriveFalconMain.get());
     SmartDashboard.putNumber("Subsystems.DriveTrain.rightPower", rightDriveFalconMain.get());
-    maxPowerChange = SmartDashboard.getNumber("Subsystems.DriveTrain.maxPowerChange", maxPowerChange);
-    SmartDashboard.putNumber("Subsystems.DriveTrain.maxPowerChange", maxPowerChange);
     maxOutputSlow = SmartDashboard.getNumber("Subsystems.DriveTrain.maxOutputSlow", maxOutputSlow);
     SmartDashboard.putNumber("Subsystems.DriveTrain.maxOutputSlow", maxOutputSlow);
     maxOutputFast = SmartDashboard.getNumber("Subsystems.DriveTrain.maxOutputFast", maxOutputFast);
     SmartDashboard.putNumber("Subsystems.DriveTrain.maxOutputFast", maxOutputFast);
-    epsilonIsStopped = SmartDashboard.getNumber("Subsystems.DriveTrain.epsilonIsStopped", epsilonIsStopped);
-    SmartDashboard.putNumber("Subsystems.DriveTrain.epsilonIsStopped", epsilonIsStopped);
+    velocityForStopMetersPerSecond = SmartDashboard.getNumber("Subsystems.DriveTrain.minimumSpeedForStopTicksPer100ms", velocityForStopMetersPerSecond);
+    SmartDashboard.putNumber("Subsystems.DriveTrain.minimumSpeedForStopTicksPer100ms", velocityForStopMetersPerSecond);
 
-    if (rampingOn) maxPowerChange = maxPowerChangeDefault;
-    else maxPowerChange = 1;
+   
+  }
+
+  private void updateMaxPowerChange() {
+    maxPowerChange = SmartDashboard.getNumber("Subsystems.DriveTrain.maxPowerChange", maxPowerChange);
+    
+    if (rampingOn) currentMaxPowerChange = maxPowerChange;
+    else currentMaxPowerChange = 1;
   }
 
   //Caps the requested powers then sends them to Differential Drive
@@ -104,18 +111,18 @@ public class DriveTrainSubsystem extends SubsystemBase {
     //Divide by current max power bcause it was divided by it earlier, and that puts it back into the unit of "requested power", instead of "raw power", which is scaled by current max power
     double curRightPower = rightDriveFalconMain.get();
     double nextRightPower;
-    if (Math.abs(rightPowerDesired - curRightPower) <= maxPowerChange){
+    if (Math.abs(rightPowerDesired - curRightPower) <= currentMaxPowerChange){
       nextRightPower = rightPowerDesired;
     } else {
-      nextRightPower = curRightPower + Math.signum(rightPowerDesired - curRightPower) * maxPowerChange;
+      nextRightPower = curRightPower + Math.signum(rightPowerDesired - curRightPower) * currentMaxPowerChange;
     }
 
     double curleftPower = leftDriveFalconMain.get();
     double nextleftPower;
-    if (Math.abs(leftPowerDesired - curleftPower) <= maxPowerChange){
+    if (Math.abs(leftPowerDesired - curleftPower) <= currentMaxPowerChange){
       nextleftPower = leftPowerDesired;
     } else {
-      nextleftPower = curleftPower + Math.signum(leftPowerDesired - curleftPower) * maxPowerChange;
+      nextleftPower = curleftPower + Math.signum(leftPowerDesired - curleftPower) * currentMaxPowerChange;
     }
 
     SmartDashboard.putNumber("Subsystems.DriveTrain.rightPowerGiven", nextRightPower);
@@ -149,7 +156,16 @@ public class DriveTrainSubsystem extends SubsystemBase {
   }
 
   public boolean isStopped() {
-    return leftDriveFalconMain.getSelectedSensorVelocity() < 100 && rightDriveFalconMain.getSelectedSensorVelocity() < 100;
+    return leftDriveFalconMain.getSelectedSensorVelocity() < speedInMetersToTicksPer100ms(velocityForStopMetersPerSecond) 
+    && rightDriveFalconMain.getSelectedSensorVelocity() < speedInMetersToTicksPer100ms(velocityForStopMetersPerSecond);
+  }
+
+  private int speedInMetersToTicksPer100ms(double speed) {
+    return (int) Math.round(speed / (10 * Constants.kDriveEncoderDistancePerPulse));
+  }
+
+  private double ticksPer100msToSpeedInMeters(int ticks) {
+    return ticks * 10 * Constants.kDriveEncoderDistancePerPulse;
   }
 
   public void enableRamping() {
