@@ -78,20 +78,13 @@ public class DriveTrainSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     updateMaxPowerChange();
     updateMaxDrivetrainOutputs();
-
-    SmartDashboard.putNumber("Subsystems.DriveTrain.maxPowerChange", maxPowerChange);
-    SmartDashboard.putNumber("Subsystems.DriveTrain.leftPower", leftDriveFalconMain.get());
-    SmartDashboard.putNumber("Subsystems.DriveTrain.rightPower", rightDriveFalconMain.get());
-    SmartDashboard.putNumber("Subsystems.DriveTrain.maxOutputSlow", maxDrivetrainOutputSlowPercent);
-    SmartDashboard.putNumber("Subsystems.DriveTrain.maxOutputFast", maxDrivetrainOutputFastPercent);
-    velocityForStopMetersPerSecond = SmartDashboard.getNumber("Subsystems.DriveTrain.velocityForStopMetersPerSecond", velocityForStopMetersPerSecond);
-    SmartDashboard.putNumber("Subsystems.DriveTrain.minimumSpeedForStopTicksPer100ms", velocityForStopMetersPerSecond);
-
-   
+    updateVelocityForStopMetersPerSecond();
+    printDrivetrainData();
   }
 
   private void updateMaxPowerChange() {
     maxPowerChange = SmartDashboard.getNumber("Subsystems.DriveTrain.maxPowerChange", maxPowerChange);
+    SmartDashboard.putNumber("Subsystems.DriveTrain.maxPowerChange", maxPowerChange);
     
     if (rampingOn) currentMaxPowerChange = maxPowerChange;
     else currentMaxPowerChange = 1;
@@ -100,6 +93,18 @@ public class DriveTrainSubsystem extends SubsystemBase {
   private void updateMaxDrivetrainOutputs() {
     maxDrivetrainOutputSlowPercent = SmartDashboard.getNumber("Subsystems.DriveTrain.maxPercentOutputSlow", maxDrivetrainOutputSlowPercent);
     maxDrivetrainOutputFastPercent = SmartDashboard.getNumber("Subsystems.DriveTrain.maxPercentOutputFast", maxDrivetrainOutputFastPercent);
+    SmartDashboard.putNumber("Subsystems.DriveTrain.maxOutputSlow", maxDrivetrainOutputSlowPercent);
+    SmartDashboard.putNumber("Subsystems.DriveTrain.maxOutputFast", maxDrivetrainOutputFastPercent);
+  }
+
+  private void updateVelocityForStopMetersPerSecond() {
+    velocityForStopMetersPerSecond = SmartDashboard.getNumber("Subsystems.DriveTrain.velocityForStopMetersPerSecond", velocityForStopMetersPerSecond);
+    SmartDashboard.putNumber("Subsystems.DriveTrain.minimumSpeedForStopTicksPer100ms", velocityForStopMetersPerSecond);
+  }
+
+  private void printDrivetrainData() {
+    SmartDashboard.putNumber("Subsystems.DriveTrain.leftPower", leftDriveFalconMain.get());
+    SmartDashboard.putNumber("Subsystems.DriveTrain.rightPower", rightDriveFalconMain.get());
   }
 
   //Caps the requested powers then sends them to Differential Drive
