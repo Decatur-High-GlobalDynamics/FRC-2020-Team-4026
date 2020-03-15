@@ -25,10 +25,10 @@ public class DriveTrainSubsystem extends SubsystemBase {
    */
   final DifferentialDrive drive;
 
-  WPI_TalonFX rightDriveFalconMain; 
-  WPI_TalonFX leftDriveFalconMain;
-  WPI_TalonFX rightDriveFalconSub;
-  WPI_TalonFX leftDriveFalconSub;
+  final WPI_TalonFX rightDriveFalconMain; 
+  final WPI_TalonFX leftDriveFalconMain;
+  final WPI_TalonFX rightDriveFalconSub;
+  final WPI_TalonFX leftDriveFalconSub;
   //This was tested to be the lowest value where problems weren't had with the squaring thing that differential drive does
   public double maxPowerChange = 0.43;
   public double currentMaxPowerChange = maxPowerChange;
@@ -36,8 +36,6 @@ public class DriveTrainSubsystem extends SubsystemBase {
   public static double maxDrivetrainOutputFastPercent = 1;
   public double currentMaxDrivetrainOutputPercent = maxDrivetrainOutputSlowPercent;
   public boolean rampingOn = true;
-
-  private boolean brakeMode = false;
 
   private double velocityForStopMetersPerSecond = 0.2;
 
@@ -47,7 +45,12 @@ public class DriveTrainSubsystem extends SubsystemBase {
     leftDriveFalconMain = new WPI_TalonFX(Constants.LeftDriveFalconMainCAN);
     rightDriveFalconSub = new WPI_TalonFX(Constants.RightDriveFalconSubCAN);
     leftDriveFalconSub = new WPI_TalonFX(Constants.LeftDriveFalconSubCAN);
+    setupDrivetrain();
+    drive = new DifferentialDrive(leftDriveFalconMain, rightDriveFalconMain);
+    setupDifferentialDrive();
+  }
 
+  private void setupDrivetrain() {
     //This configures the falcons to use their internal encoders
     TalonFXConfiguration configs = new TalonFXConfiguration();
     configs.primaryPID.selectedFeedbackSensor = FeedbackDevice.IntegratedSensor;
@@ -57,20 +60,13 @@ public class DriveTrainSubsystem extends SubsystemBase {
     leftDriveFalconSub.follow(leftDriveFalconMain);
     rightDriveFalconSub.follow(rightDriveFalconMain);
 
-
-    //This wraps the motors
-    drive = new DifferentialDrive(leftDriveFalconMain, rightDriveFalconMain);
-
-    drive.setDeadband(0);
-    
     setSlowMode();
+    setBrakeMode(NeutralMode.Coast);
+  }
 
+  private void setupDifferentialDrive() {
+    drive.setDeadband(0);
     drive.setRightSideInverted(false);
-
-    leftDriveFalconMain.setNeutralMode(NeutralMode.Coast);
-    leftDriveFalconSub.setNeutralMode(NeutralMode.Coast);
-    rightDriveFalconMain.setNeutralMode(NeutralMode.Coast);
-    rightDriveFalconSub.setNeutralMode(NeutralMode.Coast);
   }
 
   @Override
