@@ -37,8 +37,8 @@ public class TeamUtils {
         }
         return value.getValue();
     }
-    public static boolean checkTolerance(double valueA, double valueB, double epsilon ){
-        if (Math.abs(valueA-valueB) <= epsilon)
+    public static boolean checkTolerance(double currentValue, double targetValue, double epsilon ){
+        if (Math.abs(currentValue-targetValue) <= epsilon)
             return true;
         else {
             return false;
