@@ -17,7 +17,25 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
  * <p>It is advised to statically import this class (or one of its inner classes) wherever the
  * constants are needed, to reduce verbosity.
  */
-public final class Constants {
+class LogitechControllerButtons {
+    public static final int x = 1;
+    public static final int a = 2;
+    public static final int b = 3;
+    public static final int y = 4;
+    public static final int bumperLeft = 5;
+    public static final int bumperRight = 6;
+    public static final int triggerLeft = 7;
+    public static final int triggerRight = 8;
+    public static final int home = 9;
+    public static final int start = 10;
+
+    public static final int up = 0;
+    public static final int right = 90;
+    public static final int down = 180;
+    public static final int left = 270;
+}
+
+class Ports {
     //Port values for motors
     public static final int LeftDriveFalconMainCAN = 1;
     public static final int LeftDriveFalconSubCAN = 2;
@@ -37,6 +55,22 @@ public final class Constants {
     public static final int IndexerHorizCAN = 10;
     public static final int IndexerVertCAN = 11;
 
+
+    // DIO Ports
+    public static final int TurretLimitDIO = 0;
+    public static final int VerticalIndexer_BottomLimit_DIO_B = 1;
+    public static final int VerticalIndexer_MiddleLimit_DIO = 2;
+    public static final int VerticalIndexer_TopLimit_DIO = 3;
+    public static final int VerticalIndexer_BottomLimit_DIO_A = 4;
+    public static final int VerticalIndexer_BottomLimit_DIO_C = 5;
+    public static final int Climber_LeftLimitDIO = 6;
+    public static final int Climber_RightLimitDIO = 7;
+
+    public static final int Hook_LeftDIO = 9;
+    public static final int Hook_RightDIO = 8;
+}
+
+class PathfindingConstants {
     //These are TBD: They will be used as feedforward for pathfinding
     public static final double ks = 0;
     public static final double kv = 0;
@@ -55,7 +89,9 @@ public final class Constants {
     //Gains for pathfinding. These are what WPI says is good for all bots
     public static final double kRamseteB = 2;
     public static final double kRamseteZeta = 0.7;
+}
 
+class DriveTrainConstants {
     //Our gear ratio. TBD
     public static final double kDriveGearRatio = 10.71;
 
@@ -64,35 +100,4 @@ public final class Constants {
 
     //Epsilon for DriveEncoders Command (in ticks)
     public static final double driveEpsilon = 50;
-
-    // DIO Ports
-    public static final int TurretLimitDIO = 0;
-    public static final int VerticalIndexer_BottomLimit_DIO_B = 1;
-    public static final int VerticalIndexer_MiddleLimit_DIO = 2;
-    public static final int VerticalIndexer_TopLimit_DIO = 3;
-    public static final int VerticalIndexer_BottomLimit_DIO_A = 4;
-    public static final int VerticalIndexer_BottomLimit_DIO_C = 5;
-    public static final int Climber_LeftLimitDIO = 6;
-    public static final int Climber_RightLimitDIO = 7;
-
-    public static final int Hook_LeftDIO = 9;
-    public static final int Hook_RightDIO = 8;
-}
-
-class LogitechControllerButtons {
-    public static final int x = 1;
-    public static final int a = 2;
-    public static final int b = 3;
-    public static final int y = 4;
-    public static final int bumperLeft = 5;
-    public static final int bumperRight = 6;
-    public static final int triggerLeft = 7;
-    public static final int triggerRight = 8;
-    public static final int home = 9;
-    public static final int start = 10;
-
-    public static final int up = 0;
-    public static final int right = 90;
-    public static final int down = 180;
-    public static final int left = 270;
 }

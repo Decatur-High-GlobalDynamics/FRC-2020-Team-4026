@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.robot.Ports;
 import frc.robot.TeamTalonSRX;
 
 public class VerticalIndexerSubsystem extends SubsystemBase {
@@ -22,9 +22,9 @@ public class VerticalIndexerSubsystem extends SubsystemBase {
    */
   private final TeamTalonSRX verticalIndexer;
 
-  private DigitalInput bottomSwitchA = new DigitalInput(Constants.VerticalIndexer_BottomLimit_DIO_A);
-  private DigitalInput bottomSwitchB = new DigitalInput(Constants.VerticalIndexer_BottomLimit_DIO_B);
-  private DigitalInput bottomSwitchC = new DigitalInput(Constants.VerticalIndexer_BottomLimit_DIO_C);
+  private DigitalInput bottomSwitchA = new DigitalInput(Ports.VerticalIndexer_BottomLimit_DIO_A);
+  private DigitalInput bottomSwitchB = new DigitalInput(Ports.VerticalIndexer_BottomLimit_DIO_B);
+  private DigitalInput bottomSwitchC = new DigitalInput(Ports.VerticalIndexer_BottomLimit_DIO_C);
   private DigitalInput middleSwitch = new DigitalInput(Constants.VerticalIndexer_MiddleLimit_DIO);
   private DigitalInput topSwitch = new DigitalInput(Constants.VerticalIndexer_TopLimit_DIO);
 
