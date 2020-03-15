@@ -29,7 +29,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
   final WPI_TalonFX leftDriveFalconMain;
   final WPI_TalonFX rightDriveFalconSub;
   final WPI_TalonFX leftDriveFalconSub;
-  //This was tested to be the lowest value where problems weren't had with the squaring thing that differential drive does
+  //TBD: Make this a better value empirically
   public double maxPowerChange = 0.43;
   public static double maxDrivetrainOutputSlowPercent = .5;
   public static double maxDrivetrainOutputFastPercent = 1;
@@ -114,15 +114,13 @@ public class DriveTrainSubsystem extends SubsystemBase {
     leftPowerDesired *= currentMaxDrivetrainOutputPercent;
     rightPowerDesired *= currentMaxDrivetrainOutputPercent;
 
-    //Divide by current max power bcause it was divided by it earlier, and that puts it back into the unit of "requested power", instead of "raw power", which is scaled by current max power
+    
     double curRightPower = rightDriveFalconMain.get();
-    double nextRightPower = rightPowerDesired;
-    if (rampingOn) nextRightPower = getRampingAdjustedPower(curRightPower, nextRightPower);
+    double nextRightPower = rampingOn ? getRampingAdjustedPower(curRightPower, rightPowerDesired) : rightPowerDesired;
     
 
     double curleftPower = leftDriveFalconMain.get();
-    double nextleftPower = leftPowerDesired;
-    if (rampingOn) nextleftPower = getRampingAdjustedPower(curleftPower, nextleftPower);
+    double nextleftPower = rampingOn ? getRampingAdjustedPower(curRightPower, leftPowerDesired) : leftPowerDesired;
 
     SmartDashboard.putNumber("Subsystems.DriveTrain.rightPowerGiven", nextRightPower);
     SmartDashboard.putNumber("Subsystems.DriveTrain.leftPowerGiven", nextleftPower);
