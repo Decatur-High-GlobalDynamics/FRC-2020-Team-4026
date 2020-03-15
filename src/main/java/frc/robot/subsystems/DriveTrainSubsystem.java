@@ -116,10 +116,13 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
     //Divide by current max power bcause it was divided by it earlier, and that puts it back into the unit of "requested power", instead of "raw power", which is scaled by current max power
     double curRightPower = rightDriveFalconMain.get();
-    double nextRightPower = getRampingAdjustedPower(curRightPower, rightPowerDesired);
+    double nextRightPower = rightPowerDesired;
+    if (rampingOn) nextRightPower = getRampingAdjustedPower(curRightPower, nextRightPower);
+    
 
     double curleftPower = leftDriveFalconMain.get();
-    double nextleftPower = getRampingAdjustedPower(curleftPower, leftPowerDesired);
+    double nextleftPower = leftPowerDesired;
+    if (rampingOn) nextleftPower = getRampingAdjustedPower(curleftPower, nextleftPower);
 
     SmartDashboard.putNumber("Subsystems.DriveTrain.rightPowerGiven", nextRightPower);
     SmartDashboard.putNumber("Subsystems.DriveTrain.leftPowerGiven", nextleftPower);
@@ -135,7 +138,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
   private double getRampingAdjustedPower(double currentPower, double desired){
     double rampped = desired;
     double requestedPowerChange = Math.abs(desired - currentPower);
-    if (requestedPowerChange > maxPowerChange && rampingOn) {
+    if (requestedPowerChange > maxPowerChange) {
       rampped = currentPower + Math.signum(desired - currentPower) * maxPowerChange;
     }
     return rampped;
