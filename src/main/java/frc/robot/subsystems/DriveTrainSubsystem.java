@@ -85,7 +85,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Subsystems.DriveTrain.maxOutputSlow", maxOutputSlow);
     maxOutputFast = SmartDashboard.getNumber("Subsystems.DriveTrain.maxOutputFast", maxOutputFast);
     SmartDashboard.putNumber("Subsystems.DriveTrain.maxOutputFast", maxOutputFast);
-    velocityForStopMetersPerSecond = SmartDashboard.getNumber("Subsystems.DriveTrain.minimumSpeedForStopTicksPer100ms", velocityForStopMetersPerSecond);
+    velocityForStopMetersPerSecond = SmartDashboard.getNumber("Subsystems.DriveTrain.velocityForStopMetersPerSecond", velocityForStopMetersPerSecond);
     SmartDashboard.putNumber("Subsystems.DriveTrain.minimumSpeedForStopTicksPer100ms", velocityForStopMetersPerSecond);
 
    
