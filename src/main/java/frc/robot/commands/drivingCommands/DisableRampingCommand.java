@@ -23,7 +23,7 @@ public class DisableRampingCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    driveTrain.disableRamping();
+    driveTrain.setRamping(false);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -34,7 +34,7 @@ public class DisableRampingCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    driveTrain.enableRamping();
+    driveTrain.setRamping(true);
   }
 
   // Returns true when the command should end.

@@ -179,11 +179,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
     return ticks * 10 * Constants.kDriveEncoderDistancePerPulse;
   }
 
-  public void enableRamping() {
-    rampingOn = true;
-  }
-
-  public void disableRamping() {
-    rampingOn = false;
+  public void setRamping(boolean ramping) {
+    rampingOn = ramping;
   }
 }
