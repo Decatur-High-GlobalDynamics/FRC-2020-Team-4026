@@ -31,7 +31,6 @@ public class DriveTrainSubsystem extends SubsystemBase {
   final WPI_TalonFX leftDriveFalconSub;
   //This was tested to be the lowest value where problems weren't had with the squaring thing that differential drive does
   public double maxPowerChange = 0.43;
-  public double currentMaxPowerChange = maxPowerChange;
   public static double maxDrivetrainOutputSlowPercent = .5;
   public static double maxDrivetrainOutputFastPercent = 1;
   public double currentMaxDrivetrainOutputPercent = maxDrivetrainOutputSlowPercent;
@@ -86,9 +85,6 @@ public class DriveTrainSubsystem extends SubsystemBase {
   private void updateMaxPowerChange() {
     maxPowerChange = SmartDashboard.getNumber("Subsystems.DriveTrain.maxPowerChange", maxPowerChange);
     SmartDashboard.putNumber("Subsystems.DriveTrain.maxPowerChange", maxPowerChange);
-    
-    if (rampingOn) currentMaxPowerChange = maxPowerChange;
-    else currentMaxPowerChange = 1;
   }
 
   private void updateMaxDrivetrainOutputs() {
@@ -110,8 +106,8 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
   //Caps the requested powers then sends them to Differential Drive
   public void setMotorPowers(double leftPowerDesired, double rightPowerDesired){
-    leftPowerDesired = Math.max(Math.min(1, leftPowerDesired), -1);
-    rightPowerDesired = Math.max(Math.min(1, rightPowerDesired), -1);
+    leftPowerDesired = getCappedPower(leftPowerDesired);
+    rightPowerDesired = getCappedPower(rightPowerDesired);
     //Display the power we are asking for
     SmartDashboard.putNumber("Subsystems.DriveTrain.leftPowerDemand", leftPowerDesired);
     SmartDashboard.putNumber("Subsystems.DriveTrain.rightPowerDemand", rightPowerDesired);
@@ -120,24 +116,38 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
     //Divide by current max power bcause it was divided by it earlier, and that puts it back into the unit of "requested power", instead of "raw power", which is scaled by current max power
     double curRightPower = rightDriveFalconMain.get();
-    double nextRightPower;
-    if (Math.abs(rightPowerDesired - curRightPower) <= currentMaxPowerChange){
-      nextRightPower = rightPowerDesired;
-    } else {
-      nextRightPower = curRightPower + Math.signum(rightPowerDesired - curRightPower) * currentMaxPowerChange;
-    }
+    double nextRightPower = getRampingAdjustedPower(curRightPower, rightPowerDesired);
 
     double curleftPower = leftDriveFalconMain.get();
-    double nextleftPower;
-    if (Math.abs(leftPowerDesired - curleftPower) <= currentMaxPowerChange){
-      nextleftPower = leftPowerDesired;
-    } else {
-      nextleftPower = curleftPower + Math.signum(leftPowerDesired - curleftPower) * currentMaxPowerChange;
-    }
+    double nextleftPower = getRampingAdjustedPower(curleftPower, leftPowerDesired);
 
     SmartDashboard.putNumber("Subsystems.DriveTrain.rightPowerGiven", nextRightPower);
     SmartDashboard.putNumber("Subsystems.DriveTrain.leftPowerGiven", nextleftPower);
     drive.tankDrive(nextleftPower, nextRightPower, false);
+  }
+
+   /**
+   * Applies rampping logic to return the adjusted next power
+   * @param currentPower
+   * @param desired
+   * @return adjusted power level
+   */
+  private double getRampingAdjustedPower(double currentPower, double desired){
+    double rampped = desired;
+    double requestedPowerChange = Math.abs(desired - currentPower);
+    if (requestedPowerChange > maxPowerChange && rampingOn) {
+      rampped = currentPower + Math.signum(desired - currentPower) * maxPowerChange;
+    }
+    return rampped;
+  }
+
+   /**
+   * caps the input power between -1 and +1
+   * @param desired
+   * @return the capped power
+   */
+  private double getCappedPower(double desired) {
+    return Math.max(Math.min(1, desired), -1);
   }
 
   public int getLeftEncoder() {
