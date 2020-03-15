@@ -16,8 +16,6 @@ public class PointTurretAtTargetCommand extends CommandBase {
   TurretSubsystem turret;
   Timer timeoutForNoVision;
 
-  final double kProportionConstant = 0.004;
-  final double kMinMovementPower = .07;
 
   /**
    * Creates a new PointTurretAtTarget Command.
@@ -47,13 +45,10 @@ public class PointTurretAtTargetCommand extends CommandBase {
         turret.stop();
       }
       else if (angleToTarget > 0) {
-        turret.goClockwise(Math.max(kMinMovementPower,kProportionConstant * Math.abs(angleToTarget)));
+        turret.goClockwise();
       //If angle is less than 0, it is on our left so we go counter clockwise in a proportion of our angle
       } else if (angleToTarget < 0) {
-        turret.goCounterClockwise(Math.max(kMinMovementPower,kProportionConstant * Math.abs(angleToTarget)));
-      //
-      } else {
-        turret.stop();
+        turret.goCounterClockwise();
       }
     }
   }
