@@ -37,9 +37,9 @@ import frc.robot.commands.indexerCommands.VerticalIndexerUpCommand;
 import frc.robot.commands.navigationCommands.UpdateNavigationCommand;
 import frc.robot.commands.drivingCommands.DisableRampingCommand;
 import frc.robot.commands.drivingCommands.DriveStraightCommand;
+import frc.robot.commands.drivingCommands.EnableBrakeModeCommand;
 import frc.robot.commands.shooterCommands.MaxPowerShootCommand;
 import frc.robot.commands.drivingCommands.TankDriveCommand;
-import frc.robot.commands.drivingCommands.ToggleBrakeCommand;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -143,7 +143,7 @@ public class RobotContainer {
     //When right trigger on main controller is held, drive straight
     PrimaryRightTrigger.whileHeld(new DriveStraightCommand(driveTrain, navigation, ()->DriveController.getY()));
     //When left bumper held, enable brake mode
-    PrimaryLeftBumper.whileHeld(new ToggleBrakeCommand(driveTrain));
+    PrimaryLeftBumper.whileHeld(new EnableBrakeModeCommand(driveTrain));
     //When right bumper held, disable ramping
     PrimaryRightBumper.whileHeld(new DisableRampingCommand(driveTrain));
 

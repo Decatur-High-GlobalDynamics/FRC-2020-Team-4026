@@ -141,20 +141,11 @@ public class DriveTrainSubsystem extends SubsystemBase {
     currentMaxPower = maxOutputSlow;
   }
 
-  public void toggleBrakemode() {
-    if (brakeMode) {
-      leftDriveFalconMain.setNeutralMode(NeutralMode.Coast);
-      leftDriveFalconSub.setNeutralMode(NeutralMode.Coast);
-      rightDriveFalconMain.setNeutralMode(NeutralMode.Coast);
-      rightDriveFalconSub.setNeutralMode(NeutralMode.Coast);
-    }
-    if (!brakeMode) {
-      leftDriveFalconMain.setNeutralMode(NeutralMode.Brake);
-      leftDriveFalconSub.setNeutralMode(NeutralMode.Brake);
-      rightDriveFalconMain.setNeutralMode(NeutralMode.Brake);
-      rightDriveFalconSub.setNeutralMode(NeutralMode.Brake);
-    }
-    brakeMode = !brakeMode;
+  public void setBrakeMode(NeutralMode mode) {
+    leftDriveFalconMain.setNeutralMode(mode);
+    leftDriveFalconSub.setNeutralMode(mode);
+    rightDriveFalconMain.setNeutralMode(mode);
+    rightDriveFalconSub.setNeutralMode(mode);
   }
 
   public boolean isStopped() {
