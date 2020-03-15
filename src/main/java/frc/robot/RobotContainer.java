@@ -33,6 +33,7 @@ import frc.robot.commands.drivingCommands.DisableRampingCommand;
 import frc.robot.commands.drivingCommands.DriveStraightCommand;
 import frc.robot.commands.drivingCommands.EnableBrakeModeCommand;
 import frc.robot.commands.drivingCommands.SetSpeedMode;
+import frc.robot.commands.drivingCommands.StopDrivetrainCommand;
 import frc.robot.commands.shooterCommands.MaxPowerShootCommand;
 import frc.robot.commands.drivingCommands.TankDriveCommand;
 import frc.robot.subsystems.ClimberSubsystem;
@@ -243,5 +244,9 @@ public class RobotContainer {
               driveBack
             )
           );
+  }
+
+  public Command getStopDriveTrainCommand() {
+    return new StopDrivetrainCommand(driveTrain);
   }
 }

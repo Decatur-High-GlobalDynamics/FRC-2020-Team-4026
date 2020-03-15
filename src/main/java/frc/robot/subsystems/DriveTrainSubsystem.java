@@ -193,4 +193,8 @@ public class DriveTrainSubsystem extends SubsystemBase {
   public void setRamping(boolean ramping) {
     rampingOn = ramping;
   }
+
+  public void stop() {
+    drive.tankDrive(0, 0);
+  }
 }
