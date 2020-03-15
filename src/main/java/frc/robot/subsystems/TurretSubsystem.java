@@ -301,12 +301,25 @@ public class TurretSubsystem extends SubsystemBase {
   }
   
   public double getVisionXAngle() {
-    double result = (double) TeamUtils.getFromNetworkTable("limelight", "tx");
-    boolean hasTarget = (double)TeamUtils.getFromNetworkTable("limelight", "tv") == 1;
-    if (hasTarget) {
-      return result;
-    } else {
-      //Return an error code if we don't have the target
+    try {
+      Object hasTarget = TeamUtils.getFromNetworkTable("limelight", "tv");
+      if (hasTarget == null) {
+        System.err.print("Vision data was null.");
+        return 4026;
+      }
+      if ((double)hasTarget == 1) {
+        Object angle = TeamUtils.getFromNetworkTable("limelight", "tx");
+        if (angle == null) {
+          System.err.print("Vision data was null.");
+          return 4026;
+        }
+        return (double)angle;
+      } else {
+        System.err.print("Can't see target");
+        return 4026;
+      }
+    } catch (Exception e) {
+      System.err.print("Error on processing vision. " + e);
       return 4026;
     }
   }
