@@ -39,6 +39,11 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
   private double velocityForStopMetersPerSecond = 0.2;
 
+  public static enum DriveTrainMode {
+    SLOW,
+    FAST
+  }
+
 
   public DriveTrainSubsystem() {
     rightDriveFalconMain = new WPI_TalonFX(Constants.RightDriveFalconMainCAN);
@@ -60,7 +65,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
     leftDriveFalconSub.follow(leftDriveFalconMain);
     rightDriveFalconSub.follow(rightDriveFalconMain);
 
-    setSlowMode();
+    setDriveTrainMode(DriveTrainMode.SLOW);
     setBrakeMode(NeutralMode.Coast);
   }
 
@@ -143,14 +148,15 @@ public class DriveTrainSubsystem extends SubsystemBase {
     return rightDriveFalconMain.getSelectedSensorPosition();
   }
 
-  //Sets the max output to full
-  public void setFastMode() {
-    currentMaxDrivetrainOutputPercent = maxDrivetrainOutputFastPercent;
-  }
-
-  //sets it to half for controlability
-  public void setSlowMode() {
-    currentMaxDrivetrainOutputPercent = maxDrivetrainOutputSlowPercent;
+  public void setDriveTrainMode(DriveTrainMode mode) {
+    switch (mode) {
+      case SLOW:
+        currentMaxDrivetrainOutputPercent = maxDrivetrainOutputSlowPercent;
+        break;
+      case FAST:
+        currentMaxDrivetrainOutputPercent = maxDrivetrainOutputFastPercent;
+        break;
+    }
   }
 
   public void setBrakeMode(NeutralMode mode) {

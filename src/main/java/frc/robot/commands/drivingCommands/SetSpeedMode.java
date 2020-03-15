@@ -23,18 +23,19 @@ public class SetSpeedMode extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    drive.setDriveTrainMode(DriveTrainSubsystem.DriveTrainMode.FAST);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    drive.setFastMode();
+    
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    drive.setSlowMode();
+    drive.setDriveTrainMode(DriveTrainSubsystem.DriveTrainMode.SLOW);
   }
 
   // Returns true when the command should end.
