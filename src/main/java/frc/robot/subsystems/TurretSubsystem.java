@@ -62,6 +62,9 @@ public class TurretSubsystem extends SubsystemBase {
   // What is encoder value for Straight Ahead (aka Pi/2 radians)
   private final double ticksAtPiOver2Rads = -2914;
 
+  private boolean scanningCW = true;
+  private boolean isScanning = false; 
+
   public TurretSubsystem() {
     turretMotor = new TeamTalonSRX("Subsystems.Turret.motor", Constants.TurretCAN);
     turretMotor.configFactoryDefault();
@@ -179,6 +182,24 @@ public class TurretSubsystem extends SubsystemBase {
     if(!hasBeenCalibrated && !(isTurretCalibrating) ){
      // new TurretToLimitCommand(this).schedule();
     }
+
+    if (isScanning){
+      if (scanningCW){
+        if (this.getTicks() > minEncoderRange + 100){
+          this.goClockwise();
+        } else if (this.getTicks() <= minEncoderRange + 100){
+          scanningCW = false;
+          this.goCounterClockwise();
+        }
+      } else {
+        if (this.getTicks() < -100 ){
+          this.goCounterClockwise();
+        } else if (this.getTicks() >= -100){
+          scanningCW = true;
+          this.goClockwise();
+        }
+      }
+    }
   }
  
   public void goClockwise(double power){
@@ -248,6 +269,7 @@ public class TurretSubsystem extends SubsystemBase {
      turretMotor.set(ControlMode.PercentOutput, -0.004026*Math.signum(turretMotor.getMotorOutputPercent()));
      // Tell motor to hold the position
      startRotatingToEncoderPosition((long)MathUtil.clamp(turretMotor.getSelectedSensorPosition(), minEncoderRange,0));
+     isScanning = false;
   }
 
   public boolean isMotorBusy() {
@@ -309,5 +331,13 @@ public class TurretSubsystem extends SubsystemBase {
       //Return an error code if we don't have the target
       return 4026;
     }
+  }
+
+  public void startScanning(){
+    isScanning = true;
+  }
+  public void stopScanning(){
+    isScanning = false; 
+    this.stop();
   }
 }
