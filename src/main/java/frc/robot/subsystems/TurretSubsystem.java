@@ -338,6 +338,5 @@ public class TurretSubsystem extends SubsystemBase {
   }
   public void stopScanning(){
     isScanning = false; 
-    this.stop();
   }
 }
