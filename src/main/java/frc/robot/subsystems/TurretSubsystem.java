@@ -301,8 +301,8 @@ public class TurretSubsystem extends SubsystemBase {
   }
   
   public double getVisionXAngle() {
-    Double result = (Double) TeamUtils.getFromNetworkTable("limelight", "tx");
-    boolean hasTarget = (boolean) TeamUtils.getFromNetworkTable("limelight", "tv");
+    double result = (double) TeamUtils.getFromNetworkTable("limelight", "tx");
+    boolean hasTarget = (double)TeamUtils.getFromNetworkTable("limelight", "tv") == 1;
     if (hasTarget) {
       return result;
     } else {

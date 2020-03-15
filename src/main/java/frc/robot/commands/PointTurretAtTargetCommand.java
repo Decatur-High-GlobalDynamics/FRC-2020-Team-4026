@@ -9,13 +9,15 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.TeamUtils;
 import frc.robot.subsystems.TurretSubsystem;
 
 public class PointTurretAtTargetCommand extends CommandBase {
   TurretSubsystem turret;
   Timer timeoutForNoVision;
 
-  final double kProportionConstant = 0.005;
+  final double kProportionConstant = 0.004;
+  final double kMinMovementPower = .07;
 
   /**
    * Creates a new PointTurretAtTarget Command.
@@ -28,7 +30,6 @@ public class PointTurretAtTargetCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    timeoutForNoVision.reset();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -42,11 +43,14 @@ public class PointTurretAtTargetCommand extends CommandBase {
       turret.stop();
     } else {
       //If angle is more than 0, it is on our right so we go clockwise in a proportion of the angle we are off
-      if (angleToTarget > 0) {
-        turret.goClockwise(kProportionConstant * Math.abs(angleToTarget));
+      if(TeamUtils.checkTolerance(angleToTarget, 0, .5)){
+        turret.stop();
+      }
+      else if (angleToTarget > 0) {
+        turret.goClockwise(Math.max(kMinMovementPower,kProportionConstant * Math.abs(angleToTarget)));
       //If angle is less than 0, it is on our left so we go counter clockwise in a proportion of our angle
       } else if (angleToTarget < 0) {
-        turret.goCounterClockwise(kProportionConstant * Math.abs(angleToTarget));
+        turret.goCounterClockwise(Math.max(kMinMovementPower,kProportionConstant * Math.abs(angleToTarget)));
       //
       } else {
         turret.stop();
@@ -57,6 +61,7 @@ public class PointTurretAtTargetCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    turret.stop();
   }
 
   // Returns true when the command should end.
