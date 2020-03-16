@@ -38,11 +38,11 @@ public final class Constants {
     public static final int IndexerVertCAN = 11;
 
     //These are TBD: They will be used as feedforward for pathfinding
-    public static final double ks = 1;
-    public static final double kv = 1;
-    public static final double ka = 1;
+    public static final double ks = 0.201;
+    public static final double kv = 2.37;
+    public static final double ka = 0.287;
     //This is TBD: Will be a PID constant for pathfinding
-    public static final double kPDriveVel = 1;
+    public static final double kPDriveVel = 11.2;
     //This is the width between our left and right wheels
     public static final double kTrackWidthMeters = 0.581025;
     //This uses that width to convert from chassis directions (power and angle) to powers for left and right wheels
