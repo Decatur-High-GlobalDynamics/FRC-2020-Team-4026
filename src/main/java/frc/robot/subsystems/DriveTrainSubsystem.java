@@ -31,12 +31,16 @@ public class DriveTrainSubsystem extends SubsystemBase {
   WPI_TalonFX rightDriveFalconSub;
   WPI_TalonFX leftDriveFalconSub;
   //This was tested to be the lowest value where problems weren't had with the squaring thing that differential drive does
-  public double maxPowerChange = 0.43;
+  public double maxPowerChangeDefault = 0.43;
+  public double maxPowerChange = maxPowerChangeDefault;
   public static double maxOutputSlow = .5;
   public static double maxOutputFast = 1;
   public double currentMaxPower = maxOutputSlow;
+  public boolean rampingOn = true;
 
   private boolean brakeMode = false;
+
+  private double epsilonIsStopped = 100;
 
 
   public DriveTrainSubsystem() {
@@ -63,6 +67,11 @@ public class DriveTrainSubsystem extends SubsystemBase {
     setSlowMode();
 
     drive.setRightSideInverted(false);
+
+    leftDriveFalconMain.setNeutralMode(NeutralMode.Coast);
+    leftDriveFalconSub.setNeutralMode(NeutralMode.Coast);
+    rightDriveFalconMain.setNeutralMode(NeutralMode.Coast);
+    rightDriveFalconSub.setNeutralMode(NeutralMode.Coast);
   }
 
   @Override
@@ -76,6 +85,11 @@ public class DriveTrainSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Subsystems.DriveTrain.maxOutputSlow", maxOutputSlow);
     maxOutputFast = SmartDashboard.getNumber("Subsystems.DriveTrain.maxOutputFast", maxOutputFast);
     SmartDashboard.putNumber("Subsystems.DriveTrain.maxOutputFast", maxOutputFast);
+    epsilonIsStopped = SmartDashboard.getNumber("Subsystems.DriveTrain.epsilonIsStopped", epsilonIsStopped);
+    SmartDashboard.putNumber("Subsystems.DriveTrain.epsilonIsStopped", epsilonIsStopped);
+
+    if (rampingOn) maxPowerChange = maxPowerChangeDefault;
+    else maxPowerChange = 1;
   }
 
   //Caps the requested powers then sends them to Differential Drive
@@ -154,5 +168,17 @@ public class DriveTrainSubsystem extends SubsystemBase {
       rightDriveFalconSub.setNeutralMode(NeutralMode.Brake);
     }
     brakeMode = !brakeMode;
+  }
+
+  public boolean isStopped() {
+    return leftDriveFalconMain.getSelectedSensorVelocity() < 100 && rightDriveFalconMain.getSelectedSensorVelocity() < 100;
+  }
+
+  public void enableRamping() {
+    rampingOn = true;
+  }
+
+  public void disableRamping() {
+    rampingOn = false;
   }
 }

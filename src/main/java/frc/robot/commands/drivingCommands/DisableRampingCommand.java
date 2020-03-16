@@ -5,38 +5,36 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands;
+package frc.robot.commands.drivingCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.HorizontalIndexerSubsystem;
+import frc.robot.subsystems.DriveTrainSubsystem;
 
-public class HorizontalIndexerOuttakeCommand extends CommandBase {
-  HorizontalIndexerSubsystem horizontalIndexer;
-
+public class DisableRampingCommand extends CommandBase {
+  DriveTrainSubsystem driveTrain;
   /**
-   * Creates a new HorizontalIndexerOuttakeCommand.
+   * Creates a new DisableRampingCommand.
    */
-  public HorizontalIndexerOuttakeCommand(HorizontalIndexerSubsystem horizontalIndexer) {
-    this.horizontalIndexer = horizontalIndexer;
+  public DisableRampingCommand(DriveTrainSubsystem driveTrain) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(horizontalIndexer);
+    this.driveTrain = driveTrain;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    driveTrain.disableRamping();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    horizontalIndexer.outtake();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    horizontalIndexer.stop();
+    driveTrain.enableRamping();
   }
 
   // Returns true when the command should end.

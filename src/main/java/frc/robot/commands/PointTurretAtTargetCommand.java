@@ -7,33 +7,50 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.TeamUtils;
 import frc.robot.subsystems.TurretSubsystem;
 
-public class TurretToPositionCommand extends CommandBase {
+public class PointTurretAtTargetCommand extends CommandBase {
+  TurretSubsystem turret;
+  Timer timeoutForNoVision;
+
+
   /**
-   * Creates a new TurretToPosition.
+   * Creates a new PointTurretAtTarget Command.
    */
-  private final TurretSubsystem turret;
-  private double targetRad;
-  private int targetPos;
-  public TurretToPositionCommand(TurretSubsystem turret, int targetPos) {
-    System.err.println("Creating TurretToPosition");
-    // Use addRequirements() here to declare subsystem dependencies.
+  public PointTurretAtTargetCommand(TurretSubsystem turret) {
     this.turret = turret;
-    addRequirements(this.turret);
-    this.targetPos = targetPos;
+    addRequirements(turret);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    turret.startRotatingToEncoderPosition(targetPos);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    double angleToTarget;
+    //Get the value of vision angle from limelight
+    angleToTarget = turret.getVisionXAngle();
+    //This is sent if the target isn't seen
+    if (angleToTarget == 4026) {
+      turret.stop();
+    } else {
+      //If angle is more than 0, it is on our right so we go clockwise in a proportion of the angle we are off
+      if(TeamUtils.checkTolerance(angleToTarget, 0, .5)){
+        turret.stop();
+      }
+      else if (angleToTarget > 0) {
+        turret.goClockwise();
+      //If angle is less than 0, it is on our left so we go counter clockwise in a proportion of our angle
+      } else if (angleToTarget < 0) {
+        turret.goCounterClockwise();
+      }
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -45,6 +62,6 @@ public class TurretToPositionCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return !turret.isMotorBusy();
+    return false;
   }
 }

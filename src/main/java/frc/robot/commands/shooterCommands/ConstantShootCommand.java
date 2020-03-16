@@ -5,21 +5,21 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands;
+package frc.robot.commands.shooterCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.VerticalIndexerSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 
-public class VerticalIndexerDownCommand extends CommandBase {
-  VerticalIndexerSubsystem verticalIndexer;
-
+public class ConstantShootCommand extends CommandBase {
   /**
-   * Creates a new VerticalIndexerDownCommand.
+   * Creates a new ConstantShootCommand.
    */
-  public VerticalIndexerDownCommand(VerticalIndexerSubsystem verticalIndexer) {
-    this.verticalIndexer = verticalIndexer;
+  ShooterSubsystem shooter;
+
+  public ConstantShootCommand(ShooterSubsystem shooter) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(verticalIndexer);
+    this.shooter = shooter;
+    addRequirements(shooter);
   }
 
   // Called when the command is initially scheduled.
@@ -30,13 +30,14 @@ public class VerticalIndexerDownCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    verticalIndexer.down();
+    shooter.setBottomMotor(shooter.getShooterPowerBot());
+    shooter.setTopMotor(shooter.getShooterPowerTop());
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    verticalIndexer.stop();
+    shooter.stop();
   }
 
   // Returns true when the command should end.

@@ -5,40 +5,52 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.drivingCommands;
+package frc.robot.commands.turretCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.DriveTrainSubsystem;
+import frc.robot.subsystems.TurretSubsystem;
 
-public class ToggleBrakeCommand extends CommandBase {
-  DriveTrainSubsystem drive;
+public class TurretToLimitCommand extends CommandBase {
   /**
-   * Creates a new ToggleBrakeCommand.
+   * Creates a new TurretToLimitCommand.
    */
-  public ToggleBrakeCommand(DriveTrainSubsystem drive) {
-    this.drive = drive;
+  private final TurretSubsystem turret;
+  private double calibrationTurnPower = 0.1;
+
+  public TurretToLimitCommand(TurretSubsystem turret) {
+    // Use addRequirements() here to declare subsystem dependencies.
+    this.turret = turret;
+    addRequirements(turret);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    drive.toggleBrakemode();
+    turret.toggleTurretCalibrating();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    turret.goCounterClockwise(calibrationTurnPower);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    drive.toggleBrakemode();
+    if(interrupted)
+      System.err.println("TurretToLimit interrupted!");
+    if (!interrupted) {
+      turret.resetEncoder();
+      turret.markAsCalibrated();
+     // turret.startRotatingToPosition(Math.PI/2);
+    }
+    turret.toggleTurretCalibrating();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return turret.getTurretLimitSwitch();
   }
 }

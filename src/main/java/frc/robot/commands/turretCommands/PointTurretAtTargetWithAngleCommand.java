@@ -5,21 +5,21 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands;
+package frc.robot.commands.turretCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.VerticalIndexerSubsystem;
+import frc.robot.TeamUtils;
+import frc.robot.subsystems.TurretSubsystem;
 
-public class VerticalIndexerUpCommand extends CommandBase {
-  
-  VerticalIndexerSubsystem verticalIndexer;
+public class PointTurretAtTargetWithAngleCommand extends CommandBase {
+  TurretSubsystem turret;
   /**
-   * Creates a new VerticalIndexerUpCommand.
+   * Creates a new PointTurretAtTargetWithAngleCommand.
    */
-  public VerticalIndexerUpCommand(VerticalIndexerSubsystem verticalIndexer) {
-    this.verticalIndexer = verticalIndexer;
+  public PointTurretAtTargetWithAngleCommand(TurretSubsystem turret) {
+    this.turret = turret;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(verticalIndexer);
+    addRequirements(turret);
   }
 
   // Called when the command is initially scheduled.
@@ -30,13 +30,14 @@ public class VerticalIndexerUpCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    verticalIndexer.up();
+    double angleSetPoint = turret.getRadians() -Math.toRadians(turret.getVisionXAngle());
+    turret.startRotatingToPosition(angleSetPoint);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    verticalIndexer.stop();
+    turret.stop();
   }
 
   // Returns true when the command should end.

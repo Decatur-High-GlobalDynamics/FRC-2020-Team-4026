@@ -5,20 +5,20 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands;
+package frc.robot.commands.shooterCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.TurretSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 
-public class SimpleTurretCWCommand extends CommandBase {
+public class MaxPowerShootCommand extends CommandBase {
+  private final ShooterSubsystem shooter;
   /**
-   * Creates a new SimpleTurretCWCommand.
+   * Creates a new MaxPowerShootCommand.
    */
-  private final TurretSubsystem turret;
-  public SimpleTurretCWCommand(TurretSubsystem turret) {
-    this.turret = turret;
-    addRequirements(turret);
+  public MaxPowerShootCommand(ShooterSubsystem shooter) {
+    this.shooter = shooter;
     // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(shooter);
   }
 
   // Called when the command is initially scheduled.
@@ -29,12 +29,20 @@ public class SimpleTurretCWCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    turret.goClockwise();
+    shooter.setBottomMotor(1);
+    shooter.setTopMotor(1);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    turret.stop();
+    shooter.setBottomMotor(0);
+    shooter.setTopMotor(0);
+  }
+
+  // Returns true when the command should end.
+  @Override
+  public boolean isFinished() {
+    return false;
   }
 }

@@ -5,24 +5,27 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.drivingCommands;
+package frc.robot.commands.turretCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.DriveTrainSubsystem;
+import frc.robot.subsystems.TurretSubsystem;
 
-public class ToggleBrakeCommand extends CommandBase {
-  DriveTrainSubsystem drive;
+public class PrepareTurretCommand extends CommandBase {
   /**
-   * Creates a new ToggleBrakeCommand.
+   * Creates a new PrepareTurretCommand.
    */
-  public ToggleBrakeCommand(DriveTrainSubsystem drive) {
-    this.drive = drive;
+  private final TurretSubsystem turret;
+
+  public PrepareTurretCommand(TurretSubsystem turret) {
+    this.turret = turret;
+    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(turret);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    drive.toggleBrakemode();
+    turret.startRotatingToPosition(3 * Math.PI / 2);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -33,12 +36,12 @@ public class ToggleBrakeCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    drive.toggleBrakemode();
+    turret.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return !turret.isMotorBusy();
   }
 }
