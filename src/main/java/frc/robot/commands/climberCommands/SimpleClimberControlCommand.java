@@ -1,39 +1,30 @@
 /*----------------------------------------------------------------------------*/
-/* Copyright (c) 2018-2019 FIRST. All Rights Reserved.                        */
+/* Copyright (c) 2019 FIRST. All Rights Reserved.                             */
 /* Open Source Software - may be modified and shared by FRC teams. The code   */
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.drivingCommands;
+package frc.robot.commands.climberCommands;
 
-import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.DriveTrainSubsystem;
+import frc.robot.subsystems.ClimberSubsystem;
 
-/**
- * An example command that uses an example subsystem.
- */
-public class TankDriveCommand extends CommandBase {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  DriveTrainSubsystem driveTrain;
-
-  private final DoubleSupplier leftStick;
-  private final DoubleSupplier rightStick;
-
+public class SimpleClimberControlCommand extends CommandBase {
   /**
-   * Creates a new TankDriveCommand.
-   *
-   * @param subsystem The subsystem used by this command.
+   * Creates a new SimpleClimberControlCommand.
    */
-  public TankDriveCommand(DriveTrainSubsystem driveTrain, DoubleSupplier left, DoubleSupplier right) {
-    this.driveTrain = driveTrain;
-    this.leftStick = left;
-    this.rightStick = right;
+  private ClimberSubsystem climber;
+  private DoubleSupplier leftPower;
+  private DoubleSupplier rightPower;
+  public SimpleClimberControlCommand(ClimberSubsystem climber, DoubleSupplier leftPower, DoubleSupplier rightPower) {
+    this.climber = climber;
+    this.leftPower = leftPower;
+    this.rightPower= rightPower;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(driveTrain);
+    addRequirements(climber);
   }
 
   // Called when the command is initially scheduled.
@@ -44,8 +35,8 @@ public class TankDriveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    driveTrain.setMotorPowers(-this.leftStick.getAsDouble(), this.rightStick.getAsDouble());
-
+    this.climber.setLeftClimber(this.leftPower.getAsDouble());
+    this.climber.setRightClimber(this.rightPower.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.

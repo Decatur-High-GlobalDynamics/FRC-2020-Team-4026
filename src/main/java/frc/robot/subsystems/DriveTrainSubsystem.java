@@ -7,83 +7,165 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.commands.drivingCommands.TankDriveCommand;
+
 
 
 public class DriveTrainSubsystem extends SubsystemBase {
   /**
    * Creates a new DriveTrainSubsystem.
    */
-  final WPI_TalonFX rightDriveFalconMain;
-  final WPI_TalonFX leftDriveFalconMain;
-  final WPI_TalonFX rightDriveFalconSub;
-  final WPI_TalonFX leftDriveFalconSub;
+  final DifferentialDrive drive;
 
-  final Encoder rightEncoder;
-  final Encoder leftEncoder;
+  WPI_TalonFX rightDriveFalconMain; 
+  WPI_TalonFX leftDriveFalconMain;
+  WPI_TalonFX rightDriveFalconSub;
+  WPI_TalonFX leftDriveFalconSub;
+  //This was tested to be the lowest value where problems weren't had with the squaring thing that differential drive does
+  public double maxPowerChangeDefault = 0.43;
+  public double maxPowerChange = maxPowerChangeDefault;
+  public static double maxOutputSlow = .5;
+  public static double maxOutputFast = 1;
+  public double currentMaxPower = maxOutputSlow;
+  public boolean rampingOn = true;
 
+  private boolean brakeMode = false;
 
-  public static final double maxPowerChange = 0.1;
+  private double epsilonIsStopped = 100;
 
 
   public DriveTrainSubsystem() {
-    rightEncoder = new Encoder(Constants.RightEncoderCAM, Constants.RightEncoder2CAM, false);
-    leftEncoder = new Encoder(Constants.LeftEncoderCAM, Constants.LeftEncoder2CAM, false);
+    rightDriveFalconMain = new WPI_TalonFX(Constants.RightDriveFalconMainCAN);
+    leftDriveFalconMain = new WPI_TalonFX(Constants.LeftDriveFalconMainCAN);
+    rightDriveFalconSub = new WPI_TalonFX(Constants.RightDriveFalconSubCAN);
+    leftDriveFalconSub = new WPI_TalonFX(Constants.LeftDriveFalconSubCAN);
 
-    rightDriveFalconMain = new WPI_TalonFX(Constants.RightDriveFalconMainCAM);
-    leftDriveFalconMain = new WPI_TalonFX(Constants.LeftDriveFalconMainCAM);
-    rightDriveFalconSub = new WPI_TalonFX(Constants.RightDriveFalconSubCAM);
-    leftDriveFalconSub = new WPI_TalonFX(Constants.LeftDriveFalconSubCAM);
+    //This configures the falcons to use their internal encoders
+    TalonFXConfiguration configs = new TalonFXConfiguration();
+    configs.primaryPID.selectedFeedbackSensor = FeedbackDevice.IntegratedSensor;
+    rightDriveFalconMain.configAllSettings(configs);
+    leftDriveFalconMain.configAllSettings(configs);
 
     leftDriveFalconSub.follow(leftDriveFalconMain);
     rightDriveFalconSub.follow(rightDriveFalconMain);
 
-    //Sets the distance/encoder tick to be 1 unit. Should be updated after inches/encoeder is calculated. 
-    leftEncoder.setDistancePerPulse(1);
-    rightEncoder.setDistancePerPulse(1);
 
-    setDefaultCommand(new TankDriveCommand(this));
+    //This wraps the motors
+    drive = new DifferentialDrive(leftDriveFalconMain, rightDriveFalconMain);
+
+    drive.setDeadband(0);
+    
+    setSlowMode();
+
+    drive.setRightSideInverted(false);
+
+    leftDriveFalconMain.setNeutralMode(NeutralMode.Coast);
+    leftDriveFalconSub.setNeutralMode(NeutralMode.Coast);
+    rightDriveFalconMain.setNeutralMode(NeutralMode.Coast);
+    rightDriveFalconSub.setNeutralMode(NeutralMode.Coast);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Subsystems.DriveTrain.leftPower", leftDriveFalconMain.get());
+    SmartDashboard.putNumber("Subsystems.DriveTrain.rightPower", rightDriveFalconMain.get());
+    maxPowerChange = SmartDashboard.getNumber("Subsystems.DriveTrain.maxPowerChange", maxPowerChange);
+    SmartDashboard.putNumber("Subsystems.DriveTrain.maxPowerChange", maxPowerChange);
+    maxOutputSlow = SmartDashboard.getNumber("Subsystems.DriveTrain.maxOutputSlow", maxOutputSlow);
+    SmartDashboard.putNumber("Subsystems.DriveTrain.maxOutputSlow", maxOutputSlow);
+    maxOutputFast = SmartDashboard.getNumber("Subsystems.DriveTrain.maxOutputFast", maxOutputFast);
+    SmartDashboard.putNumber("Subsystems.DriveTrain.maxOutputFast", maxOutputFast);
+    epsilonIsStopped = SmartDashboard.getNumber("Subsystems.DriveTrain.epsilonIsStopped", epsilonIsStopped);
+    SmartDashboard.putNumber("Subsystems.DriveTrain.epsilonIsStopped", epsilonIsStopped);
+
+    if (rampingOn) maxPowerChange = maxPowerChangeDefault;
+    else maxPowerChange = 1;
   }
 
-  public void setMotorPowers(double rightPower, double leftPower){
-    setRightMotorPower(rightPower);
-    setLeftMotorPower(leftPower);
-  }
+  //Caps the requested powers then sends them to Differential Drive
+  public void setMotorPowers(double leftPowerDesired, double rightPowerDesired){
+    leftPowerDesired = Math.max(Math.min(1, leftPowerDesired), -1);
+    rightPowerDesired = Math.max(Math.min(1, rightPowerDesired), -1);
+    //Display the power we are asking for
+    SmartDashboard.putNumber("Subsystems.DriveTrain.leftPowerDemand", leftPowerDesired);
+    SmartDashboard.putNumber("Subsystems.DriveTrain.rightPowerDemand", rightPowerDesired);
+    leftPowerDesired *= currentMaxPower;
+    rightPowerDesired *= currentMaxPower;
 
-  public void setRightMotorPower(double power){
-    double curPower = rightDriveFalconMain.get();
-    double nextPower;
-    
-    if (Math.abs(power - curPower) <= maxPowerChange){
-      nextPower = power;
+    //Divide by current max power bcause it was divided by it earlier, and that puts it back into the unit of "requested power", instead of "raw power", which is scaled by current max power
+    double curRightPower = rightDriveFalconMain.get();
+    double nextRightPower;
+    if (Math.abs(rightPowerDesired - curRightPower) <= maxPowerChange){
+      nextRightPower = rightPowerDesired;
     } else {
-      nextPower = curPower + Math.signum(power - curPower) * maxPowerChange;
+      nextRightPower = curRightPower + Math.signum(rightPowerDesired - curRightPower) * maxPowerChange;
     }
 
-    rightDriveFalconMain.set(nextPower);
-  }
-
-  public void setLeftMotorPower(double power){
-    double curPower = leftDriveFalconMain.get();
-    double nextPower;
-    
-    if (Math.abs(power - curPower) <= maxPowerChange){
-      nextPower = power;
+    double curleftPower = leftDriveFalconMain.get();
+    double nextleftPower;
+    if (Math.abs(leftPowerDesired - curleftPower) <= maxPowerChange){
+      nextleftPower = leftPowerDesired;
     } else {
-      nextPower = curPower + Math.signum(power - curPower) * maxPowerChange;
+      nextleftPower = curleftPower + Math.signum(leftPowerDesired - curleftPower) * maxPowerChange;
     }
 
-    leftDriveFalconMain.set(nextPower);
+    SmartDashboard.putNumber("Subsystems.DriveTrain.rightPowerGiven", nextRightPower);
+    SmartDashboard.putNumber("Subsystems.DriveTrain.leftPowerGiven", nextleftPower);
+    drive.tankDrive(nextleftPower, nextRightPower, false);
+  }
+
+  public int getLeftEncoder() {
+    return leftDriveFalconMain.getSelectedSensorPosition();
+  }
+
+  public int getRightEncoder() {
+    return rightDriveFalconMain.getSelectedSensorPosition();
+  }
+
+  //Sets the max output to full
+  public void setFastMode() {
+    currentMaxPower = maxOutputFast;
+  }
+
+  //sets it to half for controlability
+  public void setSlowMode() {
+    currentMaxPower = maxOutputSlow;
+  }
+
+  public void toggleBrakemode() {
+    if (brakeMode) {
+      leftDriveFalconMain.setNeutralMode(NeutralMode.Coast);
+      leftDriveFalconSub.setNeutralMode(NeutralMode.Coast);
+      rightDriveFalconMain.setNeutralMode(NeutralMode.Coast);
+      rightDriveFalconSub.setNeutralMode(NeutralMode.Coast);
+    }
+    if (!brakeMode) {
+      leftDriveFalconMain.setNeutralMode(NeutralMode.Brake);
+      leftDriveFalconSub.setNeutralMode(NeutralMode.Brake);
+      rightDriveFalconMain.setNeutralMode(NeutralMode.Brake);
+      rightDriveFalconSub.setNeutralMode(NeutralMode.Brake);
+    }
+    brakeMode = !brakeMode;
+  }
+
+  public boolean isStopped() {
+    return leftDriveFalconMain.getSelectedSensorVelocity() < 100 && rightDriveFalconMain.getSelectedSensorVelocity() < 100;
+  }
+
+  public void enableRamping() {
+    rampingOn = true;
+  }
+
+  public void disableRamping() {
+    rampingOn = false;
   }
 }
