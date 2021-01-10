@@ -1,6 +1,6 @@
 package frc.robot.constants;
 
-class DriveTrainConstants {
+public class DriveTrainConstants {
     //Our gear ratio. TBD
     public static final double kDriveGearRatio = 10.71;
 

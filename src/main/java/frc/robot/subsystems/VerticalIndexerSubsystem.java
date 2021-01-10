@@ -8,12 +8,11 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Ports;
+import frc.robot.constants.Ports;
 import frc.robot.TeamTalonSRX;
 
 public class VerticalIndexerSubsystem extends SubsystemBase {
@@ -25,8 +24,8 @@ public class VerticalIndexerSubsystem extends SubsystemBase {
   private DigitalInput bottomSwitchA = new DigitalInput(Ports.VerticalIndexer_BottomLimit_DIO_A);
   private DigitalInput bottomSwitchB = new DigitalInput(Ports.VerticalIndexer_BottomLimit_DIO_B);
   private DigitalInput bottomSwitchC = new DigitalInput(Ports.VerticalIndexer_BottomLimit_DIO_C);
-  private DigitalInput middleSwitch = new DigitalInput(Constants.VerticalIndexer_MiddleLimit_DIO);
-  private DigitalInput topSwitch = new DigitalInput(Constants.VerticalIndexer_TopLimit_DIO);
+  private DigitalInput middleSwitch = new DigitalInput(Ports.VerticalIndexer_MiddleLimit_DIO);
+  private DigitalInput topSwitch = new DigitalInput(Ports.VerticalIndexer_TopLimit_DIO);
 
   public int ticksUntilTransfered = 6500;
 
@@ -39,7 +38,7 @@ public class VerticalIndexerSubsystem extends SubsystemBase {
 
   private Timer idleTimerSeconds = new Timer();
   public VerticalIndexerSubsystem() {
-    verticalIndexer = new TeamTalonSRX("Subsystems.VerticalIndexer.VIndxMotor", Constants.IndexerVertCAN);
+    verticalIndexer = new TeamTalonSRX("Subsystems.VerticalIndexer.VIndxMotor", Ports.IndexerVertCAN);
     idleTimerSeconds.reset();
     idleTimerSeconds.start();
   }

@@ -11,8 +11,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveTrainSubsystem;
-import frc.robot.Constants;
-import frc.robot.TeamUtils;
+import frc.robot.constants.DriveTrainConstants;
 
 public class DriveEncoders extends CommandBase {
 
@@ -70,7 +69,7 @@ public class DriveEncoders extends CommandBase {
   @Override
   public boolean isFinished() {
   //  if (Utils.checkTolerance((Math.abs(drive.getRightEncoder()-initialRightEncoderValue))*Constants.kEncoderDistancePerPulse, Math.abs(userMeters), Constants.driveEpsilon*Constants.kEncoderDistancePerPulse) && Utils.checkTolerance((Math.abs(drive.getLeftEncoder()-initialLeftEncoderValue))*Constants.kEncoderDistancePerPulse, Math.abs(userMeters), Constants.kEncoderDistancePerPulse*Constants.driveEpsilon)){
-    if((Math.abs(drive.getRightEncoder()-initialRightEncoderValue)*Constants.kEncoderDistancePerPulse)>=Math.abs(userMeters) && (Math.abs(drive.getLeftEncoder()-initialLeftEncoderValue)*Constants.kEncoderDistancePerPulse)>=Math.abs(userMeters) ){
+    if((Math.abs(drive.getRightEncoder()-initialRightEncoderValue)*DriveTrainConstants.kEncoderDistancePerPulse)>=Math.abs(userMeters) && (Math.abs(drive.getLeftEncoder()-initialLeftEncoderValue)*DriveTrainConstants.kEncoderDistancePerPulse)>=Math.abs(userMeters) ){
     return true;
     } else {
       return false;

@@ -13,7 +13,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.robot.constants.Ports;
 
 public class ClimberSubsystem extends SubsystemBase {
 
@@ -29,14 +29,14 @@ public class ClimberSubsystem extends SubsystemBase {
    * Creates a new ClimberSubsystem.
    */
   public ClimberSubsystem() {
-    leftClimber = new WPI_VictorSPX(Constants.LeftClimbCAN);
-    rightClimber = new WPI_TalonSRX(Constants.RightClimbCAN);
+    leftClimber = new WPI_VictorSPX(Ports.LeftClimbCAN);
+    rightClimber = new WPI_TalonSRX(Ports.RightClimbCAN);
 
-    leftLimit = new DigitalInput(Constants.Climber_LeftLimitDIO);
-    rightLimit = new DigitalInput(Constants.Climber_RightLimitDIO);
+    leftLimit = new DigitalInput(Ports.Climber_LeftLimitDIO);
+    rightLimit = new DigitalInput(Ports.Climber_RightLimitDIO);
 
-    rightHookLimit = new DigitalInput(Constants.Hook_RightDIO);
-    leftHookLimit = new DigitalInput(Constants.Hook_LeftDIO);
+    rightHookLimit = new DigitalInput(Ports.Hook_RightDIO);
+    leftHookLimit = new DigitalInput(Ports.Hook_LeftDIO);
 
   }
 

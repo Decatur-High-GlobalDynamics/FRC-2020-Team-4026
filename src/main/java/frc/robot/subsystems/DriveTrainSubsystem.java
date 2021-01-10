@@ -15,7 +15,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.robot.constants.Ports;
 
 
 
@@ -43,10 +43,10 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
 
   public DriveTrainSubsystem() {
-    rightDriveFalconMain = new WPI_TalonFX(Constants.RightDriveFalconMainCAN);
-    leftDriveFalconMain = new WPI_TalonFX(Constants.LeftDriveFalconMainCAN);
-    rightDriveFalconSub = new WPI_TalonFX(Constants.RightDriveFalconSubCAN);
-    leftDriveFalconSub = new WPI_TalonFX(Constants.LeftDriveFalconSubCAN);
+    rightDriveFalconMain = new WPI_TalonFX(Ports.RightDriveFalconMainCAN);
+    leftDriveFalconMain = new WPI_TalonFX(Ports.LeftDriveFalconMainCAN);
+    rightDriveFalconSub = new WPI_TalonFX(Ports.RightDriveFalconSubCAN);
+    leftDriveFalconSub = new WPI_TalonFX(Ports.LeftDriveFalconSubCAN);
 
     //This configures the falcons to use their internal encoders
     TalonFXConfiguration configs = new TalonFXConfiguration();

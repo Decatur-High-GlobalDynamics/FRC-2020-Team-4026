@@ -1,7 +1,7 @@
 package frc.robot.constants;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 
-class PathfindingConstants {
+public class PathfindingConstants {
     //These are TBD: They will be used as feedforward for pathfinding
     public static final double ks = 0;
     public static final double kv = 0;

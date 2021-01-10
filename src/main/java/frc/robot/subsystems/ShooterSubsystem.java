@@ -11,7 +11,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
-import frc.robot.Constants;
+import frc.robot.constants.Ports;
 import frc.robot.PidParameters;
 import frc.robot.TeamTalonSRX;
 import frc.robot.TeamUtils;
@@ -35,8 +35,8 @@ public class ShooterSubsystem extends SubsystemBase {
   private PidParameters botPidParameters = new PidParameters(0.1,0.00005,0.1,0.026,250,1,10);
 
   public ShooterSubsystem() {
-    shooter_bottom = new TeamTalonSRX("Subsystems.Shooter.Bottom", Constants.BotShooterMotorCAN);
-    shooter_top = new TeamTalonSRX("Subsystems.Shooter.Top", Constants.TopShooterMotorCAN);
+    shooter_bottom = new TeamTalonSRX("Subsystems.Shooter.Bottom", Ports.BotShooterMotorCAN);
+    shooter_top = new TeamTalonSRX("Subsystems.Shooter.Top", Ports.TopShooterMotorCAN);
     shooter_top.setSensorPhase(true);
     shooter_bottom.setSensorPhase(true);
     shooter_bottom.setInverted(true);

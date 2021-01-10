@@ -9,7 +9,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.robot.constants.Ports;
 import frc.robot.TeamTalonSRX;
 
 public class HorizontalIndexerSubsystem extends SubsystemBase {
@@ -21,7 +21,7 @@ public class HorizontalIndexerSubsystem extends SubsystemBase {
   private final double intakeSpeed = -.4;
   private final double outtakeSpeed = .5;
   public HorizontalIndexerSubsystem() {
-    horizontalIndexer = new TeamTalonSRX("Subsystems.HorizontalIndexer.HIndxMotor", Constants.IndexerHorizCAN);
+    horizontalIndexer = new TeamTalonSRX("Subsystems.HorizontalIndexer.HIndxMotor", Ports.IndexerHorizCAN);
   }
 
   @Override

@@ -15,12 +15,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
-import frc.robot.Constants;
+import frc.robot.constants.Ports;
 import frc.robot.PidParameters;
 import frc.robot.TeamTalonSRX;
 import frc.robot.TeamUtils;
 import frc.robot.commands.turretCommands.PrepareTurretCommand;
-import frc.robot.commands.turretCommands.TurretToLimitCommand;
 
 public class TurretSubsystem extends SubsystemBase {
   /**
@@ -63,10 +62,10 @@ public class TurretSubsystem extends SubsystemBase {
   private final double ticksAtPiOver2Rads = -2914;
 
   public TurretSubsystem() {
-    turretMotor = new TeamTalonSRX("Subsystems.Turret.motor", Constants.TurretCAN);
+    turretMotor = new TeamTalonSRX("Subsystems.Turret.motor", Ports.TurretCAN);
     turretMotor.configFactoryDefault();
 
-    turretLimit = new DigitalInput(Constants.TurretLimitDIO);
+    turretLimit = new DigitalInput(Ports.TurretLimitDIO);
 
     turretMotor.setNeutralMode(NeutralMode.Brake);
     turretMotor.setInverted(motorInvert);
