@@ -30,7 +30,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
   WPI_TalonFX leftDriveFalconMain;
   WPI_TalonFX rightDriveFalconSub;
   WPI_TalonFX leftDriveFalconSub;
-  //TBD: Fix max power change now that it's in units per second
+  //TODO: Fix max power change now that it's in units per second
   public double maxPowerChange = 0.43;
   public static double maxOutputSlow = .5;
   public static double maxOutputFast = 1;
@@ -94,10 +94,10 @@ public class DriveTrainSubsystem extends SubsystemBase {
     //Print the power that's been demanded
     SmartDashboard.putNumber("Subsystems.DriveTrain.leftPowerDemand", leftPowerSet);
     SmartDashboard.putNumber("Subsystems.DriveTrain.rightPowerDemand", rightPowerSet);
-    //Scale it by the current max power
+    //Scale it by the current max power - so if we're not in fast mode, everything goes at half speed
     double cappedLeftPowerDesired = leftPowerSet * currentMaxPower;
     double cappedRightPowerDesired = rightPowerSet * currentMaxPower;
-    //Set up vars for putting the final power in
+    //Set up vars for putting the final power in - they need to be set up here because of scope stuff
     double nextRightPower;
     double nextleftPower;
     //If you're ramping, use the calculate function on the limiter to calculate the next speed
@@ -105,14 +105,19 @@ public class DriveTrainSubsystem extends SubsystemBase {
       nextleftPower = leftLimiter.calculate(cappedLeftPowerDesired);
       nextRightPower = rightLimiter.calculate(cappedRightPowerDesired);
     } else {
+      //If you aren't ramping, just set your next power to whatever asked
       nextleftPower = cappedLeftPowerDesired;
       nextRightPower = cappedRightPowerDesired;
+      //This is important - it ensures the limiters always keep up with the current speed. They usually like to be called with calculate, but that's obviously not 
+      //possible when not ramping, so instead we just constantly force the limiters to catch up with us. This means that whenever we start ramping again they'll be caught up
       rightLimiter.reset(nextRightPower);
       leftLimiter.reset(nextleftPower);
     }
-
+    
+    //Print the power that's going to the motors
     SmartDashboard.putNumber("Subsystems.DriveTrain.rightPowerGiven", nextRightPower);
     SmartDashboard.putNumber("Subsystems.DriveTrain.leftPowerGiven", nextleftPower);
+    //Send it to the motors. The false at the end lets you not square the power - bc that leads to weird ramping stuff
     drive.tankDrive(nextleftPower, nextRightPower, false);
   }
 
