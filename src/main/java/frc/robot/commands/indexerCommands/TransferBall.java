@@ -18,7 +18,7 @@ public class TransferBall extends CommandBase {
   private final VerticalIndexerSubsystem verticalIndexer;
   private final HorizontalIndexerSubsystem horizontalIndexer;
 
-  private Integer ticksWhenBottomIsUnpressed = null;
+  private Double ticksWhenBottomIsUnpressed = null;
 
   public TransferBall(VerticalIndexerSubsystem verticalIndexer, HorizontalIndexerSubsystem horizontalIndexer) {
     // Use addRequirements() here to declare subsystem dependencies.

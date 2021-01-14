@@ -151,11 +151,11 @@ public class DriveTrainSubsystem extends SubsystemBase {
     return Math.max(Math.min(1, desired), -1);
   }
 
-  public int getLeftEncoder() {
+  public double getLeftEncoder() {
     return leftDriveFalconMain.getSelectedSensorPosition();
   }
 
-  public int getRightEncoder() {
+  public double getRightEncoder() {
     return rightDriveFalconMain.getSelectedSensorPosition();
   }
 

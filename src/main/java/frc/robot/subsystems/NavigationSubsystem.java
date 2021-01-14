@@ -43,7 +43,7 @@ public class NavigationSubsystem extends SubsystemBase {
   }
 
   //This updates the pose based on the encoder values, and heading. Not super accurate but good for low time scales
-  public void updatePoseNormally(int encoderLeft, int encoderRight) {
+  public void updatePoseNormally(double encoderLeft, double encoderRight) {
     odometry.update(Rotation2d.fromDegrees(getHeading()), encoderLeft, encoderRight);
   }
 
