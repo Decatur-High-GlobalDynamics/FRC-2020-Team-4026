@@ -1,16 +1,16 @@
 package frc.robot.commands.navigationCommands;
 
-import java.util.function.IntSupplier;
+import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.NavigationSubsystem;
 
 public class UpdateNavigationCommand extends CommandBase {
-    IntSupplier leftEncoder;
-    IntSupplier rightEncoder;
+    DoubleSupplier leftEncoder;
+    DoubleSupplier rightEncoder;
     NavigationSubsystem navSystem;
 
-    public UpdateNavigationCommand(NavigationSubsystem nav, IntSupplier leftEncode, IntSupplier rightEncode) {
+    public UpdateNavigationCommand(NavigationSubsystem nav, DoubleSupplier leftEncode, DoubleSupplier rightEncode) {
         navSystem = nav;
         leftEncoder = leftEncode;
         rightEncoder = rightEncode;
@@ -21,6 +21,6 @@ public class UpdateNavigationCommand extends CommandBase {
     @Override
     public void execute() {
         //Update the pose based on encoders
-        navSystem.updatePoseNormally(leftEncoder.getAsInt(), rightEncoder.getAsInt());
+        navSystem.updatePoseNormally(leftEncoder.getAsDouble(), rightEncoder.getAsDouble());
     }
 }
