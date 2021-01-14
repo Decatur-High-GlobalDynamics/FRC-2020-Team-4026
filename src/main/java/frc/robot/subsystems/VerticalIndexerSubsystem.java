@@ -91,7 +91,7 @@ public class VerticalIndexerSubsystem extends SubsystemBase {
     return !bottomSwitchA.get() || bottomSwitchB.get() || !bottomSwitchC.get();
   }
 
-  public int getPosition(){
+  public double getPosition(){
     return Math.abs(verticalIndexer.getSelectedSensorPosition());
   }
 
