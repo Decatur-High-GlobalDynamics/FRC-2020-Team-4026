@@ -129,11 +129,11 @@ public class DriveTrainSubsystem extends SubsystemBase {
     rightPowerSet = rightPowerDesired;
   }
 
-  public int getLeftEncoder() {
+  public double getLeftEncoder() {
     return leftDriveFalconMain.getSelectedSensorPosition();
   }
 
-  public int getRightEncoder() {
+  public double getRightEncoder() {
     return rightDriveFalconMain.getSelectedSensorPosition();
   }
 

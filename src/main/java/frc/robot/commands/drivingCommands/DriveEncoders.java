@@ -21,8 +21,8 @@ public class DriveEncoders extends CommandBase {
 
   private double speed;
   private double userMeters;
-  private int initialLeftEncoderValue;
-  private int initialRightEncoderValue;
+  private double initialLeftEncoderValue;
+  private double initialRightEncoderValue;
   /**
    * Creates a new DriveEncoders.
    */
