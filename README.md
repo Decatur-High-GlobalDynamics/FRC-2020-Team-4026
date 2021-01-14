@@ -1,4 +1,4 @@
-![Java CI](https://github.com/Decatur-High-GlobalDynamics/FRC-2020-Team-4026/workflows/Java%20CI/badge.svg)
+![Java CI](https://github.com/Decatur-High-GlobalDynamics/FRC-2020-Team-4026/workflows/Java%20CI/badge.svg?branch=2021)
 
 # FRC-2020-Team-4026
 Repository for FRC Team 4026's 2020 robot, **Bombardier**
