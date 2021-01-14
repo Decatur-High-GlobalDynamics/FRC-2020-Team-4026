@@ -21,7 +21,7 @@ public class TeamTalonSRX extends WPI_TalonSRX {
 
     protected int numEStops=0;
 
-    protected int maxSpeed = Integer.MAX_VALUE;
+    protected double maxSpeed = Double.MAX_VALUE;
 
 
     protected PidParameters pidProfiles[] = new PidParameters[4];
@@ -76,9 +76,9 @@ public class TeamTalonSRX extends WPI_TalonSRX {
         lastTelemetryUpdate = now;
 
         long currentEncoderValue = getCurrentEncoderValue();
-        int currentSpeed = getSelectedSensorVelocity();
+        double currentSpeed = getSelectedSensorVelocity();
 
-        if ( maxSpeed == Integer.MAX_VALUE || currentSpeed>maxSpeed)
+        if ( maxSpeed == Double.MAX_VALUE || currentSpeed>maxSpeed)
             maxSpeed = currentSpeed;
 
 
@@ -124,12 +124,12 @@ public class TeamTalonSRX extends WPI_TalonSRX {
     }
 
 
-    public int getVelocityError() {
+    public double getVelocityError() {
         if (getControlMode() != ControlMode.Velocity){
             return 0;
         }
-        int currentSpeed = getSelectedSensorVelocity();
-        return (int) (getClosedLoopTarget() - currentSpeed);
+        double currentSpeed = getSelectedSensorVelocity();
+        return (double) (getClosedLoopTarget() - currentSpeed);
     }
 
     public void configureWithPidParameters(PidParameters pidParameters, int pidSlotIndex) {
