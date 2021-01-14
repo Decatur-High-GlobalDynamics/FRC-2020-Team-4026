@@ -124,11 +124,11 @@ public class DriveTrainSubsystem extends SubsystemBase {
     drive.tankDrive(nextleftPower, nextRightPower, false);
   }
 
-  public int getLeftEncoder() {
+  public double getLeftEncoder() {
     return leftDriveFalconMain.getSelectedSensorPosition();
   }
 
-  public int getRightEncoder() {
+  public double getRightEncoder() {
     return rightDriveFalconMain.getSelectedSensorPosition();
   }
 
