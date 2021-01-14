@@ -315,11 +315,11 @@ public class TurretSubsystem extends SubsystemBase {
       return 4026;
     }*/
 
-    if(visionSubsystem.getTv()){
+    if(this.visionSubsystem.getTv()){
       return 4026;
     }
 
-    return visionSubsystem.getTx();
+    return this.visionSubsystem.getTx();
   }
 
   public double getVisionYAngle(){
@@ -333,10 +333,10 @@ public class TurretSubsystem extends SubsystemBase {
     }
     */
 
-    if(visionSubsystem.getTv()){
+    if(this.visionSubsystem.getTv()){
       return 4026;
     }
 
-    return visionSubsystem.getTy();
+    return this.visionSubsystem.getTy();
   }
 }
