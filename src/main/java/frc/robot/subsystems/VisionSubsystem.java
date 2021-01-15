@@ -8,6 +8,8 @@ public class VisionSubsystem extends SubsystemBase {
     private double tx = 4026;
     private boolean tv = false;
     private double ty = 4026;
+    private double lastTimeTargetSeen = 0;
+    private double tvRecentTime = 0.25; //maximum time before tvRecent is set back to false after not seeing any targets
 
     public VisionSubsystem() {
         
@@ -16,8 +18,10 @@ public class VisionSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         try{
-            boolean tv = (double) TeamUtils.getFromNetworkTable("limelight", "tv") == 1;
+            boolean tv = (double) TeamUtils.getFromNetworkTable("limelight", "tv") >= 1;
+            this.lastTimeTargetSeen = Timer.getFPGATimestamp();
             if(tv){
+                this.lastTimeTargetSeen = Timer.getFPGATimestamp();
                 double tx = (double) TeamUtils.getFromNetworkTable("limelight", "tx");
                 double ty = (double) TeamUtils.getFromNetworkTable("limelight", "ty");
 
@@ -41,5 +45,9 @@ public class VisionSubsystem extends SubsystemBase {
     }
     public boolean getTv(){
         return this.tv;
+    }
+
+    public boolean getTvRecent(){
+        return (Timer.getFPGATimestamp() - this.lastTimeTargetSeen) > this.tvRecentTime;
     }
   }
