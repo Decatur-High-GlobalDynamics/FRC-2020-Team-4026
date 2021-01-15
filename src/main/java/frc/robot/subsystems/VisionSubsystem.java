@@ -5,9 +5,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class VisionSubsystem extends SubsystemBase {
 
-    private double tx;
-    private boolean tv;
-    private double ty;
+    private double tx = 4026;
+    private boolean tv = false;
+    private double ty = 4026;
 
     public VisionSubsystem() {
         
@@ -16,13 +16,15 @@ public class VisionSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         try{
-            double tx = (double) TeamUtils.getFromNetworkTable("limelight", "tx");
             boolean tv = (double) TeamUtils.getFromNetworkTable("limelight", "tv") == 1;
-            double ty = (double) TeamUtils.getFromNetworkTable("limelight", "ty");
-
             if(tv){
-                this.tx = tx;
-                this.ty = ty;
+                double tx = (double) TeamUtils.getFromNetworkTable("limelight", "tx");
+                double ty = (double) TeamUtils.getFromNetworkTable("limelight", "ty");
+
+                if(tv){
+                    this.tx = tx;
+                    this.ty = ty;
+                }
             }
         } catch (Exception e){
 
