@@ -49,10 +49,6 @@ import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 
-
-//TODO: Bind to buttons
-import frc.robot.commands.AutoShoot;
-
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -137,7 +133,7 @@ public class RobotContainer {
 
     Button dPadUp = new POVButton(secondaryJoystick, LogitechControllerButtons.up);
     Button dPadRight = new POVButton(secondaryJoystick, LogitechControllerButtons.right);
-    Button dPadDown = new POVButton(secondaryJoystick, LogitechControllerButtons.down);
+// Not Used    Button dPadDown = new POVButton(secondaryJoystick, LogitechControllerButtons.down);
     Button dPadLeft = new POVButton(secondaryJoystick, LogitechControllerButtons.left);
 
     //Configure climber to respond to both joysticks by default

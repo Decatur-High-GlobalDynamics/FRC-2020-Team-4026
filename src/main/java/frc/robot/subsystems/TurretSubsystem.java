@@ -20,7 +20,6 @@ import frc.robot.PidParameters;
 import frc.robot.TeamTalonSRX;
 import frc.robot.TeamUtils;
 import frc.robot.commands.turretCommands.PrepareTurretCommand;
-import frc.robot.commands.turretCommands.TurretToLimitCommand;
 
 public class TurretSubsystem extends SubsystemBase {
   /**
@@ -40,9 +39,6 @@ public class TurretSubsystem extends SubsystemBase {
   private final double MinPowerToMove = 0.0425;
 
   private final int stallThresh = 30;
-
-  private double lastGoodAngle;
-  private int numSequentialErrors = 0;
 
   private boolean isTurretCalibrating = false;
   
@@ -89,7 +85,6 @@ public class TurretSubsystem extends SubsystemBase {
       return true;
 
     // Check safety limits if turret is not running TurretToLimit calibration
-    Command cmd = getCurrentCommand();
     if (isTurretCalibrating) {
       return true;
     }
