@@ -315,10 +315,6 @@ public class TurretSubsystem extends SubsystemBase {
       return 4026;
     }*/
 
-    if(this.visionSubsystem.getTv()){
-      return 4026;
-    }
-
     return this.visionSubsystem.getTx();
   }
 
@@ -332,10 +328,6 @@ public class TurretSubsystem extends SubsystemBase {
 
     }
     */
-
-    if(this.visionSubsystem.getTv()){
-      return 4026;
-    }
 
     return this.visionSubsystem.getTy();
   }
