@@ -18,7 +18,7 @@ public class VisionSubsystem extends SubsystemBase {
         try{
             double tx = (double) TeamUtils.getFromNetworkTable("limelight", "tx");
             boolean tv = (double) TeamUtils.getFromNetworkTable("limelight", "tv") == 1;
-            double ty = (double) TeamUtils.getFromNetworkTable("limelight", "tv");
+            double ty = (double) TeamUtils.getFromNetworkTable("limelight", "ty");
 
             if(tv){
                 this.tx = tx;
