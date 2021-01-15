@@ -167,7 +167,7 @@ public class TurretSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Subsystems.Turret.errorTolerance", pidParams.errorTolerance);
     // If the pidParameters have changed, load them into motor
     if ( ! previousPidParameters.equals(pidParams) ) {
-      turretMotor.configureWithPidParameters(pidParams,0);
+      turretMotor.configureWithPidParameters(pidParams, 0);
     }
     SmartDashboard.putNumber("Subsystems.Turret.xAngleAdjusted", this.visionSubsystem.getLastSeenTx());
 
