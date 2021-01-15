@@ -169,7 +169,7 @@ public class TurretSubsystem extends SubsystemBase {
     if ( ! previousPidParameters.equals(pidParams) ) {
       turretMotor.configureWithPidParameters(pidParams,0);
     }
-    SmartDashboard.putNumber("Subsystems.Turret.xAngleAdjusted", this.getVisionXAngle());
+    SmartDashboard.putNumber("Subsystems.Turret.xAngleAdjusted", this.visionSubsystem.getLastSeenTx());
 
     SmartDashboard.putNumber("Subsystems.Turret.sensorPosition", turretMotor.getSelectedSensorPosition(0));
     SmartDashboard.putString("Subsystems.Turret.Mode", turretMotor.getControlMode().toString());
@@ -303,39 +303,8 @@ public class TurretSubsystem extends SubsystemBase {
   public boolean isRadsAllowed(double rads) {
     return !(convertToTicks(rads) > 0 || convertToTicks(rads) < minEncoderRange);
   }
-  
-  public double getVisionXAngle() {
-    /*
-    double result = (double) TeamUtils.getFromNetworkTable("limelight", "tx");
-    boolean hasTarget = (double) TeamUtils.getFromNetworkTable("limelight", "tv") == 1;
-    if (hasTarget) {
-      return result;
-    } else {
-      //Return an error code if we don't have the target
-      return 4026;
-    }*/
 
-    if(!this.visionSubsystem.getTvRecent()){
-      return 4026;
-    }
-
-    return this.visionSubsystem.getTx();
-  }
-
-  public double getVisionYAngle(){
-    /*
-    double result = (double) TeamUtils.getFromNetworkTable("limelight", "ty");
-    boolean hasTarget = (double) TeamUtils.getFromNetworkTable("limelight", "tv") == 1;
-    if (hasTarget){
-      return result;
-    } else {
-
-    }
-    */
-    if(!this.visionSubsystem.getTvRecent()){
-      return 4026;
-    }
-
-    return this.visionSubsystem.getTy();
+  public VisionSubsystem getVisionSubsystem(){
+    return this.visionSubsystem;
   }
 }

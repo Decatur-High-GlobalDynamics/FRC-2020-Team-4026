@@ -2,13 +2,14 @@ package frc.robot.subsystems;
 
 import frc.robot.TeamUtils;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.Timer;
 
 public class VisionSubsystem extends SubsystemBase {
 
-    private double tx = 4026;
+    private double lastSeenTx = 4026;
     private boolean tv = false;
-    private double ty = 4026;
-    private double lastTimeTargetSeen = 0;
+    private double lastSeenTy = 4026;
+    private double lastTimeTargetSeen = -9999999;
     private double tvRecentTime = 0.25; //maximum time before tvRecent is set back to false after not seeing any targets
 
     public VisionSubsystem() {
@@ -19,16 +20,13 @@ public class VisionSubsystem extends SubsystemBase {
     public void periodic() {
         try{
             boolean tv = (double) TeamUtils.getFromNetworkTable("limelight", "tv") >= 1;
-            this.lastTimeTargetSeen = Timer.getFPGATimestamp();
             if(tv){
                 this.lastTimeTargetSeen = Timer.getFPGATimestamp();
-                double tx = (double) TeamUtils.getFromNetworkTable("limelight", "tx");
-                double ty = (double) TeamUtils.getFromNetworkTable("limelight", "ty");
-
-                if(tv){
-                    this.tx = tx;
-                    this.ty = ty;
-                }
+                double lastSeenTx = (double) TeamUtils.getFromNetworkTable("limelight", "tx");
+                double lastSeenTy = (double) TeamUtils.getFromNetworkTable("limelight", "ty");
+                this.lastSeenTx = lastSeenTx;
+                this.lastSeenTy = lastSeenTy;
+            
             }
         } catch (Exception e){
 
@@ -37,17 +35,17 @@ public class VisionSubsystem extends SubsystemBase {
 
     }
 
-    public double getTx(){
-        return this.tx;
+    public double getLastSeenTx(){
+        return this.lastSeenTx;
     }
-    public double getTy(){
-        return this.ty;
+    public double getLastSeenTy(){
+        return this.lastSeenTy;
     }
     public boolean getTv(){
         return this.tv;
     }
 
-    public boolean getTvRecent(){
+    public boolean isValid(){
         return (Timer.getFPGATimestamp() - this.lastTimeTargetSeen) > this.tvRecentTime;
     }
   }

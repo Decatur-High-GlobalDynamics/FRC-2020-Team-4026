@@ -10,14 +10,17 @@ package frc.robot.commands.turretCommands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.TeamUtils;
 import frc.robot.subsystems.TurretSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
 
 public class PointTurretAtTargetWithAngleCommand extends CommandBase {
   TurretSubsystem turret;
+  VisionSubsystem vision;
   /**
    * Creates a new PointTurretAtTargetWithAngleCommand.
    */
   public PointTurretAtTargetWithAngleCommand(TurretSubsystem turret) {
     this.turret = turret;
+    this.vision = turret.getVisionSubsystem();
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(turret);
   }
@@ -30,7 +33,7 @@ public class PointTurretAtTargetWithAngleCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double angleSetPoint = turret.getRadians() -Math.toRadians(turret.getVisionXAngle());
+    double angleSetPoint = turret.getRadians() -Math.toRadians(vision.getLastSeenTx());
     turret.startRotatingToPosition(angleSetPoint);
   }
 
