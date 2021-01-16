@@ -21,12 +21,16 @@ import frc.robot.TeamTalonSRX;
 import frc.robot.TeamUtils;
 import frc.robot.commands.turretCommands.PrepareTurretCommand;
 
+import frc.robot.subsystems.VisionSubsystem;
+
 public class TurretSubsystem extends SubsystemBase {
   /**
    * Creates a new TurretSubsystem.
    */
   private final TeamTalonSRX turretMotor;
   private final DigitalInput turretLimit;
+
+  private VisionSubsystem visionSubsystem = new VisionSubsystem();
 
   private final double baseTurnSpeed = .1;
   private double maxTurnSpeed = baseTurnSpeed;
@@ -158,9 +162,9 @@ public class TurretSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Subsystems.Turret.errorTolerance", pidParams.errorTolerance);
     // If the pidParameters have changed, load them into motor
     if ( ! previousPidParameters.equals(pidParams) ) {
-      turretMotor.configureWithPidParameters(pidParams,0);
+      turretMotor.configureWithPidParameters(pidParams, 0);
     }
-    SmartDashboard.putNumber("Subsystems.Turret.xAngleAdjusted", this.getVisionXAngle());
+    SmartDashboard.putNumber("Subsystems.Turret.xAngleAdjusted", this.visionSubsystem.getLastSeenTx());
 
     SmartDashboard.putNumber("Subsystems.Turret.sensorPosition", turretMotor.getSelectedSensorPosition(0));
     SmartDashboard.putString("Subsystems.Turret.Mode", turretMotor.getControlMode().toString());
@@ -294,28 +298,8 @@ public class TurretSubsystem extends SubsystemBase {
   public boolean isRadsAllowed(double rads) {
     return !(convertToTicks(rads) > 0 || convertToTicks(rads) < minEncoderRange);
   }
-  
-  public double getVisionXAngle() {
-    try {
-      Object hasTarget = TeamUtils.getFromNetworkTable("limelight", "tv");
-      if (hasTarget == null) {
-        System.err.print("Vision data was null.");
-        return 4026;
-      }
-      if ((double)hasTarget == 1) {
-        Object angle = TeamUtils.getFromNetworkTable("limelight", "tx");
-        if (angle == null) {
-          System.err.print("Vision data was null.");
-          return 4026;
-        }
-        return (double)angle;
-      } else {
-        System.err.print("Can't see target");
-        return 4026;
-      }
-    } catch (Exception e) {
-      System.err.print("Error on processing vision. " + e);
-      return 4026;
-    }
+
+  public VisionSubsystem getVisionSubsystem(){
+    return this.visionSubsystem;
   }
 }
