@@ -16,10 +16,7 @@ public class PointTurretAtTargetCommand extends CommandBase {
   TurretSubsystem turret;
   Timer timeoutForNoVision;
 
-
-  /**
-   * Creates a new PointTurretAtTarget Command.
-   */
+  /** Creates a new PointTurretAtTarget Command. */
   public PointTurretAtTargetCommand(TurretSubsystem turret) {
     this.turret = turret;
     addRequirements(turret);
@@ -27,26 +24,26 @@ public class PointTurretAtTargetCommand extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     double angleToTarget;
-    //Get the value of vision angle from limelight
+    // Get the value of vision angle from limelight
     angleToTarget = turret.getVisionXAngle();
-    //This is sent if the target isn't seen
+    // This is sent if the target isn't seen
     if (angleToTarget == 4026) {
       turret.stop();
     } else {
-      //If angle is more than 0, it is on our right so we go clockwise in a proportion of the angle we are off
-      if(TeamUtils.checkTolerance(angleToTarget, 0, .5)){
+      // If angle is more than 0, it is on our right so we go clockwise in a proportion of the angle
+      // we are off
+      if (TeamUtils.checkTolerance(angleToTarget, 0, .5)) {
         turret.stop();
-      }
-      else if (angleToTarget > 0) {
+      } else if (angleToTarget > 0) {
         turret.goClockwise();
-      //If angle is less than 0, it is on our left so we go counter clockwise in a proportion of our angle
+        // If angle is less than 0, it is on our left so we go counter clockwise in a proportion of
+        // our angle
       } else if (angleToTarget < 0) {
         turret.goCounterClockwise();
       }

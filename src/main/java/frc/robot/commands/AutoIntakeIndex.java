@@ -17,9 +17,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.VerticalIndexerSubsystem;
 
 public class AutoIntakeIndex extends CommandBase {
-  /**
-   * Creates a new AutoIntakeIndex.
-   */
+  /** Creates a new AutoIntakeIndex. */
   private final VerticalIndexerSubsystem verticalIndexer;
 
   private boolean ballAtBot;
@@ -31,7 +29,10 @@ public class AutoIntakeIndex extends CommandBase {
   private final HorizontalIndexerIntakeCommand horizontalIntakeCommand;
   private final TransferBall transferBallCommand;
 
-  public AutoIntakeIndex(IntakeSubsystem intake, HorizontalIndexerSubsystem horizontalIndexer, VerticalIndexerSubsystem verticalIndexer) {
+  public AutoIntakeIndex(
+      IntakeSubsystem intake,
+      HorizontalIndexerSubsystem horizontalIndexer,
+      VerticalIndexerSubsystem verticalIndexer) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.verticalIndexer = verticalIndexer;
 
@@ -52,20 +53,19 @@ public class AutoIntakeIndex extends CommandBase {
     ballAtBot = verticalIndexer.bottomSwitchIsPressed();
     ballAtTop = verticalIndexer.topSwitchIsPressed();
 
-    if (ballAtBot && !ballAtTop && !transferBallCommand.isScheduled()){
+    if (ballAtBot && !ballAtTop && !transferBallCommand.isScheduled()) {
       currentState = "transfer";
       horizontalIntakeCommand.cancel();
       transferBallCommand.schedule();
-    }
-    else if (!ballAtBot && !transferBallCommand.isScheduled()){
+    } else if (!ballAtBot && !transferBallCommand.isScheduled()) {
       currentState = "pulling";
       horizontalIntakeCommand.schedule();
-    }
-    else if (ballAtTop && ballAtBot && horizontalIntakeCommand.isScheduled()){
+    } else if (ballAtTop && ballAtBot && horizontalIntakeCommand.isScheduled()) {
       currentState = "full";
       horizontalIntakeCommand.cancel();
-    } 
-    else if (!ballAtBot && !transferBallCommand.isScheduled() && !horizontalIntakeCommand.isScheduled()){
+    } else if (!ballAtBot
+        && !transferBallCommand.isScheduled()
+        && !horizontalIntakeCommand.isScheduled()) {
       currentState = "top full";
       horizontalIntakeCommand.schedule();
     }
@@ -77,13 +77,13 @@ public class AutoIntakeIndex extends CommandBase {
   public void end(boolean interrupted) {
     currentState = "end";
     SmartDashboard.putString("Commands.AutoIntakeIndex.CurrentState", currentState);
-    if (transferBallCommand.isScheduled()){
+    if (transferBallCommand.isScheduled()) {
       transferBallCommand.cancel();
     }
-    if (intakeCommand.isScheduled()){
+    if (intakeCommand.isScheduled()) {
       intakeCommand.cancel();
     }
-    if (horizontalIntakeCommand.isScheduled()){
+    if (horizontalIntakeCommand.isScheduled()) {
       horizontalIntakeCommand.cancel();
     }
     currentState = "";

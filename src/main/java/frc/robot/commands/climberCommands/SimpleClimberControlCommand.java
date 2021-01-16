@@ -13,24 +13,24 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ClimberSubsystem;
 
 public class SimpleClimberControlCommand extends CommandBase {
-  /**
-   * Creates a new SimpleClimberControlCommand.
-   */
+  /** Creates a new SimpleClimberControlCommand. */
   private ClimberSubsystem climber;
+
   private DoubleSupplier leftPower;
   private DoubleSupplier rightPower;
-  public SimpleClimberControlCommand(ClimberSubsystem climber, DoubleSupplier leftPower, DoubleSupplier rightPower) {
+
+  public SimpleClimberControlCommand(
+      ClimberSubsystem climber, DoubleSupplier leftPower, DoubleSupplier rightPower) {
     this.climber = climber;
     this.leftPower = leftPower;
-    this.rightPower= rightPower;
+    this.rightPower = rightPower;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(climber);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -41,8 +41,7 @@ public class SimpleClimberControlCommand extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
