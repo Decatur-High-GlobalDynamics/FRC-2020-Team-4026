@@ -261,17 +261,20 @@ public class RobotContainer {
   }
 
   private Command getAutoTestPathfinding() {
-    try {
-      Path trajPath = Filesystem.getDeployDirectory().toPath().resolve(testTrajectoryFilePath);
-      return getTrajectoryFollowCommand(TrajectoryUtil.fromPathweaverJson(trajPath));
-    } catch (IOException e) {
-      DriverStation.reportError("Unable to open trajectory: " + testTrajectoryFilePath, e.getStackTrace());
-      return null;
-    }
+    return getTrajCommandFromJSON(testTrajectoryFilePath);
   }
 
   
-  public Command getTrajectoryFollowCommand(Trajectory traj) {
+  public Command getTrajCommandFromJSON(String trajectoryJSON) {
+    Trajectory traj = new Trajectory();
+    try {
+      Path trajPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
+      traj = TrajectoryUtil.fromPathweaverJson(trajPath);
+    } catch (IOException ex) {
+      DriverStation.reportError("Unable to open trajectory: " + testTrajectoryFilePath, ex.getStackTrace());
+      return null;
+    }
+
     return new RamseteCommand(
       traj, 
       navigation::getPose, 
