@@ -263,28 +263,27 @@ public class RobotContainer {
     return getTrajCommandFromJSON(testTrajectoryFilePath);
   }
 
-  
   public Command getTrajCommandFromJSON(String trajectoryJSON) {
     Trajectory traj = new Trajectory();
     try {
       Path trajPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
       traj = TrajectoryUtil.fromPathweaverJson(trajPath);
     } catch (IOException ex) {
-      DriverStation.reportError("Unable to open trajectory: " + testTrajectoryFilePath, ex.getStackTrace());
+      DriverStation.reportError(
+          "Unable to open trajectory: " + testTrajectoryFilePath, ex.getStackTrace());
       return null;
     }
 
     return new RamseteCommand(
-      traj, 
-      navigation::getPose, 
-      new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta), 
-      new SimpleMotorFeedforward(Constants.ks, Constants.kv, Constants.ka),
-      Constants.kDriveKinematics, 
-      driveTrain::getWheelSpeeds, 
-      new PIDController(Constants.kPDriveVel, 0, 0), 
-      new PIDController(Constants.kPDriveVel, 0, 0),
-      driveTrain::tankDriveWithVolts,
-      driveTrain
-    );
+        traj,
+        navigation::getPose,
+        new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta),
+        new SimpleMotorFeedforward(Constants.ks, Constants.kv, Constants.ka),
+        Constants.kDriveKinematics,
+        driveTrain::getWheelSpeeds,
+        new PIDController(Constants.kPDriveVel, 0, 0),
+        new PIDController(Constants.kPDriveVel, 0, 0),
+        driveTrain::tankDriveWithVolts,
+        driveTrain);
   }
 }
