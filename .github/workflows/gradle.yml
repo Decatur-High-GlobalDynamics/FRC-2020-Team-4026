@@ -18,17 +18,3 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       run: ./gradlew build
-
-  formatting:
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v2 # v2 minimum required
-        - name: Set up JDK
-          uses: actions/setup-java@v1
-          with:
-            java-version: 1.11
-        - uses: axel-op/googlejavaformat-action@v3
-          with:
-            args: "--skip-sorting-imports --replace"
-            githubToken: ${{ secrets.GITHUB_TOKEN }}
-

@@ -20,7 +20,6 @@ import frc.robot.PidParameters;
 import frc.robot.TeamTalonSRX;
 import frc.robot.commands.turretCommands.PrepareTurretCommand;
 
-
 public class TurretSubsystem extends SubsystemBase {
   /** Creates a new TurretSubsystem. */
   private final TeamTalonSRX turretMotor;
