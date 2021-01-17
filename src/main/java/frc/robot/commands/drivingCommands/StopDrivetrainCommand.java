@@ -13,9 +13,7 @@ import frc.robot.subsystems.DriveTrainSubsystem;
 public class StopDrivetrainCommand extends CommandBase {
   DriveTrainSubsystem drive;
 
-  /**
-   * Creates a new StopDrivetrainCommand.
-   */
+  /** Creates a new StopDrivetrainCommand. */
   public StopDrivetrainCommand(DriveTrainSubsystem drive) {
     this.drive = drive;
     addRequirements(drive);

@@ -21,11 +21,11 @@ public class DriveTrainSubsystem extends SubsystemBase {
   /** Creates a new DriveTrainSubsystem. */
   final DifferentialDrive drive;
 
-  final WPI_TalonFX rightDriveFalconMain; 
+  final WPI_TalonFX rightDriveFalconMain;
   final WPI_TalonFX leftDriveFalconMain;
   final WPI_TalonFX rightDriveFalconSub;
   final WPI_TalonFX leftDriveFalconSub;
-  //TBD: Make this a better value empirically
+  // TBD: Make this a better value empirically
   public double maxPowerChange = 0.43;
   public static double maxDrivetrainOutputSlowPercent = .5;
   public static double maxDrivetrainOutputFastPercent = 1;
@@ -50,7 +50,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
   }
 
   private void setupDrivetrain() {
-    //This configures the falcons to use their internal encoders
+    // This configures the falcons to use their internal encoders
     TalonFXConfiguration configs = new TalonFXConfiguration();
     configs.primaryPID.selectedFeedbackSensor = FeedbackDevice.IntegratedSensor;
     rightDriveFalconMain.configAllSettings(configs);
@@ -78,20 +78,28 @@ public class DriveTrainSubsystem extends SubsystemBase {
   }
 
   private void updateMaxPowerChange() {
-    maxPowerChange = SmartDashboard.getNumber("Subsystems.DriveTrain.maxPowerChange", maxPowerChange);
+    maxPowerChange =
+        SmartDashboard.getNumber("Subsystems.DriveTrain.maxPowerChange", maxPowerChange);
     SmartDashboard.putNumber("Subsystems.DriveTrain.maxPowerChange", maxPowerChange);
   }
 
   private void updateMaxDrivetrainOutputs() {
-    maxDrivetrainOutputSlowPercent = SmartDashboard.getNumber("Subsystems.DriveTrain.maxPercentOutputSlow", maxDrivetrainOutputSlowPercent);
-    maxDrivetrainOutputFastPercent = SmartDashboard.getNumber("Subsystems.DriveTrain.maxPercentOutputFast", maxDrivetrainOutputFastPercent);
+    maxDrivetrainOutputSlowPercent =
+        SmartDashboard.getNumber(
+            "Subsystems.DriveTrain.maxPercentOutputSlow", maxDrivetrainOutputSlowPercent);
+    maxDrivetrainOutputFastPercent =
+        SmartDashboard.getNumber(
+            "Subsystems.DriveTrain.maxPercentOutputFast", maxDrivetrainOutputFastPercent);
     SmartDashboard.putNumber("Subsystems.DriveTrain.maxOutputSlow", maxDrivetrainOutputSlowPercent);
     SmartDashboard.putNumber("Subsystems.DriveTrain.maxOutputFast", maxDrivetrainOutputFastPercent);
   }
 
   private void updateVelocityForStopMetersPerSecond() {
-    velocityForStopMetersPerSecond = SmartDashboard.getNumber("Subsystems.DriveTrain.velocityForStopMetersPerSecond", velocityForStopMetersPerSecond);
-    SmartDashboard.putNumber("Subsystems.DriveTrain.minimumSpeedForStopTicksPer100ms", velocityForStopMetersPerSecond);
+    velocityForStopMetersPerSecond =
+        SmartDashboard.getNumber(
+            "Subsystems.DriveTrain.velocityForStopMetersPerSecond", velocityForStopMetersPerSecond);
+    SmartDashboard.putNumber(
+        "Subsystems.DriveTrain.minimumSpeedForStopTicksPer100ms", velocityForStopMetersPerSecond);
   }
 
   private void printDrivetrainData() {
@@ -99,36 +107,37 @@ public class DriveTrainSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Subsystems.DriveTrain.rightPower", rightDriveFalconMain.get());
   }
 
-  //Caps the requested powers then sends them to Differential Drive
-  public void setMotorPowers(double leftPowerDesired, double rightPowerDesired){
+  // Caps the requested powers then sends them to Differential Drive
+  public void setMotorPowers(double leftPowerDesired, double rightPowerDesired) {
     leftPowerDesired = getCappedPower(leftPowerDesired);
     rightPowerDesired = getCappedPower(rightPowerDesired);
-    //Display the power we are asking for
+    // Display the power we are asking for
     SmartDashboard.putNumber("Subsystems.DriveTrain.leftPowerDemand", leftPowerDesired);
     SmartDashboard.putNumber("Subsystems.DriveTrain.rightPowerDemand", rightPowerDesired);
     leftPowerDesired *= currentMaxDrivetrainOutputPercent;
     rightPowerDesired *= currentMaxDrivetrainOutputPercent;
 
-    
     double curRightPower = rightDriveFalconMain.get();
-    double nextRightPower = rampingOn ? getRampingAdjustedPower(curRightPower, rightPowerDesired) : rightPowerDesired;
-    
+    double nextRightPower =
+        rampingOn ? getRampingAdjustedPower(curRightPower, rightPowerDesired) : rightPowerDesired;
 
     double curleftPower = leftDriveFalconMain.get();
-    double nextleftPower = rampingOn ? getRampingAdjustedPower(curleftPower, leftPowerDesired) : leftPowerDesired;
+    double nextleftPower =
+        rampingOn ? getRampingAdjustedPower(curleftPower, leftPowerDesired) : leftPowerDesired;
 
     SmartDashboard.putNumber("Subsystems.DriveTrain.rightPowerGiven", nextRightPower);
     SmartDashboard.putNumber("Subsystems.DriveTrain.leftPowerGiven", nextleftPower);
     drive.tankDrive(nextleftPower, nextRightPower, false);
   }
 
-   /**
+  /**
    * Applies rampping logic to return the adjusted next power
+   *
    * @param currentPower
    * @param desired
    * @return adjusted power level
    */
-  private double getRampingAdjustedPower(double currentPower, double desired){
+  private double getRampingAdjustedPower(double currentPower, double desired) {
     double rampped = desired;
     double requestedPowerChange = Math.abs(desired - currentPower);
     if (requestedPowerChange > maxPowerChange) {
@@ -137,8 +146,9 @@ public class DriveTrainSubsystem extends SubsystemBase {
     return rampped;
   }
 
-   /**
+  /**
    * caps the input power between -1 and +1
+   *
    * @param desired
    * @return the capped power
    */
@@ -173,8 +183,10 @@ public class DriveTrainSubsystem extends SubsystemBase {
   }
 
   public boolean isStopped() {
-    return leftDriveFalconMain.getSelectedSensorVelocity() < speedInMetersToTicksPer100ms(velocityForStopMetersPerSecond) 
-    && rightDriveFalconMain.getSelectedSensorVelocity() < speedInMetersToTicksPer100ms(velocityForStopMetersPerSecond);
+    return leftDriveFalconMain.getSelectedSensorVelocity()
+            < speedInMetersToTicksPer100ms(velocityForStopMetersPerSecond)
+        && rightDriveFalconMain.getSelectedSensorVelocity()
+            < speedInMetersToTicksPer100ms(velocityForStopMetersPerSecond);
   }
 
   private int speedInMetersToTicksPer100ms(double speed) {
