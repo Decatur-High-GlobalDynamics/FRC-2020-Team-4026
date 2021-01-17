@@ -20,7 +20,8 @@ import frc.robot.PidParameters;
 import frc.robot.TeamTalonSRX;
 import frc.robot.TeamUtils;
 import frc.robot.commands.turretCommands.PrepareTurretCommand;
-import frc.robot.commands.turretCommands.TurretToLimitCommand;
+
+import frc.robot.subsystems.VisionSubsystem;
 
 public class TurretSubsystem extends SubsystemBase {
   /**
@@ -28,6 +29,8 @@ public class TurretSubsystem extends SubsystemBase {
    */
   private final TeamTalonSRX turretMotor;
   private final DigitalInput turretLimit;
+
+  private VisionSubsystem visionSubsystem = new VisionSubsystem();
 
   private final double baseTurnSpeed = .1;
   private double maxTurnSpeed = baseTurnSpeed;
@@ -40,9 +43,6 @@ public class TurretSubsystem extends SubsystemBase {
   private final double MinPowerToMove = 0.0425;
 
   private final int stallThresh = 30;
-
-  private double lastGoodAngle;
-  private int numSequentialErrors = 0;
 
   private boolean isTurretCalibrating = false;
   
@@ -89,7 +89,6 @@ public class TurretSubsystem extends SubsystemBase {
       return true;
 
     // Check safety limits if turret is not running TurretToLimit calibration
-    Command cmd = getCurrentCommand();
     if (isTurretCalibrating) {
       return true;
     }
@@ -163,9 +162,9 @@ public class TurretSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Subsystems.Turret.errorTolerance", pidParams.errorTolerance);
     // If the pidParameters have changed, load them into motor
     if ( ! previousPidParameters.equals(pidParams) ) {
-      turretMotor.configureWithPidParameters(pidParams,0);
+      turretMotor.configureWithPidParameters(pidParams, 0);
     }
-    SmartDashboard.putNumber("Subsystems.Turret.xAngleAdjusted", this.getVisionXAngle());
+    SmartDashboard.putNumber("Subsystems.Turret.xAngleAdjusted", this.visionSubsystem.getLastSeenTx());
 
     SmartDashboard.putNumber("Subsystems.Turret.sensorPosition", turretMotor.getSelectedSensorPosition(0));
     SmartDashboard.putString("Subsystems.Turret.Mode", turretMotor.getControlMode().toString());
@@ -299,15 +298,8 @@ public class TurretSubsystem extends SubsystemBase {
   public boolean isRadsAllowed(double rads) {
     return !(convertToTicks(rads) > 0 || convertToTicks(rads) < minEncoderRange);
   }
-  
-  public double getVisionXAngle() {
-    double result = (double) TeamUtils.getFromNetworkTable("limelight", "tx");
-    boolean hasTarget = (double)TeamUtils.getFromNetworkTable("limelight", "tv") == 1;
-    if (hasTarget) {
-      return result;
-    } else {
-      //Return an error code if we don't have the target
-      return 4026;
-    }
+
+  public VisionSubsystem getVisionSubsystem(){
+    return this.visionSubsystem;
   }
 }
