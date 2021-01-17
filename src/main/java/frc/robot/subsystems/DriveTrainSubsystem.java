@@ -137,7 +137,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
   // wpi does it so I can't say that multiplying by 10 is correct, but it should be
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
     return new DifferentialDriveWheelSpeeds(
-        (leftDriveFalconMain.getSelectedSensorVelocity() * 10) / Constants.kEncoderDistancePerPulse,
+        (leftDriveFalconMain.getSelectedSensorVelocity() * 10) * Constants.kEncoderDistancePerPulse,
         (rightDriveFalconMain.getSelectedSensorVelocity() * 10)
             * Constants.kEncoderDistancePerPulse);
   }
