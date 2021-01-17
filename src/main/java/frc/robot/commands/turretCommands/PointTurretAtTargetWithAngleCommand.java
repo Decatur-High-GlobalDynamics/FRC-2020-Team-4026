@@ -14,9 +14,7 @@ import frc.robot.subsystems.VisionSubsystem;
 public class PointTurretAtTargetWithAngleCommand extends CommandBase {
   TurretSubsystem turret;
   VisionSubsystem vision;
-  /**
-   * Creates a new PointTurretAtTargetWithAngleCommand.
-   */
+  /** Creates a new PointTurretAtTargetWithAngleCommand. */
   public PointTurretAtTargetWithAngleCommand(TurretSubsystem turret) {
     this.turret = turret;
     this.vision = turret.getVisionSubsystem();
@@ -26,13 +24,12 @@ public class PointTurretAtTargetWithAngleCommand extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(vision.isValid()){
+    if (vision.isValid()) {
       double angleSetPoint = turret.getRadians() - Math.toRadians(vision.getLastSeenTx());
       turret.startRotatingToPosition(angleSetPoint);
     } else {

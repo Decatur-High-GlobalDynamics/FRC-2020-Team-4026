@@ -15,16 +15,14 @@ import frc.robot.Constants;
 
 public class DriveEncoders extends CommandBase {
 
-  private DriveTrainSubsystem drive; 
+  private DriveTrainSubsystem drive;
   private Timer driveTime;
 
   private double speed;
   private double userMeters;
   private double initialLeftEncoderValue;
   private double initialRightEncoderValue;
-  /**
-   * Creates a new DriveEncoders.
-   */
+  /** Creates a new DriveEncoders. */
   public DriveEncoders(double userMeters, double speed, DriveTrainSubsystem drive) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.driveTime = new Timer();
@@ -57,7 +55,7 @@ public class DriveEncoders extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     drive.setMotorPowers(0, 0);
-    if(interrupted || driveTime.hasPeriodPassed(userMeters))
+    if (interrupted || driveTime.hasPeriodPassed(userMeters))
       System.err.println("Auto interrupted!");
     if (!interrupted) {
       driveTime.stop();
@@ -68,9 +66,15 @@ public class DriveEncoders extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-  //  if (Utils.checkTolerance((Math.abs(drive.getRightEncoder()-initialRightEncoderValue))*Constants.kEncoderDistancePerPulse, Math.abs(userMeters), Constants.driveEpsilon*Constants.kEncoderDistancePerPulse) && Utils.checkTolerance((Math.abs(drive.getLeftEncoder()-initialLeftEncoderValue))*Constants.kEncoderDistancePerPulse, Math.abs(userMeters), Constants.kEncoderDistancePerPulse*Constants.driveEpsilon)){
-    if((Math.abs(drive.getRightEncoder()-initialRightEncoderValue)*Constants.kDriveEncoderDistancePerPulse)>=Math.abs(userMeters) && (Math.abs(drive.getLeftEncoder()-initialLeftEncoderValue)*Constants.kDriveEncoderDistancePerPulse)>=Math.abs(userMeters) ){
-    return true;
+    //  if
+    // (Utils.checkTolerance((Math.abs(drive.getRightEncoder()-initialRightEncoderValue))*Constants.kEncoderDistancePerPulse, Math.abs(userMeters), Constants.driveEpsilon*Constants.kEncoderDistancePerPulse) && Utils.checkTolerance((Math.abs(drive.getLeftEncoder()-initialLeftEncoderValue))*Constants.kEncoderDistancePerPulse, Math.abs(userMeters), Constants.kEncoderDistancePerPulse*Constants.driveEpsilon)){
+    if ((Math.abs(drive.getRightEncoder() - initialRightEncoderValue)
+                * Constants.kEncoderDistancePerPulse)
+            >= Math.abs(userMeters)
+        && (Math.abs(drive.getLeftEncoder() - initialLeftEncoderValue)
+                * Constants.kEncoderDistancePerPulse)
+            >= Math.abs(userMeters)) {
+      return true;
     } else {
       return false;
     }

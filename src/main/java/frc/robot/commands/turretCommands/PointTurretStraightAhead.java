@@ -13,9 +13,7 @@ import frc.robot.subsystems.TurretSubsystem;
 
 public class PointTurretStraightAhead extends CommandBase {
   TurretSubsystem turret;
-  /**
-   * Creates a new PointTurretStraightAhead.
-   */
+  /** Creates a new PointTurretStraightAhead. */
   public PointTurretStraightAhead(TurretSubsystem turret) {
     this.turret = turret;
     addRequirements(turret);
@@ -23,8 +21,7 @@ public class PointTurretStraightAhead extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -41,6 +38,7 @@ public class PointTurretStraightAhead extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return TeamUtils.checkTolerance(Math.PI/2, turret.getRadians(), 1/(36*Math.PI)) || !turret.checkCalibration();
+    return TeamUtils.checkTolerance(Math.PI / 2, turret.getRadians(), 1 / (36 * Math.PI))
+        || !turret.checkCalibration();
   }
 }

@@ -12,9 +12,7 @@ import frc.robot.subsystems.DriveTrainSubsystem;
 
 public class DisableRampingCommand extends CommandBase {
   DriveTrainSubsystem driveTrain;
-  /**
-   * Creates a new DisableRampingCommand.
-   */
+  /** Creates a new DisableRampingCommand. */
   public DisableRampingCommand(DriveTrainSubsystem driveTrain) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.driveTrain = driveTrain;
@@ -28,8 +26,7 @@ public class DisableRampingCommand extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override

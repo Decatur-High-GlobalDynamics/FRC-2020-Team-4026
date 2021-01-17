@@ -12,9 +12,7 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveTrainSubsystem;
 
-/**
- * An example command that uses an example subsystem.
- */
+/** An example command that uses an example subsystem. */
 public class TankDriveCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   DriveTrainSubsystem driveTrain;
@@ -27,7 +25,8 @@ public class TankDriveCommand extends CommandBase {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public TankDriveCommand(DriveTrainSubsystem driveTrain, DoubleSupplier left, DoubleSupplier right) {
+  public TankDriveCommand(
+      DriveTrainSubsystem driveTrain, DoubleSupplier left, DoubleSupplier right) {
     this.driveTrain = driveTrain;
     this.leftStick = left;
     this.rightStick = right;
@@ -37,20 +36,17 @@ public class TankDriveCommand extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     driveTrain.setMotorPowers(-this.leftStick.getAsDouble(), this.rightStick.getAsDouble());
-
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override

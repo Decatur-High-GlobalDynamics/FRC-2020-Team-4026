@@ -14,9 +14,7 @@ import frc.robot.subsystems.DriveTrainSubsystem;
 
 public class EnableBrakeModeCommand extends CommandBase {
   DriveTrainSubsystem drive;
-  /**
-   * Creates a new ToggleBrakeCommand.
-   */
+  /** Creates a new EnableBrakeModeCommand. */
   public EnableBrakeModeCommand(DriveTrainSubsystem drive) {
     this.drive = drive;
   }
@@ -29,8 +27,7 @@ public class EnableBrakeModeCommand extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override

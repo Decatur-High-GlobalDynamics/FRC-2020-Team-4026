@@ -17,12 +17,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-
-
 public class DriveTrainSubsystem extends SubsystemBase {
-  /**
-   * Creates a new DriveTrainSubsystem.
-   */
+  /** Creates a new DriveTrainSubsystem. */
   final DifferentialDrive drive;
 
   final WPI_TalonFX rightDriveFalconMain; 
@@ -42,7 +38,6 @@ public class DriveTrainSubsystem extends SubsystemBase {
     SLOW,
     FAST
   }
-
 
   public DriveTrainSubsystem() {
     rightDriveFalconMain = new WPI_TalonFX(Constants.RightDriveFalconMainCAN);
