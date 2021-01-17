@@ -12,15 +12,15 @@ import frc.robot.subsystems.HorizontalIndexerSubsystem;
 import frc.robot.subsystems.VerticalIndexerSubsystem;
 
 public class TransferBall extends CommandBase {
-  /**
-   * Creates a new TransferBall.
-   */
+  /** Creates a new TransferBall. */
   private final VerticalIndexerSubsystem verticalIndexer;
+
   private final HorizontalIndexerSubsystem horizontalIndexer;
 
   private Double ticksWhenBottomIsUnpressed = null;
 
-  public TransferBall(VerticalIndexerSubsystem verticalIndexer, HorizontalIndexerSubsystem horizontalIndexer) {
+  public TransferBall(
+      VerticalIndexerSubsystem verticalIndexer, HorizontalIndexerSubsystem horizontalIndexer) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.verticalIndexer = verticalIndexer;
     this.horizontalIndexer = horizontalIndexer;
@@ -31,7 +31,7 @@ public class TransferBall extends CommandBase {
   @Override
   public void initialize() {
     // Refuse to start the vertical indexer if top switch is pressed
-    if (!verticalIndexer.topSwitchIsPressed()){
+    if (!verticalIndexer.topSwitchIsPressed()) {
       verticalIndexer.up();
       horizontalIndexer.intake();
       ticksWhenBottomIsUnpressed = null;
@@ -56,12 +56,13 @@ public class TransferBall extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (verticalIndexer.topSwitchIsPressed()){
+    if (verticalIndexer.topSwitchIsPressed()) {
       return true;
     }
-    if (ticksWhenBottomIsUnpressed==null){
+    if (ticksWhenBottomIsUnpressed == null) {
       return false;
     }
-    return Math.abs(verticalIndexer.getPosition() - ticksWhenBottomIsUnpressed) >= verticalIndexer.ticksUntilTransfered;
+    return Math.abs(verticalIndexer.getPosition() - ticksWhenBottomIsUnpressed)
+        >= verticalIndexer.ticksUntilTransfered;
   }
 }

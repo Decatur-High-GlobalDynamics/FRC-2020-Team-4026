@@ -18,15 +18,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-
-
 public class DriveTrainSubsystem extends SubsystemBase {
-  /**
-   * Creates a new DriveTrainSubsystem.
-   */
+  /** Creates a new DriveTrainSubsystem. */
   final DifferentialDrive drive;
 
-  WPI_TalonFX rightDriveFalconMain; 
+  WPI_TalonFX rightDriveFalconMain;
   WPI_TalonFX leftDriveFalconMain;
   WPI_TalonFX rightDriveFalconSub;
   WPI_TalonFX leftDriveFalconSub;
@@ -53,7 +49,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
     rightDriveFalconSub = new WPI_TalonFX(Constants.RightDriveFalconSubCAN);
     leftDriveFalconSub = new WPI_TalonFX(Constants.LeftDriveFalconSubCAN);
 
-    //This configures the falcons to use their internal encoders
+    // This configures the falcons to use their internal encoders
     TalonFXConfiguration configs = new TalonFXConfiguration();
     configs.primaryPID.selectedFeedbackSensor = FeedbackDevice.IntegratedSensor;
     rightDriveFalconMain.configAllSettings(configs);
@@ -62,12 +58,11 @@ public class DriveTrainSubsystem extends SubsystemBase {
     leftDriveFalconSub.follow(leftDriveFalconMain);
     rightDriveFalconSub.follow(rightDriveFalconMain);
 
-
-    //This wraps the motors
+    // This wraps the motors
     drive = new DifferentialDrive(leftDriveFalconMain, rightDriveFalconMain);
 
     drive.setDeadband(0);
-    
+
     setSlowMode();
 
     drive.setRightSideInverted(false);
@@ -83,13 +78,15 @@ public class DriveTrainSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Subsystems.DriveTrain.leftPower", leftDriveFalconMain.get());
     SmartDashboard.putNumber("Subsystems.DriveTrain.rightPower", rightDriveFalconMain.get());
-    maxPowerChange = SmartDashboard.getNumber("Subsystems.DriveTrain.maxPowerChange", maxPowerChange);
+    maxPowerChange =
+        SmartDashboard.getNumber("Subsystems.DriveTrain.maxPowerChange", maxPowerChange);
     SmartDashboard.putNumber("Subsystems.DriveTrain.maxPowerChange", maxPowerChange);
     maxOutputSlow = SmartDashboard.getNumber("Subsystems.DriveTrain.maxOutputSlow", maxOutputSlow);
     SmartDashboard.putNumber("Subsystems.DriveTrain.maxOutputSlow", maxOutputSlow);
     maxOutputFast = SmartDashboard.getNumber("Subsystems.DriveTrain.maxOutputFast", maxOutputFast);
     SmartDashboard.putNumber("Subsystems.DriveTrain.maxOutputFast", maxOutputFast);
-    epsilonIsStopped = SmartDashboard.getNumber("Subsystems.DriveTrain.epsilonIsStopped", epsilonIsStopped);
+    epsilonIsStopped =
+        SmartDashboard.getNumber("Subsystems.DriveTrain.epsilonIsStopped", epsilonIsStopped);
     SmartDashboard.putNumber("Subsystems.DriveTrain.epsilonIsStopped", epsilonIsStopped);
     //Print the power that's been demanded
     SmartDashboard.putNumber("Subsystems.DriveTrain.leftPowerDemand", leftPowerSet);
@@ -137,12 +134,12 @@ public class DriveTrainSubsystem extends SubsystemBase {
     return rightDriveFalconMain.getSelectedSensorPosition();
   }
 
-  //Sets the max output to full
+  // Sets the max output to full
   public void setFastMode() {
     currentMaxPower = maxOutputFast;
   }
 
-  //sets it to half for controlability
+  // sets it to half for controlability
   public void setSlowMode() {
     currentMaxPower = maxOutputSlow;
   }
@@ -164,7 +161,8 @@ public class DriveTrainSubsystem extends SubsystemBase {
   }
 
   public boolean isStopped() {
-    return leftDriveFalconMain.getSelectedSensorVelocity() < 100 && rightDriveFalconMain.getSelectedSensorVelocity() < 100;
+    return leftDriveFalconMain.getSelectedSensorVelocity() < 100
+        && rightDriveFalconMain.getSelectedSensorVelocity() < 100;
   }
 
   public void enableRamping() {
