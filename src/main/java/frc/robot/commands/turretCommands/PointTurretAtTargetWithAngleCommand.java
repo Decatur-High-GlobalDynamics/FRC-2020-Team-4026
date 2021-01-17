@@ -29,7 +29,7 @@ public class PointTurretAtTargetWithAngleCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(vision.isValid()){
+    if (vision.isValid()) {
       double angleSetPoint = turret.getRadians() - Math.toRadians(vision.getLastSeenTx());
       turret.startRotatingToPosition(angleSetPoint);
     } else {

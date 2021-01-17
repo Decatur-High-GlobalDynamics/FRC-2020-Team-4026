@@ -18,10 +18,8 @@ import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.Constants;
 import frc.robot.PidParameters;
 import frc.robot.TeamTalonSRX;
-import frc.robot.TeamUtils;
 import frc.robot.commands.turretCommands.PrepareTurretCommand;
 
-import frc.robot.subsystems.VisionSubsystem;
 
 public class TurretSubsystem extends SubsystemBase {
   /** Creates a new TurretSubsystem. */
@@ -161,7 +159,8 @@ public class TurretSubsystem extends SubsystemBase {
     if (!previousPidParameters.equals(pidParams)) {
       turretMotor.configureWithPidParameters(pidParams, 0);
     }
-    SmartDashboard.putNumber("Subsystems.Turret.xAngleAdjusted", this.visionSubsystem.getLastSeenTx());
+    SmartDashboard.putNumber(
+        "Subsystems.Turret.xAngleAdjusted", this.visionSubsystem.getLastSeenTx());
 
     SmartDashboard.putNumber(
         "Subsystems.Turret.sensorPosition", turretMotor.getSelectedSensorPosition(0));
@@ -306,7 +305,7 @@ public class TurretSubsystem extends SubsystemBase {
     return !(convertToTicks(rads) > 0 || convertToTicks(rads) < minEncoderRange);
   }
 
-  public VisionSubsystem getVisionSubsystem(){
+  public VisionSubsystem getVisionSubsystem() {
     return this.visionSubsystem;
   }
 }

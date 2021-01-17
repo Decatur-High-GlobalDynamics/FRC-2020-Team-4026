@@ -33,14 +33,15 @@ public class PointTurretAtTargetCommand extends CommandBase {
     double angleToTarget;
 
     VisionSubsystem visionSubsystem = turret.getVisionSubsystem();
-    //Get the value of vision angle from limelight
+    // Get the value of vision angle from limelight
     angleToTarget = visionSubsystem.getLastSeenTx();
-    //This is sent if the target isn't seen
+    // This is sent if the target isn't seen
     if (!visionSubsystem.isValid()) {
       turret.stop();
     } else {
-      //If angle is more than 0, it is on our right so we go clockwise in a proportion of the angle we are off
-      if(TeamUtils.checkTolerance(angleToTarget, 0, 0.5)){
+      // If angle is more than 0, it is on our right so we go clockwise in a proportion of the angle
+      // we are off
+      if (TeamUtils.checkTolerance(angleToTarget, 0, 0.5)) {
         turret.stop();
       } else if (angleToTarget > 0) {
         turret.goClockwise();
