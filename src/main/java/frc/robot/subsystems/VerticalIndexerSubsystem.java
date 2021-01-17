@@ -16,14 +16,15 @@ import frc.robot.constants.Ports;
 import frc.robot.TeamTalonSRX;
 
 public class VerticalIndexerSubsystem extends SubsystemBase {
-  /**
-   * Creates a new VerticalIndexerSubsystem.
-   */
+  /** Creates a new VerticalIndexerSubsystem. */
   private final TeamTalonSRX verticalIndexer;
 
-  private DigitalInput bottomSwitchA = new DigitalInput(Ports.VerticalIndexer_BottomLimit_DIO_A);
-  private DigitalInput bottomSwitchB = new DigitalInput(Ports.VerticalIndexer_BottomLimit_DIO_B);
-  private DigitalInput bottomSwitchC = new DigitalInput(Ports.VerticalIndexer_BottomLimit_DIO_C);
+  private DigitalInput bottomSwitchA =
+      new DigitalInput(Ports.VerticalIndexer_BottomLimit_DIO_A);
+  private DigitalInput bottomSwitchB =
+      new DigitalInput(Ports.VerticalIndexer_BottomLimit_DIO_B);
+  private DigitalInput bottomSwitchC =
+      new DigitalInput(Ports.VerticalIndexer_BottomLimit_DIO_C);
   private DigitalInput middleSwitch = new DigitalInput(Ports.VerticalIndexer_MiddleLimit_DIO);
   private DigitalInput topSwitch = new DigitalInput(Ports.VerticalIndexer_TopLimit_DIO);
 
@@ -37,8 +38,10 @@ public class VerticalIndexerSubsystem extends SubsystemBase {
   private double epsilonIdleTime = 1;
 
   private Timer idleTimerSeconds = new Timer();
+
   public VerticalIndexerSubsystem() {
-    verticalIndexer = new TeamTalonSRX("Subsystems.VerticalIndexer.VIndxMotor", Ports.IndexerVertCAN);
+    verticalIndexer =
+        new TeamTalonSRX("Subsystems.VerticalIndexer.VIndxMotor", Ports.IndexerVertCAN);
     idleTimerSeconds.reset();
     idleTimerSeconds.start();
   }
@@ -50,18 +53,24 @@ public class VerticalIndexerSubsystem extends SubsystemBase {
     SmartDashboard.putBoolean("Subsystems.VerticalIndexer.TopSwitch", topSwitchIsPressed());
     SmartDashboard.putBoolean("Subsystems.VerticalIndexer.MiddleSwitch", middleSwitchIsPressed());
     SmartDashboard.putBoolean("Subsystems.VerticalIndexer.BottomSwitch", bottomSwitchIsPressed());
-    ticksUntilTransfered = (int) SmartDashboard.getNumber("Subsystems.VerticalIndexer.TicksUntilTransferred", ticksUntilTransfered);
-    SmartDashboard.putNumber("Subsystems.VerticalIndexer.TicksUntilTransferred", ticksUntilTransfered);
-    SmartDashboard.putNumber("Subsystems.VerticalIndexer.currentPosition", verticalIndexer.getSelectedSensorPosition());
-    epsilonIdleTime = SmartDashboard.getNumber("Subsystems.DriveTrain.epsilonIdleTime", epsilonIdleTime);
+    ticksUntilTransfered =
+        (int)
+            SmartDashboard.getNumber(
+                "Subsystems.VerticalIndexer.TicksUntilTransferred", ticksUntilTransfered);
+    SmartDashboard.putNumber(
+        "Subsystems.VerticalIndexer.TicksUntilTransferred", ticksUntilTransfered);
+    SmartDashboard.putNumber(
+        "Subsystems.VerticalIndexer.currentPosition", verticalIndexer.getSelectedSensorPosition());
+    epsilonIdleTime =
+        SmartDashboard.getNumber("Subsystems.DriveTrain.epsilonIdleTime", epsilonIdleTime);
     SmartDashboard.putNumber("Subsystems.DriveTrain.epsilonIdleTime", epsilonIdleTime);
-    if (this.getCurrentCommand() == null){
+    if (this.getCurrentCommand() == null) {
       currCmd = "null";
-    } else { 
+    } else {
       currCmd = this.getCurrentCommand().toString();
     }
     SmartDashboard.putString("Subsystems.VerticalIndexer.currCommand", currCmd);
-    
+
     if (topSwitchIsPressed() || verticalIndexer.get() == 0) {
       idleTimerSeconds.reset();
     }
@@ -79,10 +88,12 @@ public class VerticalIndexerSubsystem extends SubsystemBase {
     // Negative because of opposite switch polarity
     return !topSwitch.get();
   }
+
   public boolean middleSwitchIsPressed() {
     // Negative because of opposite switch polarity
     return !middleSwitch.get();
   }
+
   public boolean bottomSwitchIsPressed() {
     // Negative because of opposite switch polarity
 
@@ -91,18 +102,19 @@ public class VerticalIndexerSubsystem extends SubsystemBase {
     return !bottomSwitchA.get() || bottomSwitchB.get() || !bottomSwitchC.get();
   }
 
-  public double getPosition(){
+  public double getPosition() {
     return Math.abs(verticalIndexer.getSelectedSensorPosition());
   }
 
-  public void up(){
-      verticalIndexer.set(ControlMode.PercentOutput,upSpeed);
-  }
-  public void down(){
-      verticalIndexer.set(ControlMode.PercentOutput,downSpeed);
-  }
-  public void stop(){
-  verticalIndexer.set(0);
+  public void up() {
+    verticalIndexer.set(ControlMode.PercentOutput, upSpeed);
   }
 
+  public void down() {
+    verticalIndexer.set(ControlMode.PercentOutput, downSpeed);
+  }
+
+  public void stop() {
+    verticalIndexer.set(0);
+  }
 }

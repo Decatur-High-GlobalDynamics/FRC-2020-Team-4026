@@ -1,4 +1,3 @@
-
 /*----------------------------------------------------------------------------*/
 /* Copyright (c) 2019 FIRST. All Rights Reserved.                             */
 /* Open Source Software - may be modified and shared by FRC teams. The code   */
@@ -14,9 +13,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 public class SimpleIntakeCommand extends CommandBase {
   IntakeSubsystem intake;
 
-  /**
-   * Creates a new SimpleIntakeCommand.
-   */
+  /** Creates a new SimpleIntakeCommand. */
   public SimpleIntakeCommand(IntakeSubsystem intake) {
     this.intake = intake;
     // Use addRequirements() here to declare subsystem dependencies.
@@ -25,8 +22,7 @@ public class SimpleIntakeCommand extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override

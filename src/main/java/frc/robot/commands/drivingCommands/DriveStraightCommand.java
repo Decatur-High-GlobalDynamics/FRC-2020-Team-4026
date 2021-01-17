@@ -18,15 +18,14 @@ public class DriveStraightCommand extends CommandBase {
   NavigationSubsystem nav;
   DoubleSupplier joystick;
 
-  //This is the turn offset p value for pid
-  double pTurn = 1/90;
+  // This is the turn offset p value for pid
+  double pTurn = 1 / 90;
 
   double desiredHeading;
 
-  /**
-   * Creates a new DriveStraightCommand.
-   */
-  public DriveStraightCommand(DriveTrainSubsystem driveTrain, NavigationSubsystem nav, DoubleSupplier joystick) {
+  /** Creates a new DriveStraightCommand. */
+  public DriveStraightCommand(
+      DriveTrainSubsystem driveTrain, NavigationSubsystem nav, DoubleSupplier joystick) {
     addRequirements(driveTrain);
     this.driveTrain = driveTrain;
     this.nav = nav;
@@ -43,7 +42,7 @@ public class DriveStraightCommand extends CommandBase {
   @Override
   public void execute() {
     double desiredSpeed = joystick.getAsDouble();
-    //This is the offset for motors for turning
+    // This is the offset for motors for turning
     double turnOffset = 0;
 
     driveTrain.setMotorPowers(-(desiredSpeed) + turnOffset, desiredSpeed + turnOffset);
@@ -51,8 +50,7 @@ public class DriveStraightCommand extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override

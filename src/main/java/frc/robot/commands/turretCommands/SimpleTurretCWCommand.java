@@ -11,10 +11,9 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.TurretSubsystem;
 
 public class SimpleTurretCWCommand extends CommandBase {
-  /**
-   * Creates a new SimpleTurretCWCommand.
-   */
+  /** Creates a new SimpleTurretCWCommand. */
   private final TurretSubsystem turret;
+
   public SimpleTurretCWCommand(TurretSubsystem turret) {
     this.turret = turret;
     addRequirements(turret);
@@ -23,8 +22,7 @@ public class SimpleTurretCWCommand extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -34,7 +32,7 @@ public class SimpleTurretCWCommand extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) { 
+  public void end(boolean interrupted) {
     turret.stop();
   }
 }

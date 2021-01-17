@@ -12,9 +12,7 @@ import frc.robot.subsystems.DriveTrainSubsystem;
 
 public class SetSpeedMode extends CommandBase {
   DriveTrainSubsystem drive;
-  /**
-   * Creates a new SetSpeedMode.
-   */
+  /** Creates a new SetSpeedMode. */
   public SetSpeedMode(DriveTrainSubsystem drive) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.drive = drive;
@@ -22,8 +20,7 @@ public class SetSpeedMode extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override

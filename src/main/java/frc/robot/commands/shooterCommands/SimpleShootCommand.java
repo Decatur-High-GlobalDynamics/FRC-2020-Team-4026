@@ -13,27 +13,22 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ShooterSubsystem;
 
 public class SimpleShootCommand extends CommandBase {
-  
+
   ShooterSubsystem shooter;
   DoubleSupplier topThrottle;
   DoubleSupplier bottomThrottle;
-  /**
-   * Creates a new SimpleShootCommand.
-   */
+  /** Creates a new SimpleShootCommand. */
   public SimpleShootCommand(ShooterSubsystem shooter, DoubleSupplier top, DoubleSupplier bottom) {
     this.shooter = shooter;
     this.topThrottle = top;
     this.bottomThrottle = bottom;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(shooter);
-
   }
-  
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
