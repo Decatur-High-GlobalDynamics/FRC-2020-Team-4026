@@ -17,37 +17,36 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.SerialPort;
 
 public class NavigationSubsystem extends SubsystemBase {
-    //Change this to whatever type is needed
+  // Change this to whatever type is needed
 
-    DifferentialDriveOdometry odometry;
+  DifferentialDriveOdometry odometry;
 
-    AHRS navx;
+  AHRS navx;
 
-    double accumulatedHeading = 0;
+  double accumulatedHeading = 0;
 
-    double lastHeading = 0;
+  double lastHeading = 0;
 
-  /**
-   * Creates a new NavigationSubsystem.
-   */
+  /** Creates a new NavigationSubsystem. */
   public NavigationSubsystem() {
-    //Create navx
+    // Create navx
     navx = new AHRS(SerialPort.Port.kMXP);
-    //This keeps a tally of position and heading and updates them based on encoders
+    // This keeps a tally of position and heading and updates them based on encoders
     odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
   }
 
-  //Returns the robot's pose (position and rotation) in meters
+  // Returns the robot's pose (position and rotation) in meters
   public Pose2d getPose() {
     return odometry.getPoseMeters();
   }
 
-  //This updates the pose based on the encoder values, and heading. Not super accurate but good for low time scales
+  // This updates the pose based on the encoder values, and heading. Not super accurate but good for
+  // low time scales
   public void updatePoseNormally(double encoderLeft, double encoderRight) {
     odometry.update(Rotation2d.fromDegrees(getHeading()), encoderLeft, encoderRight);
   }
 
-  //Calibrates the pose based on vision/lidar/etc.
+  // Calibrates the pose based on vision/lidar/etc.
   public void calibratePose(Pose2d pose) {
     odometry.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
   }

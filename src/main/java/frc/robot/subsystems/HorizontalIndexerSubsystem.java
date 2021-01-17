@@ -13,31 +13,34 @@ import frc.robot.Constants;
 import frc.robot.TeamTalonSRX;
 
 public class HorizontalIndexerSubsystem extends SubsystemBase {
-  /**
-   * Creates a new HorizontalIndexerSubsystem.
-   */
+  /** Creates a new HorizontalIndexerSubsystem. */
   private final TeamTalonSRX horizontalIndexer;
 
   private final double intakeSpeed = -.4;
   private final double outtakeSpeed = .5;
+
   public HorizontalIndexerSubsystem() {
-    horizontalIndexer = new TeamTalonSRX("Subsystems.HorizontalIndexer.HIndxMotor", Constants.IndexerHorizCAN);
+    horizontalIndexer =
+        new TeamTalonSRX("Subsystems.HorizontalIndexer.HIndxMotor", Constants.IndexerHorizCAN);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     horizontalIndexer.periodic();
-    SmartDashboard.putNumber("Subsystems.HorizontalIndexer.Position", horizontalIndexer.getSelectedSensorPosition());
-  }
-  public void intake(){
-      horizontalIndexer.set(intakeSpeed);
-  }
-  public void outtake(){
-      horizontalIndexer.set(outtakeSpeed);
-  }
-  public void stop(){
-      horizontalIndexer.set(0);
+    SmartDashboard.putNumber(
+        "Subsystems.HorizontalIndexer.Position", horizontalIndexer.getSelectedSensorPosition());
   }
 
+  public void intake() {
+    horizontalIndexer.set(intakeSpeed);
+  }
+
+  public void outtake() {
+    horizontalIndexer.set(outtakeSpeed);
+  }
+
+  public void stop() {
+    horizontalIndexer.set(0);
+  }
 }

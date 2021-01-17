@@ -14,14 +14,12 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class IntakeSubsystem extends SubsystemBase {
-  /**
-   * Creates a new IntakeSubsystem.
-   */
+  /** Creates a new IntakeSubsystem. */
   private final WPI_TalonSRX intake;
 
   private final double intakeSpeed = .5;
   private final double outtakeSpeed = -.5;
-  
+
   public IntakeSubsystem() {
     intake = new WPI_TalonSRX(Constants.IntakeCAN);
   }
@@ -31,14 +29,16 @@ public class IntakeSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     SmartDashboard.putString("Subsystems.Shooter.currentCMD", "" + this.getCurrentCommand());
   }
-  public void inTake(){
-      intake.set(intakeSpeed);
-  }
-  public void outTake(){
-      intake.set(outtakeSpeed);
-  }
-  public void stop(){
-  intake.set(0);
+
+  public void inTake() {
+    intake.set(intakeSpeed);
   }
 
+  public void outTake() {
+    intake.set(outtakeSpeed);
+  }
+
+  public void stop() {
+    intake.set(0);
+  }
 }

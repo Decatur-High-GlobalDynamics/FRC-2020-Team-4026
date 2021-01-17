@@ -12,15 +12,15 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ShooterSubsystem;
 
 public class FindShooterVelocity extends CommandBase {
-  /**
-   * Creates a new FindTurretVelocity.
-   */
+  /** Creates a new FindTurretVelocity. */
   private final double percentTarget;
+
   private int currVelBot = 0;
   private int currVelTop = 0;
   private final ShooterSubsystem shooter;
   private boolean botDone = false;
   private boolean topDone = false;
+
   public FindShooterVelocity(ShooterSubsystem shooter, double percentTarget) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.percentTarget = percentTarget;
@@ -29,13 +29,12 @@ public class FindShooterVelocity extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (shooter.getShooterPowerBot() < percentTarget){
+    if (shooter.getShooterPowerBot() < percentTarget) {
       currVelBot += 5;
       shooter.setShooterVelBot(currVelBot);
     } else {
@@ -44,7 +43,7 @@ public class FindShooterVelocity extends CommandBase {
       shooter.setTopMotor(0);
     }
 
-    if (shooter.getShooterPowerTop() < percentTarget){
+    if (shooter.getShooterPowerTop() < percentTarget) {
       currVelTop += 5;
       shooter.setBottomMotor(currVelTop);
     } else {
@@ -56,8 +55,7 @@ public class FindShooterVelocity extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
