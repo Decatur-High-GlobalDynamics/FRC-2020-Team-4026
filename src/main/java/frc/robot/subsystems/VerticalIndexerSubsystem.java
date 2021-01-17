@@ -19,12 +19,9 @@ public class VerticalIndexerSubsystem extends SubsystemBase {
   /** Creates a new VerticalIndexerSubsystem. */
   private final TeamTalonSRX verticalIndexer;
 
-  private DigitalInput bottomSwitchA =
-      new DigitalInput(Ports.VerticalIndexer_BottomLimit_DIO_A);
-  private DigitalInput bottomSwitchB =
-      new DigitalInput(Ports.VerticalIndexer_BottomLimit_DIO_B);
-  private DigitalInput bottomSwitchC =
-      new DigitalInput(Ports.VerticalIndexer_BottomLimit_DIO_C);
+  private DigitalInput bottomSwitchA = new DigitalInput(Ports.VerticalIndexer_BottomLimit_DIO_A);
+  private DigitalInput bottomSwitchB = new DigitalInput(Ports.VerticalIndexer_BottomLimit_DIO_B);
+  private DigitalInput bottomSwitchC = new DigitalInput(Ports.VerticalIndexer_BottomLimit_DIO_C);
   private DigitalInput middleSwitch = new DigitalInput(Ports.VerticalIndexer_MiddleLimit_DIO);
   private DigitalInput topSwitch = new DigitalInput(Ports.VerticalIndexer_TopLimit_DIO);
 
