@@ -134,7 +134,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
   //This gets wheel speeds for pathing. The one issue is, the falcons get selected sensor velocity gives it in raw units per 100 ms, whereas the Wpi encoder gives as distance per
   //second, so I multiply by 10 then divide by distance per pulse. I don't know where to see how wpi does it so I can't say that multiplying by 10 is correct, but it should be
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-    return new DifferentialDriveWheelSpeeds((leftDriveFalconMain.getSelectedSensorVelocity() * 10) / Constants.kEncoderDistancePerPulse, (rightDriveFalconMain.getSelectedSensorVelocity() * 10) * Constants.kEncoderDistancePerPulse);
+    return new DifferentialDriveWheelSpeeds((leftDriveFalconMain.getSelectedSensorVelocity() * 10) * Constants.kEncoderDistancePerPulse, (rightDriveFalconMain.getSelectedSensorVelocity() * 10) * Constants.kEncoderDistancePerPulse);
   }
 
   public void tankDriveWithVolts(double leftVolts, double rightVolts) {
