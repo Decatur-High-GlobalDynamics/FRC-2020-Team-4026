@@ -59,7 +59,7 @@ public class TurretSubsystem extends SubsystemBase {
   private final double ticksAtPiOver2Rads = -2914;
 
   private boolean scanningCW = true;
-  private boolean isScanning = false; 
+  private boolean isScanning = false;
 
   public TurretSubsystem() {
     turretMotor = new TeamTalonSRX("Subsystems.Turret.motor", Constants.TurretCAN);
@@ -179,18 +179,18 @@ public class TurretSubsystem extends SubsystemBase {
       // new TurretToLimitCommand(this).schedule();
     }
 
-    if (isScanning){
-      if (scanningCW){
-        if (this.getTicks() > minEncoderRange + 100){
+    if (isScanning) {
+      if (scanningCW) {
+        if (this.getTicks() > minEncoderRange + 100) {
           this.goClockwise();
-        } else if (this.getTicks() <= minEncoderRange + 100){
+        } else if (this.getTicks() <= minEncoderRange + 100) {
           scanningCW = false;
           this.goCounterClockwise();
         }
       } else {
-        if (this.getTicks() < -100 ){
+        if (this.getTicks() < -100) {
           this.goCounterClockwise();
-        } else if (this.getTicks() >= -100){
+        } else if (this.getTicks() >= -100) {
           scanningCW = true;
           this.goClockwise();
         }
@@ -330,10 +330,11 @@ public class TurretSubsystem extends SubsystemBase {
     return this.visionSubsystem;
   }
 
-  public void startScanning(){
+  public void startScanning() {
     isScanning = true;
   }
-  public void stopScanning(){
-    isScanning = false; 
+
+  public void stopScanning() {
+    isScanning = false;
   }
 }
