@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.TeamUtils;
 import frc.robot.subsystems.TurretSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
 
 public class PointTurretAtTargetCommand extends CommandBase {
   TurretSubsystem turret;
@@ -30,15 +31,16 @@ public class PointTurretAtTargetCommand extends CommandBase {
   @Override
   public void execute() {
     double angleToTarget;
-    // Get the value of vision angle from limelight
-    angleToTarget = turret.getVisionXAngle();
-    // This is sent if the target isn't seen
-    if (angleToTarget == 4026) {
+
+    VisionSubsystem visionSubsystem = turret.getVisionSubsystem();
+    //Get the value of vision angle from limelight
+    angleToTarget = visionSubsystem.getLastSeenTx();
+    //This is sent if the target isn't seen
+    if (!visionSubsystem.isValid()) {
       turret.stop();
     } else {
-      // If angle is more than 0, it is on our right so we go clockwise in a proportion of the angle
-      // we are off
-      if (TeamUtils.checkTolerance(angleToTarget, 0, .5)) {
+      //If angle is more than 0, it is on our right so we go clockwise in a proportion of the angle we are off
+      if(TeamUtils.checkTolerance(angleToTarget, 0, 0.5)){
         turret.stop();
       } else if (angleToTarget > 0) {
         turret.goClockwise();
