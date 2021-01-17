@@ -12,9 +12,7 @@ import frc.robot.subsystems.ShooterSubsystem;
 
 public class MaxPowerShootCommand extends CommandBase {
   private final ShooterSubsystem shooter;
-  /**
-   * Creates a new MaxPowerShootCommand.
-   */
+  /** Creates a new MaxPowerShootCommand. */
   public MaxPowerShootCommand(ShooterSubsystem shooter) {
     this.shooter = shooter;
     // Use addRequirements() here to declare subsystem dependencies.
@@ -23,8 +21,7 @@ public class MaxPowerShootCommand extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override

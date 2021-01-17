@@ -11,10 +11,9 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.TurretSubsystem;
 
 public class TurretToLimitCommand extends CommandBase {
-  /**
-   * Creates a new TurretToLimitCommand.
-   */
+  /** Creates a new TurretToLimitCommand. */
   private final TurretSubsystem turret;
+
   private double calibrationTurnPower = 0.1;
 
   public TurretToLimitCommand(TurretSubsystem turret) {
@@ -38,8 +37,7 @@ public class TurretToLimitCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    if(interrupted)
-      System.err.println("TurretToLimit interrupted!");
+    if (interrupted) System.err.println("TurretToLimit interrupted!");
     if (!interrupted) {
       turret.resetEncoder();
       turret.markAsCalibrated();
