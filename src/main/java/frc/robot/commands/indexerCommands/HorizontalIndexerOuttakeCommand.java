@@ -13,9 +13,7 @@ import frc.robot.subsystems.HorizontalIndexerSubsystem;
 public class HorizontalIndexerOuttakeCommand extends CommandBase {
   HorizontalIndexerSubsystem horizontalIndexer;
 
-  /**
-   * Creates a new HorizontalIndexerOuttakeCommand.
-   */
+  /** Creates a new HorizontalIndexerOuttakeCommand. */
   public HorizontalIndexerOuttakeCommand(HorizontalIndexerSubsystem horizontalIndexer) {
     this.horizontalIndexer = horizontalIndexer;
     // Use addRequirements() here to declare subsystem dependencies.
@@ -24,8 +22,7 @@ public class HorizontalIndexerOuttakeCommand extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override

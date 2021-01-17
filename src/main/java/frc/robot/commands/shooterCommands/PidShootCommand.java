@@ -13,32 +13,31 @@ import frc.robot.subsystems.ShooterSubsystem;
 
 public class PidShootCommand extends CommandBase {
   ShooterSubsystem shooter;
-  /**
-   * Creates a new SimpleShootCommand.
-   */
-  public PidShootCommand(ShooterSubsystem shooter, double topVelocityFraction, double bottomVelocityFraction) {
+  /** Creates a new SimpleShootCommand. */
+  public PidShootCommand(
+      ShooterSubsystem shooter, double topVelocityFraction, double bottomVelocityFraction) {
     this.shooter = shooter;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(shooter);
-
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    double topShootingVelocityFraction = SmartDashboard.getNumber("Commands.PidShooter.topSpeedFraction", 1);
+    double topShootingVelocityFraction =
+        SmartDashboard.getNumber("Commands.PidShooter.topSpeedFraction", 1);
     SmartDashboard.putNumber("Commands.PidShooter.topSpeedFraction", topShootingVelocityFraction);
-    double bottomShootingVelocityFraction = SmartDashboard.getNumber("Commands.PidShooter.BottomSpeedFraction", 1);
-    SmartDashboard.putNumber("Commands.PidShooter.BottomSpeedFraction", bottomShootingVelocityFraction);
-
+    double bottomShootingVelocityFraction =
+        SmartDashboard.getNumber("Commands.PidShooter.BottomSpeedFraction", 1);
+    SmartDashboard.putNumber(
+        "Commands.PidShooter.BottomSpeedFraction", bottomShootingVelocityFraction);
 
     shooter.setMotorVelocities(topShootingVelocityFraction, bottomShootingVelocityFraction);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override

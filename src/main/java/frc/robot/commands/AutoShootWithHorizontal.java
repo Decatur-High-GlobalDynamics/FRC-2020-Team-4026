@@ -13,16 +13,19 @@ import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VerticalIndexerSubsystem;
 
 public class AutoShootWithHorizontal extends CommandBase {
-  /**
-   * Creates a new AutoShoot.
-   */
+  /** Creates a new AutoShoot. */
   private final ShooterSubsystem shooter;
+
   private final VerticalIndexerSubsystem verticalIndexer;
   private final HorizontalIndexerSubsystem horizontalIndexer;
   private int targetSpeedTop;
   private final int targetSpeedBot;
 
-  public AutoShootWithHorizontal(ShooterSubsystem shooter, VerticalIndexerSubsystem verticalIndexer, HorizontalIndexerSubsystem horizontalIndexer, int targetSpeedBot) {
+  public AutoShootWithHorizontal(
+      ShooterSubsystem shooter,
+      VerticalIndexerSubsystem verticalIndexer,
+      HorizontalIndexerSubsystem horizontalIndexer,
+      int targetSpeedBot) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.shooter = shooter;
     this.verticalIndexer = verticalIndexer;
@@ -36,8 +39,8 @@ public class AutoShootWithHorizontal extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    //In the future, get speeds from the lookup table based on vision
-    //Also, potentially rotate turret
+    // In the future, get speeds from the lookup table based on vision
+    // Also, potentially rotate turret
     targetSpeedTop = (int) (targetSpeedBot * (2.5 / 6.5));
     shooter.setShooterVelBot(targetSpeedBot);
     shooter.setShooterVelTop(targetSpeedTop);
@@ -46,7 +49,7 @@ public class AutoShootWithHorizontal extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (shooter.isShooterReady()){
+    if (shooter.isShooterReady()) {
       verticalIndexer.up();
       horizontalIndexer.intake();
     } else {
