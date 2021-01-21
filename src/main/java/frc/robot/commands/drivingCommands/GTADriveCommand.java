@@ -49,12 +49,12 @@ public class GTADriveCommand extends CommandBase {
         }
         double turn = 0;
         if (powerToSet == 0) {
-            double rightStickAmount = rightStick.getAsDouble();
-            turn = rightStickAmount;
+            double leftStickAmount = leftStick.getAsDouble();
+            turn = leftStickAmount;
         }
         else {
-            double rightStickAmount = rightStick.getAsDouble();
-            turn = rightStickAmount * curvatureDampner;
+            double leftStickAmount = leftStick.getAsDouble();
+            turn = leftStickAmount * curvatureDampner;
         }
         driveTrain.setMotorPowers(powerToSet + turn, powerToSet - turn);
     }
