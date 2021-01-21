@@ -42,6 +42,7 @@ import frc.robot.commands.indexerCommands.VerticalIndexerUpCommand;
 import frc.robot.commands.navigationCommands.UpdateNavigationCommand;
 import frc.robot.commands.drivingCommands.DisableRampingCommand;
 import frc.robot.commands.drivingCommands.DriveStraightCommand;
+import frc.robot.commands.drivingCommands.GTADriveCommand;
 import frc.robot.commands.drivingCommands.SetSpeedMode;
 import frc.robot.commands.shooterCommands.MaxPowerShootCommand;
 import frc.robot.commands.drivingCommands.TankDriveCommand;
@@ -117,12 +118,13 @@ public class RobotContainer {
     Button leftTrigger = new JoystickButton(driveController, LogitechControllerButtons.triggerLeft);
     Button leftBumper = new JoystickButton(driveController, LogitechControllerButtons.bumperLeft);
     Button rightBumper = new JoystickButton(driveController, LogitechControllerButtons.bumperRight);
+    Button dPadUp = new POVButton(driveController, LogitechControllerButtons.up);
 
     // Configure driveTrain default command, which is tank drive with Primary Controller Joysticks
     // (NUMBERED CONTROLLER). It also uses left trigger for speed mode
     driveTrain.setDefaultCommand(
-        new TankDriveCommand(
-            driveTrain, () -> driveController.getY(), () -> driveController.getThrottle()));
+        new GTADriveCommand(
+            driveTrain, () -> driveController.getY(), () -> driveController.getThrottle(), () -> rightTrigger.get(), () -> leftTrigger.get(), () -> dPadUp.get()));
 
     // --------Drivetrain Button Bindings--------
     // When right trigger on main controller is held, drive straight
