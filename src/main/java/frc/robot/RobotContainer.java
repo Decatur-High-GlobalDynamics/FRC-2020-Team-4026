@@ -128,8 +128,8 @@ public class RobotContainer {
 
     // --------Drivetrain Button Bindings--------
     // When right trigger on main controller is held, drive straight
-    rightTrigger.whileHeld(
-        new DriveStraightCommand(driveTrain, navigation, () -> driveController.getY()));
+    //rightTrigger.whileHeld(
+    //   new DriveStraightCommand(driveTrain, navigation, () -> driveController.getY()));
     // When left trigger is held, set speed mode
     leftTrigger.whileHeld(new SetSpeedMode(driveTrain));
     // When left bumper held, enable brake mode
