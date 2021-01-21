@@ -41,11 +41,9 @@ import frc.robot.commands.indexerCommands.VerticalIndexerDownCommand;
 import frc.robot.commands.indexerCommands.VerticalIndexerUpCommand;
 import frc.robot.commands.navigationCommands.UpdateNavigationCommand;
 import frc.robot.commands.drivingCommands.DisableRampingCommand;
-import frc.robot.commands.drivingCommands.DriveStraightCommand;
 import frc.robot.commands.drivingCommands.GTADriveCommand;
 import frc.robot.commands.drivingCommands.SetSpeedMode;
 import frc.robot.commands.shooterCommands.MaxPowerShootCommand;
-import frc.robot.commands.drivingCommands.TankDriveCommand;
 import frc.robot.commands.drivingCommands.ToggleBrakeCommand;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
@@ -124,11 +122,16 @@ public class RobotContainer {
     // (NUMBERED CONTROLLER). It also uses left trigger for speed mode
     driveTrain.setDefaultCommand(
         new GTADriveCommand(
-            driveTrain, () -> driveController.getY(), () -> driveController.getThrottle(), () -> rightTrigger.get(), () -> leftTrigger.get(), () -> dPadUp.get()));
+            driveTrain,
+            () -> driveController.getY(),
+            () -> driveController.getThrottle(),
+            () -> rightTrigger.get(),
+            () -> leftTrigger.get(),
+            () -> dPadUp.get()));
 
     // --------Drivetrain Button Bindings--------
     // When right trigger on main controller is held, drive straight
-    //rightTrigger.whileHeld(
+    // rightTrigger.whileHeld(
     //   new DriveStraightCommand(driveTrain, navigation, () -> driveController.getY()));
     // When left trigger is held, set speed mode
     leftTrigger.whileHeld(new SetSpeedMode(driveTrain));
