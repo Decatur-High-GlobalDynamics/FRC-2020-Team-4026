@@ -13,19 +13,15 @@ public class GTADriveCommand extends CommandBase {
     private final DoubleSupplier rightStick;
     private final BooleanSupplier rightTrigger;
     private final BooleanSupplier leftTrigger;
-    private final BooleanSupplier upDPad;
-    private final BooleanSupplier downDPad;
 
     private final double curvatureDampner = 0.5;
 
-    public GTADriveCommand(DriveTrainSubsystem driveTrain, DoubleSupplier leftStick, DoubleSupplier rightStick, BooleanSupplier rightTrigger, BooleanSupplier leftTrigger, BooleanSupplier upDPad) {
+    public GTADriveCommand(DriveTrainSubsystem driveTrain, DoubleSupplier leftStick, DoubleSupplier rightStick, BooleanSupplier rightTrigger, BooleanSupplier leftTrigger) {
         this.driveTrain = driveTrain;
         this.leftStick = leftStick;
         this.rightStick = rightStick;
         this.rightTrigger = rightTrigger;
         this.leftTrigger = leftTrigger;
-        this.upDPad = upDPad;
-        this.downDPad = downDPad;
 
         addRequirements(driveTrain);
     }
@@ -33,19 +29,14 @@ public class GTADriveCommand extends CommandBase {
     @Override
     public void execute() {
         double powerToSet = 0;
-        if (leftTrigger.getAsBoolean() || rightTrigger.getAsBoolean()) {
+        if (leftTrigger.getAsBoolean() && rightTrigger.getAsBoolean()) {
             powerToSet = 0;
         }
         else if (leftTrigger.getAsBoolean()) {
-            powerToSet = -1;
+            powerToSet = -((rightStick.getAsDouble() + 1) / 2);
         }
         else if (rightTrigger.getAsBoolean()) {
-            powerToSet = 1;
-        }
-        if (upDPad.getAsBoolean()) {
-            driveTrain.setFastMode();
-        } else {
-            driveTrain.setSlowMode();
+            powerToSet = (rightStick.getAsDouble() + 1) / 2;
         }
         double turn = 0;
         if (powerToSet == 0) {

@@ -118,24 +118,22 @@ public class RobotContainer {
     Button leftTrigger = new JoystickButton(driveController, LogitechControllerButtons.triggerLeft);
     Button leftBumper = new JoystickButton(driveController, LogitechControllerButtons.bumperLeft);
     Button rightBumper = new JoystickButton(driveController, LogitechControllerButtons.bumperRight);
-    Button dPadUp = new POVButton(driveController, LogitechControllerButtons.up);
+    Button x = new JoystickButton(driveController, LogitechControllerButtons.x);
 
-    // Configure driveTrain default command, which is tank drive with Primary Controller Joysticks
-    // (NUMBERED CONTROLLER). It also uses left trigger for speed mode
+
+    // Configure driveTrain default command, which is GTA drive. It works by having turning run by the left joystick, direction controlled by triggers, and speed controlled by
+    //right joystick. So if right joystick isn't touched, it goes at half of the current capped speed. If right joystick is fully forward, it goes at max capped speed.
     driveTrain.setDefaultCommand(
         new GTADriveCommand(
-            driveTrain, () -> driveController.getY(), () -> driveController.getThrottle(), () -> rightTrigger.get(), () -> leftTrigger.get(), () -> dPadUp.get()));
+            driveTrain, () -> driveController.getX(), () -> driveController.getThrottle(), () -> rightTrigger.get(), () -> leftTrigger.get()));
 
     // --------Drivetrain Button Bindings--------
-    // When right trigger on main controller is held, drive straight
-    //rightTrigger.whileHeld(
-    //   new DriveStraightCommand(driveTrain, navigation, () -> driveController.getY()));
-    // When left trigger is held, set speed mode
-    leftTrigger.whileHeld(new SetSpeedMode(driveTrain));
     // When left bumper held, enable brake mode
-    leftBumper.whileHeld(new ToggleBrakeCommand(driveTrain));
+    leftBumper.whileHeld(new DisableRampingCommand(driveTrain));
     // When right bumper held, disable ramping
-    rightBumper.whileHeld(new DisableRampingCommand(driveTrain));
+    rightBumper.whileHeld(new ToggleBrakeCommand(driveTrain));
+    // When x is held, set speed mode
+    x.whileHeld(new SetSpeedMode(driveTrain));
   }
 
   private void configureSecondaryController() {
