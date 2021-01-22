@@ -16,37 +16,39 @@ public class GTADriveCommand extends CommandBase {
 
   private final double curvatureDampner = 0.5;
 
-  public GTADriveCommand(DriveTrainSubsystem driveTrain, DoubleSupplier leftStick, DoubleSupplier rightStick, BooleanSupplier rightTrigger, BooleanSupplier leftTrigger) {
-      this.driveTrain = driveTrain;
-      this.leftStick = leftStick;
-      this.rightStick = rightStick;
-      this.rightTrigger = rightTrigger;
-      this.leftTrigger = leftTrigger;
+  public GTADriveCommand(
+      DriveTrainSubsystem driveTrain,
+      DoubleSupplier leftStick,
+      DoubleSupplier rightStick,
+      BooleanSupplier rightTrigger,
+      BooleanSupplier leftTrigger) {
+    this.driveTrain = driveTrain;
+    this.leftStick = leftStick;
+    this.rightStick = rightStick;
+    this.rightTrigger = rightTrigger;
+    this.leftTrigger = leftTrigger;
 
-      addRequirements(driveTrain);
+    addRequirements(driveTrain);
   }
 
   @Override
   public void execute() {
-      double powerToSet = 0;
-      if (leftTrigger.getAsBoolean() && rightTrigger.getAsBoolean()) {
-          powerToSet = 0;
-      }
-      else if (leftTrigger.getAsBoolean()) {
-          powerToSet = -((rightStick.getAsDouble() + 1) / 2);
-      }
-      else if (rightTrigger.getAsBoolean()) {
-          powerToSet = (rightStick.getAsDouble() + 1) / 2;
-      }
-      double turn = 0;
-      if (powerToSet == 0) {
-          double leftStickAmount = leftStick.getAsDouble();
-          turn = leftStickAmount;
-      }
-      else {
-          double leftStickAmount = leftStick.getAsDouble();
-          turn = leftStickAmount * curvatureDampner;
-      }
-      driveTrain.setMotorPowers(powerToSet + turn, powerToSet - turn);
+    double powerToSet = 0;
+    if (leftTrigger.getAsBoolean() && rightTrigger.getAsBoolean()) {
+      powerToSet = 0;
+    } else if (leftTrigger.getAsBoolean()) {
+      powerToSet = -((rightStick.getAsDouble() + 1) / 2);
+    } else if (rightTrigger.getAsBoolean()) {
+      powerToSet = (rightStick.getAsDouble() + 1) / 2;
+    }
+    double turn = 0;
+    if (powerToSet == 0) {
+      double leftStickAmount = leftStick.getAsDouble();
+      turn = leftStickAmount;
+    } else {
+      double leftStickAmount = leftStick.getAsDouble();
+      turn = leftStickAmount * curvatureDampner;
+    }
+    driveTrain.setMotorPowers(powerToSet + turn, powerToSet - turn);
   }
 }

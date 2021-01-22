@@ -118,12 +118,17 @@ public class RobotContainer {
     Button rightBumper = new JoystickButton(driveController, LogitechControllerButtons.bumperRight);
     Button x = new JoystickButton(driveController, LogitechControllerButtons.x);
 
-
-    // Configure driveTrain default command, which is GTA drive. It works by having turning run by the left joystick, direction controlled by triggers, and speed controlled by
-    //right joystick. So if right joystick isn't touched, it goes at half of the current capped speed. If right joystick is fully forward, it goes at max capped speed.
+    // Configure driveTrain default command, which is GTA drive. It works by having turning run by
+    // the left joystick, direction controlled by triggers, and speed controlled by
+    // right joystick. So if right joystick isn't touched, it goes at half of the current capped
+    // speed. If right joystick is fully forward, it goes at max capped speed.
     driveTrain.setDefaultCommand(
         new GTADriveCommand(
-            driveTrain, () -> driveController.getX(), () -> driveController.getThrottle(), () -> rightTrigger.get(), () -> leftTrigger.get()));
+            driveTrain,
+            () -> driveController.getX(),
+            () -> driveController.getThrottle(),
+            () -> rightTrigger.get(),
+            () -> leftTrigger.get()));
 
     // --------Drivetrain Button Bindings--------
     // When left bumper held, enable brake mode
