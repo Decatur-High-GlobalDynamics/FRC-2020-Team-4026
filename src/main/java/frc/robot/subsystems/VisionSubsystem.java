@@ -67,12 +67,22 @@ public class VisionSubsystem extends SubsystemBase {
     return (Timer.getFPGATimestamp() - this.lastTimeTargetSeen) > this.tvRecentTime;
   }
 
+  /*
+  * -1 is far left, +1 is far right, 0 is the center
+  */
   public double getBallX(){
     return this.ballX;
   }
+
+  /*
+  * -1 is the bottom, +1 is the top, 0 is the center
+  */
   public double getBallY(){
     return this.ballY;
   }
+  /*
+  * returns if the pi sees a ball or not
+  */
   public double getBallSeen(){
     return this.ballSeen;
   }
