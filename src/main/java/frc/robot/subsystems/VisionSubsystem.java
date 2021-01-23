@@ -22,7 +22,7 @@ public class VisionSubsystem extends SubsystemBase {
   public void periodic() {
     try {
       boolean tv = (double) TeamUtils.getFromNetworkTable("limelight", "tv") >= 1;
-      boolean ballSeen = (boolean) TeamUtils.getFromNetworkTable("ballVision", "hasTarget");
+      this.tv = tv;
       if (tv) {
         this.lastTimeTargetSeen = Timer.getFPGATimestamp();
         double ballX = (double) TeamUtils.getFromNetworkTable("ballVision", "targetX");
@@ -40,6 +40,7 @@ public class VisionSubsystem extends SubsystemBase {
 
     try {
       boolean ballSeen = (boolean) TeamUtils.getFromNetworkTable("ballVision", "hasTarget");
+      this.ballSeen = ballSeen;
       if (ballSeen) {
         double ballX = (double) TeamUtils.getFromNetworkTable("ballVision", "targetX");
         double ballY = (double) TeamUtils.getFromNetworkTable("ballVision", "targetY");
@@ -83,7 +84,7 @@ public class VisionSubsystem extends SubsystemBase {
   /*
    * returns if the pi sees a ball or not
    */
-  public double getBallSeen() {
+  public boolean getBallSeen() {
     return this.ballSeen;
   }
 }
