@@ -46,7 +46,7 @@ public class VisionSubsystem extends SubsystemBase {
         this.ballX = ballX;
         this.ballY = ballY;
       }
-    } catch (Exception e){
+    } catch (Exception e) {
 
     }
   }
@@ -68,22 +68,22 @@ public class VisionSubsystem extends SubsystemBase {
   }
 
   /*
-  * -1 is far left, +1 is far right, 0 is the center
-  */
-  public double getBallX(){
+   * -1 is far left, +1 is far right, 0 is the center
+   */
+  public double getBallX() {
     return this.ballX;
   }
 
   /*
-  * -1 is the bottom, +1 is the top, 0 is the center
-  */
-  public double getBallY(){
+   * -1 is the bottom, +1 is the top, 0 is the center
+   */
+  public double getBallY() {
     return this.ballY;
   }
   /*
-  * returns if the pi sees a ball or not
-  */
-  public double getBallSeen(){
+   * returns if the pi sees a ball or not
+   */
+  public double getBallSeen() {
     return this.ballSeen;
   }
 }
