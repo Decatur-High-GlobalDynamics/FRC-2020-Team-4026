@@ -25,14 +25,10 @@ public class VisionSubsystem extends SubsystemBase {
       this.tv = tv;
       if (tv) {
         this.lastTimeTargetSeen = Timer.getFPGATimestamp();
-        double ballX = (double) TeamUtils.getFromNetworkTable("ballVision", "targetX");
-        double ballY = (double) TeamUtils.getFromNetworkTable("ballVision", "targetY");
         double lastSeenTx = (double) TeamUtils.getFromNetworkTable("limelight", "tx");
         double lastSeenTy = (double) TeamUtils.getFromNetworkTable("limelight", "ty");
         this.lastSeenTx = lastSeenTx;
         this.lastSeenTy = lastSeenTy;
-        this.ballX = ballX;
-        this.ballY = ballY;
       }
     } catch (Exception e) {
 
