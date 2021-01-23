@@ -12,6 +12,9 @@ public class VisionSubsystem extends SubsystemBase {
   private double lastTimeTargetSeen = -9999999;
   private double tvRecentTime =
       0.25; // maximum time before tvRecent is set back to false after not seeing any targets
+  private boolean ballSeen = false;
+  private double ballX = 0;
+  private double ballY = 0;
 
   public VisionSubsystem() {}
 
@@ -19,14 +22,31 @@ public class VisionSubsystem extends SubsystemBase {
   public void periodic() {
     try {
       boolean tv = (double) TeamUtils.getFromNetworkTable("limelight", "tv") >= 1;
+      boolean ballSeen = (boolean) TeamUtils.getFromNetworkTable("ballVision", "hasTarget");
       if (tv) {
         this.lastTimeTargetSeen = Timer.getFPGATimestamp();
+        double ballX = (double) TeamUtils.getFromNetworkTable("ballVision", "targetX");
+        double ballY = (double) TeamUtils.getFromNetworkTable("ballVision", "targetY");
         double lastSeenTx = (double) TeamUtils.getFromNetworkTable("limelight", "tx");
         double lastSeenTy = (double) TeamUtils.getFromNetworkTable("limelight", "ty");
         this.lastSeenTx = lastSeenTx;
         this.lastSeenTy = lastSeenTy;
+        this.ballX = ballX;
+        this.ballY = ballY;
       }
     } catch (Exception e) {
+
+    }
+
+    try {
+      boolean ballSeen = (boolean) TeamUtils.getFromNetworkTable("ballVision", "hasTarget");
+      if (ballSeen) {
+        double ballX = (double) TeamUtils.getFromNetworkTable("ballVision", "targetX");
+        double ballY = (double) TeamUtils.getFromNetworkTable("ballVision", "targetY");
+        this.ballX = ballX;
+        this.ballY = ballY;
+      }
+    } catch (Exception e){
 
     }
   }
@@ -45,5 +65,15 @@ public class VisionSubsystem extends SubsystemBase {
 
   public boolean isValid() {
     return (Timer.getFPGATimestamp() - this.lastTimeTargetSeen) > this.tvRecentTime;
+  }
+
+  public double getBallX(){
+    return this.ballX;
+  }
+  public double getBallY(){
+    return this.ballY;
+  }
+  public double getBallSeen(){
+    return this.ballSeen;
   }
 }
