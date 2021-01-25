@@ -7,6 +7,7 @@
 
 package frc.robot.subsystems;
 
+import java.util.Objects;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -14,14 +15,23 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class IntakeSubsystem extends SubsystemBase {
-  /** Creates a new IntakeSubsystem. */
   private final WPI_TalonSRX intake;
 
   private final double intakeSpeed = .5;
   private final double outtakeSpeed = -.5;
 
   public IntakeSubsystem() {
-    intake = new WPI_TalonSRX(Constants.IntakeCAN);
+    throw new IllegalArgumentException(
+        "not allowed! ctor must provide parameters for all dependencies");
+  }
+
+  public IntakeSubsystem(WPI_TalonSRX intake) {
+    this.intake = Objects.requireNonNull(intake, "intake must not be null");
+  }
+
+  public static IntakeSubsystem Create() {
+    WPI_TalonSRX intake = new WPI_TalonSRX(Constants.IntakeCAN);
+    return new IntakeSubsystem(intake);
   }
 
   @Override

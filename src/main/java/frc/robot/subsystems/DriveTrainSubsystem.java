@@ -7,6 +7,7 @@
 
 package frc.robot.subsystems;
 
+import java.util.Objects;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
@@ -18,7 +19,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class DriveTrainSubsystem extends SubsystemBase {
-  /** Creates a new DriveTrainSubsystem. */
   final DifferentialDrive drive;
 
   WPI_TalonFX rightDriveFalconMain;
@@ -39,10 +39,23 @@ public class DriveTrainSubsystem extends SubsystemBase {
   private double epsilonIsStopped = 100;
 
   public DriveTrainSubsystem() {
-    rightDriveFalconMain = new WPI_TalonFX(Constants.RightDriveFalconMainCAN);
-    leftDriveFalconMain = new WPI_TalonFX(Constants.LeftDriveFalconMainCAN);
-    rightDriveFalconSub = new WPI_TalonFX(Constants.RightDriveFalconSubCAN);
-    leftDriveFalconSub = new WPI_TalonFX(Constants.LeftDriveFalconSubCAN);
+    throw new IllegalArgumentException(
+        "not allowed! ctor must provide parameters for all dependencies");
+  }
+
+  public DriveTrainSubsystem(
+      WPI_TalonFX rightDriveFalconMain,
+      WPI_TalonFX leftDriveFalconMain,
+      WPI_TalonFX rightDriveFalconSub,
+      WPI_TalonFX leftDriveFalconSub) {
+    this.rightDriveFalconMain =
+        Objects.requireNonNull(rightDriveFalconMain, "rightDriveFalconMain must not be null");
+    this.leftDriveFalconMain =
+        Objects.requireNonNull(leftDriveFalconMain, "leftDriveFalconMain must not be null");
+    this.rightDriveFalconSub =
+        Objects.requireNonNull(rightDriveFalconSub, "rightDriveFalconSub must not be null");
+    this.leftDriveFalconSub =
+        Objects.requireNonNull(leftDriveFalconSub, "leftDriveFalconSub must not be null");
 
     // This configures the falcons to use their internal encoders
     TalonFXConfiguration configs = new TalonFXConfiguration();
@@ -66,6 +79,18 @@ public class DriveTrainSubsystem extends SubsystemBase {
     leftDriveFalconSub.setNeutralMode(NeutralMode.Coast);
     rightDriveFalconMain.setNeutralMode(NeutralMode.Coast);
     rightDriveFalconSub.setNeutralMode(NeutralMode.Coast);
+  }
+
+  public static DriveTrainSubsystem Create() {
+    WPI_TalonFX rightDriveFalconMainCAN = new WPI_TalonFX(Constants.RightDriveFalconMainCAN);
+    WPI_TalonFX leftDriveFalconMainCAN = new WPI_TalonFX(Constants.LeftDriveFalconMainCAN);
+    WPI_TalonFX rightDriveFalconSubCAN = new WPI_TalonFX(Constants.RightDriveFalconSubCAN);
+    WPI_TalonFX leftDriveFalconSub = new WPI_TalonFX(Constants.LeftDriveFalconSubCAN);
+    return new DriveTrainSubsystem(
+        rightDriveFalconMainCAN,
+        leftDriveFalconMainCAN,
+        rightDriveFalconSubCAN,
+        leftDriveFalconSub);
   }
 
   @Override

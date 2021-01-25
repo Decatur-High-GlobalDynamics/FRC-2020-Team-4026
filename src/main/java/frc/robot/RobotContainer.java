@@ -57,13 +57,13 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final DriveTrainSubsystem driveTrain = new DriveTrainSubsystem();
-  private final IntakeSubsystem intake = new IntakeSubsystem();
-  private final ShooterSubsystem shooter = new ShooterSubsystem();
-  private final VerticalIndexerSubsystem verticalIndexer = new VerticalIndexerSubsystem();
-  private final TurretSubsystem turret = new TurretSubsystem();
-  private final HorizontalIndexerSubsystem horizontalIndexer = new HorizontalIndexerSubsystem();
-  private final NavigationSubsystem navigation = new NavigationSubsystem();
+  private final DriveTrainSubsystem driveTrain = DriveTrainSubsystem.Create();
+  private final IntakeSubsystem intake = IntakeSubsystem.Create();
+  private final ShooterSubsystem shooter = ShooterSubsystem.Create();
+  private final VerticalIndexerSubsystem verticalIndexer = VerticalIndexerSubsystem.Create();
+  private final TurretSubsystem turret = TurretSubsystem.Create();
+  private final HorizontalIndexerSubsystem horizontalIndexer = HorizontalIndexerSubsystem.Create();
+  private final NavigationSubsystem navigation = NavigationSubsystem.Create();
   private final ClimberSubsystem climber = ClimberSubsystem.Create();
 
   public static final Joystick driveController = new Joystick(0);
