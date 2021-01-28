@@ -39,7 +39,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
   private double epsilonIsStopped = 100;
 
-  //This is brought over from differential drive in order to bring over it's curvature drive code
+  //These three are brought over from differential drive in order to bring over it's curvature drive code
   private double m_quickStopAccumulator;
   private double m_quickStopThreshold;
   private double m_quickStopAlpha;
@@ -176,6 +176,8 @@ public class DriveTrainSubsystem extends SubsystemBase {
     rampingOn = false;
   }
 
+  //This is literally just the curvature drive mode from differntial drive - the differnce is that it feeds it to our management system for motor power instead, which means ramping
+  //and max power change apply
   public void curveDrive(double speed, double rotation, boolean turnInPlace) {
     speed = MathUtil.clamp(speed, -1.0, 1.0);
 
