@@ -271,5 +271,4 @@ public class RobotContainer {
     return (driveForward.raceWith(spinUpShooter))
         .andThen((shoot.withTimeout(5)).andThen(driveBack));
   }
-
 }
