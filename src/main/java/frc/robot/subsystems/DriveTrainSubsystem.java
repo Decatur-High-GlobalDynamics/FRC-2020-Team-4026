@@ -39,7 +39,8 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
   private double epsilonIsStopped = 100;
 
-  //These three are brought over from differential drive in order to bring over it's curvature drive code
+  // These three are brought over from differential drive in order to bring over it's curvature
+  // drive code
   private double m_quickStopAccumulator;
   private double m_quickStopThreshold;
   private double m_quickStopAlpha;
@@ -136,7 +137,6 @@ public class DriveTrainSubsystem extends SubsystemBase {
     return rightDriveFalconMain.getSelectedSensorPosition();
   }
 
-
   // Sets the max output to full
   public void setFastMode() {
     currentMaxPower = maxOutputFast;
@@ -176,8 +176,9 @@ public class DriveTrainSubsystem extends SubsystemBase {
     rampingOn = false;
   }
 
-  //This is literally just the curvature drive mode from differntial drive - the differnce is that it feeds it to our management system for motor power instead, which means ramping
-  //and max power change apply
+  // This is literally just the curvature drive mode from differntial drive - the differnce is that
+  // it feeds it to our management system for motor power instead, which means ramping
+  // and max power change apply
   public void curveDrive(double speed, double rotation, boolean turnInPlace) {
     speed = MathUtil.clamp(speed, -1.0, 1.0);
 
@@ -210,8 +211,8 @@ public class DriveTrainSubsystem extends SubsystemBase {
     double leftMotorOutput = speed + angularPower;
     double rightMotorOutput = speed - angularPower;
 
-     // If rotation is overpowered, reduce both outputs to within acceptable range
-     if (overPower) {
+    // If rotation is overpowered, reduce both outputs to within acceptable range
+    if (overPower) {
       if (leftMotorOutput > 1.0) {
         rightMotorOutput -= leftMotorOutput - 1.0;
         leftMotorOutput = 1.0;
