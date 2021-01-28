@@ -74,7 +74,7 @@ public class RobotContainer {
   private final TurretSubsystem turret = new TurretSubsystem();
   private final HorizontalIndexerSubsystem horizontalIndexer = new HorizontalIndexerSubsystem();
   private final NavigationSubsystem navigation = new NavigationSubsystem();
-  private final ClimberSubsystem climber = new ClimberSubsystem();
+  private final ClimberSubsystem climber = ClimberSubsystem.Create();
 
   public static final Joystick driveController = new Joystick(0);
   public static final Joystick secondaryJoystick = new Joystick(1);
