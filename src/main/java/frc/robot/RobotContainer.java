@@ -69,7 +69,7 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  
+
   // The robot's subsystems and commands are defined here...
   private final DriveTrainSubsystem driveTrain = new DriveTrainSubsystem();
   private final IntakeSubsystem intake = new IntakeSubsystem();
@@ -149,8 +149,8 @@ public class RobotContainer {
       // Configure driveTrain default command, which is tank drive with Primary Controller Joysticks
       // (NUMBERED CONTROLLER). It also uses left trigger for speed mode
       driveTrain.setDefaultCommand(
-        new TankDriveCommand(
-            driveTrain, () -> driveController.getY(), () -> driveController.getThrottle()));
+          new TankDriveCommand(
+              driveTrain, () -> driveController.getY(), () -> driveController.getThrottle()));
 
       // --------Drivetrain Button Bindings--------
       // When right trigger on main controller is held, drive straight
