@@ -76,9 +76,8 @@ public class HunterKillerCommand extends CommandBase {
       if (this.alignCounter <= 2) {
         if (Math.abs(ballX - angleMid) < angleOff) {
 
-          // drive straight if the ball is in front of the bot
-          driveTrain.setMotorPowers(-(desiredSpeed) + turnOffset, desiredSpeed + turnOffset);
-          this.alignCounter++;
+            //if aligned, count up alignCounter
+            this.alignCounter++;
 
         } else {
           if (ballX > angleMid) {
