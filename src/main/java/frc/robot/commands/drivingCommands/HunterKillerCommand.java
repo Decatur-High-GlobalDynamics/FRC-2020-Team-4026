@@ -76,8 +76,8 @@ public class HunterKillerCommand extends CommandBase {
       if (this.alignCounter <= 2) {
         if (Math.abs(ballX - angleMid) < angleOff) {
 
-            //if aligned, count up alignCounter
-            this.alignCounter++;
+          // if aligned, count up alignCounter
+          this.alignCounter++;
 
         } else {
           if (ballX > angleMid) {
