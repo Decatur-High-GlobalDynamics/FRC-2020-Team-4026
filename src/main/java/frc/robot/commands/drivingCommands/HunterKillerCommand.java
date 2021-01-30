@@ -81,7 +81,7 @@ public class HunterKillerCommand extends CommandBase {
           this.alignCounter++;
 
         } else {
-          if (ballX > 0) {
+          if (ballX > angleMid) {
 
             // turn right if the ball is right of the robot
             driveTrain.setMotorPowers(-(desiredSpeed) + turnOffset, -(desiredSpeed + turnOffset));
