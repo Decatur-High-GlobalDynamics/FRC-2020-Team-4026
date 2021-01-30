@@ -73,7 +73,7 @@ public class HunterKillerCommand extends CommandBase {
 
       double ballX = vision.getBallX();
 
-      if (this.alignCounter < 2) {
+      if (this.alignCounter <= 2) {
         if (Math.abs(ballX - angleMid) < angleOff) {
 
           // drive straight if the ball is in front of the bot
