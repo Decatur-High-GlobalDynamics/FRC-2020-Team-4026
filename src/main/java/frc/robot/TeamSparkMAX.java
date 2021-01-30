@@ -8,7 +8,7 @@ import com.revrobotics.CANPIDController;
 import com.revrobotics.CANEncoder;
 
 public class TeamSparkMAX extends CANSparkMax {
-public static double telemetryUpdateInterval_secs = 0.0;
+  public static double telemetryUpdateInterval_secs = 0.0;
   private double lastTelemetryUpdate = 0;
 
   protected final String smartDashboardPrefix;
@@ -22,10 +22,9 @@ public static double telemetryUpdateInterval_secs = 0.0;
   protected CANEncoder canEncoder;
 
   protected PidParameters pidProfiles[] = new PidParameters[4];
-  
 
-  public TeamSparkMAX(String smartDashboardPrefix, int deviceID) { 
-    super(deviceID, MotorType.kBrushless); //Neos are brushless
+  public TeamSparkMAX(String smartDashboardPrefix, int deviceID) {
+    super(deviceID, MotorType.kBrushless); // Neos are brushless
     this.smartDashboardPrefix = smartDashboardPrefix;
     canPidController = getPIDController();
     canEncoder = getEncoder();
@@ -104,7 +103,9 @@ public static double telemetryUpdateInterval_secs = 0.0;
     switch (getControlMode()) {
       case Position:
       case Velocity:
-        SmartDashboard.putNumber(smartDashboardPrefix + "Target", getClosedLoopTarget(0)); //0 is the primary closed-loop
+        SmartDashboard.putNumber(
+            smartDashboardPrefix + "Target",
+            getClosedLoopTarget(0)); // 0 is the primary closed-loop
         SmartDashboard.putNumber(smartDashboardPrefix + "Error", getClosedLoopError(0));
         break;
       default:
@@ -125,7 +126,7 @@ public static double telemetryUpdateInterval_secs = 0.0;
   public void configureWithPidParameters(PidParameters pidParameters, int pidSlotIndex) {
     pidProfiles[pidSlotIndex] = pidParameters;
 
-    canPidController.setFF(pidParameters.kF, pidSlotIndex); //Feed-forward
+    canPidController.setFF(pidParameters.kF, pidSlotIndex); // Feed-forward
     canPidController.setP(pidParameters.kP, pidSlotIndex);
     canPidController.setI(pidParameters.kI, pidSlotIndex);
     canPidController.setD(pidParameters.kD, pidSlotIndex);
@@ -133,5 +134,4 @@ public static double telemetryUpdateInterval_secs = 0.0;
     canPidController.setOutputRange(-pidParameters.kPeakOutput, pidParameters.kPeakOutput);
     configAllowableClosedloopError(pidSlotIndex, pidParameters.errorTolerance, 30);
   }
-    
 }
