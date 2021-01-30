@@ -36,6 +36,7 @@ import frc.robot.commands.drivingCommands.SetSpeedMode;
 import frc.robot.commands.shooterCommands.MaxPowerShootCommand;
 import frc.robot.commands.drivingCommands.TankDriveCommand;
 import frc.robot.commands.drivingCommands.ToggleBrakeCommand;
+import frc.robot.commands.drivingCommands.HunterKillerCommand;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
