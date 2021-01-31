@@ -66,6 +66,7 @@ public class HunterKillerCommand extends CommandBase {
     // Variable to represent the ball's x coordinate that means the robot is aligned with it
     double angleMid = 0;
 
+    // this comment is here to make git happy
     // allowed range around the angleMid for the robot to be aligned with the ball
     double angleOff = 0.1;
 
