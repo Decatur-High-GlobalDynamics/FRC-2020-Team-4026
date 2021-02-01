@@ -9,6 +9,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.commands.AutoIntakeIndex;
@@ -26,15 +27,16 @@ import frc.robot.commands.turretCommands.SimpleTurretCWCommand;
 import frc.robot.commands.turretCommands.PointTurretAtTargetWithAngleCommand;
 import frc.robot.commands.turretCommands.PrepareTurretCommand;
 import frc.robot.commands.drivingCommands.DriveEncoders;
+import frc.robot.commands.drivingCommands.DriveStraightCommand;
 import frc.robot.commands.turretCommands.TurretToLimitCommand;
 import frc.robot.commands.indexerCommands.VerticalIndexerDownCommand;
 import frc.robot.commands.indexerCommands.VerticalIndexerUpCommand;
 import frc.robot.commands.navigationCommands.UpdateNavigationCommand;
 import frc.robot.commands.drivingCommands.DisableRampingCommand;
-import frc.robot.commands.drivingCommands.DriveStraightCommand;
+import frc.robot.commands.drivingCommands.GTADriveCommand;
 import frc.robot.commands.drivingCommands.SetSpeedMode;
-import frc.robot.commands.shooterCommands.MaxPowerShootCommand;
 import frc.robot.commands.drivingCommands.TankDriveCommand;
+import frc.robot.commands.shooterCommands.MaxPowerShootCommand;
 import frc.robot.commands.drivingCommands.ToggleBrakeCommand;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
@@ -56,6 +58,7 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+
   // The robot's subsystems and commands are defined here...
   private final DriveTrainSubsystem driveTrain = new DriveTrainSubsystem();
   private final IntakeSubsystem intake = new IntakeSubsystem();
@@ -98,28 +101,54 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureDriveController() {
+    boolean GTADrive;
+    Preferences prefs = Preferences.getInstance();
+    GTADrive = prefs.getBoolean("GTADrive", true);
+
     Button rightTrigger =
         new JoystickButton(driveController, LogitechControllerButtons.triggerRight);
     Button leftTrigger = new JoystickButton(driveController, LogitechControllerButtons.triggerLeft);
     Button leftBumper = new JoystickButton(driveController, LogitechControllerButtons.bumperLeft);
     Button rightBumper = new JoystickButton(driveController, LogitechControllerButtons.bumperRight);
+    Button x = new JoystickButton(driveController, LogitechControllerButtons.x);
+    if (GTADrive) {
+      // Configure driveTrain default command, which is GTA drive. It works by having turning run by
+      // the left joystick, direction controlled by triggers, and speed controlled by
+      // right joystick. So if right joystick isn't touched, it goes at half of the current capped
+      // speed. If right joystick is fully forward, it goes at max capped speed.
+      driveTrain.setDefaultCommand(
+          new GTADriveCommand(
+              driveTrain,
+              () -> driveController.getX(),
+              () -> driveController.getThrottle(),
+              () -> rightTrigger.get(),
+              () -> leftTrigger.get()));
 
-    // Configure driveTrain default command, which is tank drive with Primary Controller Joysticks
-    // (NUMBERED CONTROLLER). It also uses left trigger for speed mode
-    driveTrain.setDefaultCommand(
-        new TankDriveCommand(
-            driveTrain, () -> driveController.getY(), () -> driveController.getThrottle()));
+      // --------Drivetrain Button Bindings--------
+      // When left bumper held, enable brake mode
+      leftBumper.whileHeld(new DisableRampingCommand(driveTrain));
+      // When right bumper held, disable ramping
+      rightBumper.whileHeld(new ToggleBrakeCommand(driveTrain));
+      // When x is held, set speed mode
+      x.whileHeld(new SetSpeedMode(driveTrain));
+    } else {
+      // Configure driveTrain default command, which is tank drive with Primary Controller Joysticks
+      // (NUMBERED CONTROLLER). It also uses left trigger for speed mode
+      driveTrain.setDefaultCommand(
+          new TankDriveCommand(
+              driveTrain, () -> driveController.getY(), () -> driveController.getThrottle()));
 
-    // --------Drivetrain Button Bindings--------
-    // When right trigger on main controller is held, drive straight
-    rightTrigger.whileHeld(
-        new DriveStraightCommand(driveTrain, navigation, () -> driveController.getY()));
-    // When left trigger is held, set speed mode
-    leftTrigger.whileHeld(new SetSpeedMode(driveTrain));
-    // When left bumper held, enable brake mode
-    leftBumper.whileHeld(new ToggleBrakeCommand(driveTrain));
-    // When right bumper held, disable ramping
-    rightBumper.whileHeld(new DisableRampingCommand(driveTrain));
+      // --------Drivetrain Button Bindings--------
+      // When right trigger on main controller is held, drive straight
+      rightTrigger.whileHeld(
+          new DriveStraightCommand(driveTrain, navigation, () -> driveController.getY()));
+      // When left trigger is held, set speed mode
+      leftTrigger.whileHeld(new SetSpeedMode(driveTrain));
+      // When left bumper held, enable brake mode
+      leftBumper.whileHeld(new ToggleBrakeCommand(driveTrain));
+      // When right bumper held, disable ramping
+      rightBumper.whileHeld(new DisableRampingCommand(driveTrain));
+    }
   }
 
   private void configureSecondaryController() {
