@@ -73,6 +73,7 @@ public class PidParameters {
   public void configureMotorWithPidParameters(TeamTalonSRX motor, int pidSlotIndex) {
     motor.configureWithPidParameters(this, pidSlotIndex);
   }
+
   public void configureMotorWithPidParameters(TeamSparkMAX motor, int pidSlotIndex) {
     motor.configureWithPidParameters(this, pidSlotIndex);
   }
@@ -134,7 +135,6 @@ public class PidParameters {
     SmartDashboard.putNumber(prefix + ".errorTolerance", errorTolerance);
   }
 
-
   public void periodic(String prefix, TeamSparkMAX motor, int pidSlotIndex) {
     double now = TeamUtils.getCurrentTime();
 
@@ -186,7 +186,8 @@ public class PidParameters {
         (int) SmartDashboard.getNumber(prefix + ".errorTolerance", errorTolerance);
     if (new_errorTolerance != errorTolerance) {
       errorTolerance = new_errorTolerance;
-      if (updateMotor) motor.canPidController.setSmartMotionAllowedClosedLoopError(errorTolerance, pidSlotIndex);
+      if (updateMotor)
+        motor.canPidController.setSmartMotionAllowedClosedLoopError(errorTolerance, pidSlotIndex);
     }
     SmartDashboard.putNumber(prefix + ".errorTolerance", errorTolerance);
 

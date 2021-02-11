@@ -7,8 +7,6 @@
 
 package frc.robot.subsystems;
 
-import com.revrobotics.CANPIDController;
-import com.revrobotics.ControlType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
@@ -85,7 +83,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void setTopMotor(double speed) {
     this.shooter_top.setSmartMotionVelocity(speed);
-    //this.shooter_top.set(Math.abs(speed));
+    // this.shooter_top.set(Math.abs(speed));
   }
 
   public double getShooterPowerTop() {
