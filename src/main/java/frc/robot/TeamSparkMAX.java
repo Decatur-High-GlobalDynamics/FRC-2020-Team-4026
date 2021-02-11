@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANPIDController;
-import com.ctre.phoenix.motorcontrol.ControlFrame;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.ControlType;
 
@@ -37,9 +36,10 @@ public class TeamSparkMAX extends CANSparkMax {
   private static boolean isPidControlMode(ControlType mode) {
 
     // kDutyCycle, kVelocity, kVoltage, kPosition, kSmartMotion, kCurrent, kSmartVelocity
-    
-    // Are all possible values. If one of these are not part of PID, add case for them and return false.
-    
+
+    // Are all possible values. If one of these are not part of PID, add case for them and return
+    // false.
+
     switch (mode) {
       case kCurrent:
         return false;
@@ -59,10 +59,11 @@ public class TeamSparkMAX extends CANSparkMax {
 
   public void resetEncoder() {
     canEncoder.setPosition(0.0);
-
   }
 
-  public boolean isRunningPidControlMode() { // Dunno if this is safe, but its the easiest way to get around problems with the PidParameters.
+  public boolean
+      isRunningPidControlMode() { // Dunno if this is safe, but its the easiest way to get around
+                                  // problems with the PidParameters.
     return true;
   }
 
@@ -107,7 +108,7 @@ public class TeamSparkMAX extends CANSparkMax {
         SmartDashboard.putNumber(smartDashboardPrefix + "Error", 0);
     }*/
   }
-  
+
   public double getClosedLoopTarget() {
     return this.smartMotionLoopTarget;
   }
@@ -116,7 +117,7 @@ public class TeamSparkMAX extends CANSparkMax {
     this.smartMotionLoopTarget = value;
     return this.smartMotionLoopTarget;
   }
-  
+
   public void setSmartMotionVelocity(double speed) {
     setClosedLoopTarget(speed);
     this.canPidController.setReference(Math.abs(speed), ControlType.kSmartMotion);
@@ -141,9 +142,8 @@ public class TeamSparkMAX extends CANSparkMax {
 
     canPidController.setSmartMotionMaxVelocity(maxSpeed, pidSlotIndex);
     canPidController.setSmartMotionMinOutputVelocity(0, pidSlotIndex);
-    //canPidController.setSmartMotionMaxAccel(maxAcc, pidSlotIndex);
-    canPidController.setSmartMotionAllowedClosedLoopError(pidParameters.errorTolerance, pidSlotIndex);
+    // canPidController.setSmartMotionMaxAccel(maxAcc, pidSlotIndex);
+    canPidController.setSmartMotionAllowedClosedLoopError(
+        pidParameters.errorTolerance, pidSlotIndex);
   }
-  
-  
 }
