@@ -10,7 +10,7 @@ public class PidParameters {
   public double kP, kI, kD, kF, kIZone, kPeakOutput, maxAcc, maxVel;
   public int errorTolerance;
 
-  public PidParameters( //Talon SRX
+  public PidParameters( // Talon SRX
       double kP,
       double kI,
       double kD,
@@ -27,7 +27,7 @@ public class PidParameters {
     this.errorTolerance = errorTolerance;
   }
 
-  public PidParameters( //Spark MAX
+  public PidParameters( // Spark MAX
       double kP,
       double kI,
       double kD,
@@ -202,10 +202,7 @@ public class PidParameters {
       maxVel = new_maxVel;
       if (updateMotor) motor.canPidController.setSmartMotionMaxVelocity(maxVel, pidSlotIndex);
     }
-    
+
     SmartDashboard.putNumber(prefix + ".kPeakOutput", kPeakOutput);
-
-
-    
   }
 }
