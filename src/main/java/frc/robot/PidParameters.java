@@ -7,10 +7,10 @@ public class PidParameters {
 
   private double lastTelemetryUpdate = 0;
 
-  public double kP, kI, kD, kF, kIZone, kPeakOutput;
+  public double kP, kI, kD, kF, kIZone, kPeakOutput, maxAcc, maxVel;
   public int errorTolerance;
 
-  public PidParameters(
+  public PidParameters( //Talon SRX
       double kP,
       double kI,
       double kD,
@@ -25,6 +25,27 @@ public class PidParameters {
     this.kIZone = kIZone;
     this.kPeakOutput = kPeakOutput;
     this.errorTolerance = errorTolerance;
+  }
+
+  public PidParameters( //Spark MAX
+      double kP,
+      double kI,
+      double kD,
+      double kF,
+      double kIZone,
+      double kPeakOutput,
+      double maxVel,
+      double maxAcc,
+      int errorTolerance) {
+    this.kP = kP;
+    this.kI = kI;
+    this.kD = kD;
+    this.kF = kF;
+    this.kIZone = kIZone;
+    this.kPeakOutput = kPeakOutput;
+    this.errorTolerance = errorTolerance;
+    this.maxVel = maxVel;
+    this.maxAcc = maxAcc;
   }
 
   @Override
@@ -168,5 +189,22 @@ public class PidParameters {
       if (updateMotor) motor.canPidController.setSmartMotionAllowedClosedLoopError(errorTolerance, pidSlotIndex);
     }
     SmartDashboard.putNumber(prefix + ".errorTolerance", errorTolerance);
+
+    double new_maxAcc = SmartDashboard.getNumber(prefix + ".maxAcc", maxAcc);
+    if (new_maxAcc != maxAcc) {
+      maxAcc = new_maxAcc;
+      if (updateMotor) motor.canPidController.setSmartMotionMaxAccel(maxAcc, pidSlotIndex);
+    }
+
+    double new_maxVel = SmartDashboard.getNumber(prefix + ".maxAcc", maxVel);
+    if (new_maxVel != maxVel) {
+      maxVel = new_maxVel;
+      if (updateMotor) motor.canPidController.setSmartMotionMaxVelocity(maxVel, pidSlotIndex);
+    }
+    
+    SmartDashboard.putNumber(prefix + ".kPeakOutput", kPeakOutput);
+
+
+    
   }
 }

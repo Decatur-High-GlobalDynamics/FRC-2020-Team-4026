@@ -119,7 +119,7 @@ public class TeamSparkMAX extends CANSparkMax {
   
   public void setSmartMotionVelocity(double speed) {
     setClosedLoopTarget(speed);
-    this.canPidController.setReference(Math.abs(speed), ControlType.kSmartMotion);
+    this.canPidController.setReference(Math.abs(speed), ControlType.kSmartVelocity);
   }
 
   public double getVelocityError() {
@@ -139,9 +139,9 @@ public class TeamSparkMAX extends CANSparkMax {
     canPidController.setD(pidParameters.kD, pidSlotIndex);
     canPidController.setOutputRange(-pidParameters.kPeakOutput, pidParameters.kPeakOutput);
 
-    canPidController.setSmartMotionMaxVelocity(maxSpeed, pidSlotIndex);
+    canPidController.setSmartMotionMaxVelocity(pidParameters.maxVel, pidSlotIndex);
     canPidController.setSmartMotionMinOutputVelocity(0, pidSlotIndex);
-    //canPidController.setSmartMotionMaxAccel(maxAcc, pidSlotIndex);
+    canPidController.setSmartMotionMaxAccel(pidParameters.maxAcc, pidSlotIndex);
     canPidController.setSmartMotionAllowedClosedLoopError(pidParameters.errorTolerance, pidSlotIndex);
   }
   
