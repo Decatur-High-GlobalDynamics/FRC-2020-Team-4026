@@ -5,7 +5,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANPIDController;
+import com.ctre.phoenix.motorcontrol.ControlFrame;
 import com.revrobotics.CANEncoder;
+import com.revrobotics.ControlType;
 
 public class TeamSparkMAX extends CANSparkMax {
   public static double telemetryUpdateInterval_secs = 0.0;
@@ -17,9 +19,11 @@ public class TeamSparkMAX extends CANSparkMax {
 
   protected double maxSpeed = Double.MAX_VALUE;
 
-  protected CANPIDController canPidController;
+  protected double smartMotionLoopTarget;
 
-  protected CANEncoder canEncoder;
+  public CANPIDController canPidController;
+
+  public CANEncoder canEncoder;
 
   protected PidParameters pidProfiles[] = new PidParameters[4];
 
@@ -30,21 +34,18 @@ public class TeamSparkMAX extends CANSparkMax {
     canEncoder = getEncoder();
   }
 
-  private static boolean isPidControlMode(ControlMode mode) {
+  private static boolean isPidControlMode(ControlType mode) {
+
+    // kDutyCycle, kVelocity, kVoltage, kPosition, kSmartMotion, kCurrent, kSmartVelocity
+    
+    // Are all possible values. If one of these are not part of PID, add case for them and return false.
+    
     switch (mode) {
-      case Current:
-        return false;
-      case Disabled:
-        return false;
-      case Follower:
+      case kCurrent:
         return false;
       default:
         return true;
     }
-  }
-
-  public boolean isRunningPidControlMode() {
-    return isPidControlMode(getControlMode());
   }
 
   public void noteEmergencyStop() {
@@ -58,6 +59,11 @@ public class TeamSparkMAX extends CANSparkMax {
 
   public void resetEncoder() {
     canEncoder.setPosition(0.0);
+
+  }
+
+  public boolean isRunningPidControlMode() { // Dunno if this is safe, but its the easiest way to get around problems with the PidParameters.
+    return true;
   }
 
   public void periodic() {
@@ -70,24 +76,11 @@ public class TeamSparkMAX extends CANSparkMax {
     lastTelemetryUpdate = now;
 
     double currentEncoderValue = getCurrentEncoderValue();
-    double currentSpeed = getSelectedSensorVelocity();
+    double currentSpeed = canEncoder.getVelocity();
 
     if (maxSpeed == Double.MAX_VALUE || currentSpeed > maxSpeed) maxSpeed = currentSpeed;
 
-    if (isRunningPidControlMode()) {
-      SmartDashboard.putBoolean(smartDashboardPrefix + ".PID", true);
-    } else {
-      SmartDashboard.putBoolean(smartDashboardPrefix + ".PID", false);
-    }
-
-    if (getControlMode() == ControlMode.Velocity) {
-      double currentError = getVelocityError();
-      SmartDashboard.putNumber(smartDashboardPrefix + ".VelocityError", currentError);
-    } else {
-      SmartDashboard.putNumber(smartDashboardPrefix + ".VelocityError", 0);
-    }
-
-    SmartDashboard.putNumber(smartDashboardPrefix + ".PowerPercent", getMotorOutputPercent());
+    // SmartDashboard.putNumber(smartDashboardPrefix + ".PowerPercent", getMotorOutputPercent());
 
     SmartDashboard.putNumber(smartDashboardPrefix + ".Position-ticks", currentEncoderValue);
 
@@ -97,9 +90,9 @@ public class TeamSparkMAX extends CANSparkMax {
     SmartDashboard.putNumber(smartDashboardPrefix + ".maxSpeedPer100ms", maxSpeed);
     SmartDashboard.putNumber(smartDashboardPrefix + ".maxSpeedPerSec", maxSpeed * 10);
 
-    SmartDashboard.putString(smartDashboardPrefix + "Mode", getControlMode().toString());
+    // SmartDashboard.putString(smartDashboardPrefix + "Mode", getControlMode().toString());
     SmartDashboard.putNumber(smartDashboardPrefix + "EmergencyStops", numEStops);
-
+    /*
     switch (getControlMode()) {
       case Position:
       case Velocity:
@@ -112,15 +105,29 @@ public class TeamSparkMAX extends CANSparkMax {
         // Fill in Zeros when we're not in a mode that is using it
         SmartDashboard.putNumber(smartDashboardPrefix + "Target", 0);
         SmartDashboard.putNumber(smartDashboardPrefix + "Error", 0);
-    }
+    }*/
+  }
+  
+  public double getClosedLoopTarget() {
+    return this.smartMotionLoopTarget;
+  }
+
+  public double setClosedLoopTarget(double value) {
+    this.smartMotionLoopTarget = value;
+    return this.smartMotionLoopTarget;
+  }
+  
+  public void setSmartMotionVelocity(double speed) {
+    setClosedLoopTarget(speed);
+    this.canPidController.setReference(Math.abs(speed), ControlType.kSmartMotion);
   }
 
   public double getVelocityError() {
-    if (getControlMode() != ControlMode.Velocity) {
+    /* if (getControlMode() != ControlType.kSmartVelocity) {
       return 0;
-    }
-    double currentSpeed = getSelectedSensorVelocity();
-    return (double) (getClosedLoopTarget() - currentSpeed);
+    } */
+    double currentSpeed = canEncoder.getVelocity();
+    return getClosedLoopTarget() - currentSpeed;
   }
 
   public void configureWithPidParameters(PidParameters pidParameters, int pidSlotIndex) {
@@ -130,8 +137,13 @@ public class TeamSparkMAX extends CANSparkMax {
     canPidController.setP(pidParameters.kP, pidSlotIndex);
     canPidController.setI(pidParameters.kI, pidSlotIndex);
     canPidController.setD(pidParameters.kD, pidSlotIndex);
-
     canPidController.setOutputRange(-pidParameters.kPeakOutput, pidParameters.kPeakOutput);
-    configAllowableClosedloopError(pidSlotIndex, pidParameters.errorTolerance, 30);
+
+    canPidController.setSmartMotionMaxVelocity(maxSpeed, pidSlotIndex);
+    canPidController.setSmartMotionMinOutputVelocity(0, pidSlotIndex);
+    //canPidController.setSmartMotionMaxAccel(maxAcc, pidSlotIndex);
+    canPidController.setSmartMotionAllowedClosedLoopError(pidParameters.errorTolerance, pidSlotIndex);
   }
+  
+  
 }

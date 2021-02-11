@@ -7,13 +7,14 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.revrobotics.CANPIDController;
+import com.revrobotics.ControlType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.Constants;
 import frc.robot.PidParameters;
-import frc.robot.TeamTalonSRX;
+import frc.robot.TeamSparkMAX;
 import frc.robot.TeamUtils;
 
 public class ShooterSubsystem extends SubsystemBase {
@@ -23,8 +24,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
   private int targetSpeedBot = 10000;
   // Values for 95% (max power for shooting)
-  private final TeamTalonSRX shooter_bottom;
-  private final TeamTalonSRX shooter_top;
+  private final TeamSparkMAX shooter_bottom;
+  private final TeamSparkMAX shooter_top;
   /** Creates a new ShooterSubsystem. */
   private double shooterPowerTop = 0.95;
 
@@ -34,10 +35,8 @@ public class ShooterSubsystem extends SubsystemBase {
   private PidParameters botPidParameters = new PidParameters(0.1, 0.00005, 0.1, 0.026, 250, 1, 10);
 
   public ShooterSubsystem() {
-    shooter_bottom = new TeamTalonSRX("Subsystems.Shooter.Bottom", Constants.BotShooterMotorCAN);
-    shooter_top = new TeamTalonSRX("Subsystems.Shooter.Top", Constants.TopShooterMotorCAN);
-    shooter_top.setSensorPhase(true);
-    shooter_bottom.setSensorPhase(true);
+    shooter_bottom = new TeamSparkMAX("Subsystems.Shooter.Bottom", Constants.BotShooterMotorCAN);
+    shooter_top = new TeamSparkMAX("Subsystems.Shooter.Top", Constants.TopShooterMotorCAN);
     shooter_bottom.setInverted(true);
     shooter_top.setInverted(false);
   }
@@ -80,11 +79,13 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void setBottomMotor(double speed) {
-    this.shooter_bottom.set(Math.abs(speed));
+    this.shooter_bottom.setSmartMotionVelocity(speed);
+    // this.shooter_bottom.set(Math.abs(speed));
   }
 
   public void setTopMotor(double speed) {
-    this.shooter_top.set(Math.abs(speed));
+    this.shooter_top.setSmartMotionVelocity(speed);
+    //this.shooter_top.set(Math.abs(speed));
   }
 
   public double getShooterPowerTop() {
@@ -96,28 +97,32 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void stop() {
-    shooter_bottom.set(0);
-    shooter_top.set(0);
+    this.shooter_bottom.setSmartMotionVelocity(0);
+    this.shooter_top.setSmartMotionVelocity(0);
+    // shooter_bottom.set(0);
+    // shooter_top.set(0);
   }
 
   public double getShooterSpeedTop() {
-    return shooter_top.getSelectedSensorVelocity();
+    return shooter_top.canEncoder.getVelocity();
   }
 
   public double getShooterSpeedBot() {
-    return shooter_bottom.getSelectedSensorVelocity();
+    return shooter_bottom.canEncoder.getVelocity();
   }
 
   public void setShooterVelTop(int speed) {
     speed = (int) MathUtil.clamp(speed, 0, maxRotationSpeedTop);
     shooter_top.configureWithPidParameters(topPidParameters, 0);
-    this.shooter_top.set(ControlMode.Velocity, speed);
+    shooter_top.setSmartMotionVelocity(speed);
+    // this.shooter_top.set(speed);
   }
 
   public void setShooterVelBot(int speed) {
     speed = (int) MathUtil.clamp(speed, 0, maxRotationSpeedBot);
     shooter_bottom.configureWithPidParameters(botPidParameters, 0);
-    this.shooter_bottom.set(ControlMode.Velocity, speed);
+    shooter_bottom.setSmartMotionVelocity(speed);
+    // this.shooter_bottom.set(speed);
   }
 
   public int getMaxVelTop() {
