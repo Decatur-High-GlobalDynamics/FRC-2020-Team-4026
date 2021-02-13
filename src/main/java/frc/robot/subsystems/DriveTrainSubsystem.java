@@ -23,10 +23,10 @@ import frc.robot.Constants;
 public class DriveTrainSubsystem extends SubsystemBase {
   final DifferentialDrive drive;
 
-  WPI_TalonFX rightDriveFalconMain;
-  WPI_TalonFX leftDriveFalconMain;
-  WPI_TalonFX rightDriveFalconSub;
-  WPI_TalonFX leftDriveFalconSub;
+  final WPI_TalonFX rightDriveFalconMain;
+  final WPI_TalonFX leftDriveFalconMain;
+  final WPI_TalonFX rightDriveFalconSub;
+  final WPI_TalonFX leftDriveFalconSub;
   // TODO: Fix max power change now that it's in units per second
   public double maxPowerChange = 0.43;
   public static double maxOutputSlow = .5;
@@ -34,9 +34,12 @@ public class DriveTrainSubsystem extends SubsystemBase {
   public double currentMaxPower = maxOutputSlow;
   public boolean rampingOn = true;
 
-  private boolean brakeMode = false;
+  private double velocityForStopMetersPerSecond = 0.2;
 
-  private double epsilonIsStopped = 100;
+  public static enum DriveTrainMode {
+    SLOW,
+    FAST
+  }
 
   private SlewRateLimiter rightLimiter = new SlewRateLimiter(maxPowerChange);
   private SlewRateLimiter leftLimiter = new SlewRateLimiter(maxPowerChange);
@@ -68,7 +71,12 @@ public class DriveTrainSubsystem extends SubsystemBase {
         Objects.requireNonNull(rightDriveFalconSub, "rightDriveFalconSub must not be null");
     this.leftDriveFalconSub =
         Objects.requireNonNull(leftDriveFalconSub, "leftDriveFalconSub must not be null");
+    setupDrivetrain();
+    drive = new DifferentialDrive(leftDriveFalconMain, rightDriveFalconMain);
+    setupDifferentialDrive();
+  }
 
+  private void setupDrivetrain() {
     // This configures the falcons to use their internal encoders
     TalonFXConfiguration configs = new TalonFXConfiguration();
     configs.primaryPID.selectedFeedbackSensor = FeedbackDevice.IntegratedSensor;
@@ -78,19 +86,13 @@ public class DriveTrainSubsystem extends SubsystemBase {
     leftDriveFalconSub.follow(leftDriveFalconMain);
     rightDriveFalconSub.follow(rightDriveFalconMain);
 
-    // This wraps the motors
-    drive = new DifferentialDrive(leftDriveFalconMain, rightDriveFalconMain);
+    setDriveTrainMode(DriveTrainMode.SLOW);
+    setBrakeMode(NeutralMode.Coast);
+  }
 
+  private void setupDifferentialDrive() {
     drive.setDeadband(0);
-
-    setSlowMode();
-
     drive.setRightSideInverted(false);
-
-    leftDriveFalconMain.setNeutralMode(NeutralMode.Coast);
-    leftDriveFalconSub.setNeutralMode(NeutralMode.Coast);
-    rightDriveFalconMain.setNeutralMode(NeutralMode.Coast);
-    rightDriveFalconSub.setNeutralMode(NeutralMode.Coast);
   }
 
   public static DriveTrainSubsystem Create() {
@@ -108,21 +110,45 @@ public class DriveTrainSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Subsystems.DriveTrain.leftPower", leftDriveFalconMain.get());
-    SmartDashboard.putNumber("Subsystems.DriveTrain.rightPower", rightDriveFalconMain.get());
+    updateMaxPowerChange();
+    updateMaxDrivetrainOutputs();
+    updateVelocityForStopMetersPerSecond();
+    printDrivetrainData();
+    updateMotorOutputs();
+  }
+
+  private void updateMaxPowerChange() {
     maxPowerChange =
         SmartDashboard.getNumber("Subsystems.DriveTrain.maxPowerChange", maxPowerChange);
     SmartDashboard.putNumber("Subsystems.DriveTrain.maxPowerChange", maxPowerChange);
-    maxOutputSlow = SmartDashboard.getNumber("Subsystems.DriveTrain.maxOutputSlow", maxOutputSlow);
+  }
+
+  private void updateMaxDrivetrainOutputs() {
+    maxOutputSlow =
+        SmartDashboard.getNumber("Subsystems.DriveTrain.maxPercentOutputSlow", maxOutputSlow);
+    maxOutputFast =
+        SmartDashboard.getNumber("Subsystems.DriveTrain.maxPercentOutputFast", maxOutputFast);
     SmartDashboard.putNumber("Subsystems.DriveTrain.maxOutputSlow", maxOutputSlow);
-    maxOutputFast = SmartDashboard.getNumber("Subsystems.DriveTrain.maxOutputFast", maxOutputFast);
     SmartDashboard.putNumber("Subsystems.DriveTrain.maxOutputFast", maxOutputFast);
-    epsilonIsStopped =
-        SmartDashboard.getNumber("Subsystems.DriveTrain.epsilonIsStopped", epsilonIsStopped);
-    SmartDashboard.putNumber("Subsystems.DriveTrain.epsilonIsStopped", epsilonIsStopped);
+  }
+
+  private void updateVelocityForStopMetersPerSecond() {
+    velocityForStopMetersPerSecond =
+        SmartDashboard.getNumber(
+            "Subsystems.DriveTrain.velocityForStopMetersPerSecond", velocityForStopMetersPerSecond);
+    SmartDashboard.putNumber(
+        "Subsystems.DriveTrain.minimumSpeedForStopTicksPer100ms", velocityForStopMetersPerSecond);
+  }
+
+  private void printDrivetrainData() {
+    SmartDashboard.putNumber("Subsystems.DriveTrain.leftPower", leftDriveFalconMain.get());
+    SmartDashboard.putNumber("Subsystems.DriveTrain.rightPower", rightDriveFalconMain.get());
     // Print the power that's been demanded
     SmartDashboard.putNumber("Subsystems.DriveTrain.leftPowerDemand", leftPowerSet);
     SmartDashboard.putNumber("Subsystems.DriveTrain.rightPowerDemand", rightPowerSet);
+  }
+
+  private void updateMotorOutputs() {
     // Scale it by the current max power - so if we're not in fast mode, everything goes at half
     // speed
     double cappedLeftPowerDesired = leftPowerSet * currentMaxPower;
@@ -155,10 +181,20 @@ public class DriveTrainSubsystem extends SubsystemBase {
     drive.tankDrive(nextleftPower, nextRightPower, false);
   }
 
+  /**
+   * caps the input power between -1 and +1
+   *
+   * @param desired
+   * @return the capped power
+   */
+  private double getCappedPower(double desired) {
+    return Math.max(Math.min(1, desired), -1);
+  }
+
   // Caps the requested powers then sends them to Differential Drive
   public void setMotorPowers(double leftPowerDesired, double rightPowerDesired) {
-    leftPowerDesired = Math.max(Math.min(1, leftPowerDesired), -1);
-    rightPowerDesired = Math.max(Math.min(1, rightPowerDesired), -1);
+    leftPowerDesired = getCappedPower(leftPowerDesired);
+    rightPowerDesired = getCappedPower(rightPowerDesired);
     leftPowerSet = leftPowerDesired;
     rightPowerSet = rightPowerDesired;
   }
@@ -171,43 +207,45 @@ public class DriveTrainSubsystem extends SubsystemBase {
     return rightDriveFalconMain.getSelectedSensorPosition();
   }
 
-  // Sets the max output to full
-  public void setFastMode() {
-    currentMaxPower = maxOutputFast;
+  public void setDriveTrainMode(DriveTrainMode mode) {
+    switch (mode) {
+      case SLOW:
+        currentMaxPower = maxOutputSlow;
+        break;
+      case FAST:
+        currentMaxPower = maxOutputFast;
+        break;
+    }
   }
 
-  // sets it to half for controlability
-  public void setSlowMode() {
-    currentMaxPower = maxOutputSlow;
-  }
-
-  public void toggleBrakemode() {
-    if (brakeMode) {
-      leftDriveFalconMain.setNeutralMode(NeutralMode.Coast);
-      leftDriveFalconSub.setNeutralMode(NeutralMode.Coast);
-      rightDriveFalconMain.setNeutralMode(NeutralMode.Coast);
-      rightDriveFalconSub.setNeutralMode(NeutralMode.Coast);
-    }
-    if (!brakeMode) {
-      leftDriveFalconMain.setNeutralMode(NeutralMode.Brake);
-      leftDriveFalconSub.setNeutralMode(NeutralMode.Brake);
-      rightDriveFalconMain.setNeutralMode(NeutralMode.Brake);
-      rightDriveFalconSub.setNeutralMode(NeutralMode.Brake);
-    }
-    brakeMode = !brakeMode;
+  public void setBrakeMode(NeutralMode mode) {
+    leftDriveFalconMain.setNeutralMode(mode);
+    leftDriveFalconSub.setNeutralMode(mode);
+    rightDriveFalconMain.setNeutralMode(mode);
+    rightDriveFalconSub.setNeutralMode(mode);
   }
 
   public boolean isStopped() {
-    return leftDriveFalconMain.getSelectedSensorVelocity() < 100
-        && rightDriveFalconMain.getSelectedSensorVelocity() < 100;
+    return leftDriveFalconMain.getSelectedSensorVelocity()
+            < speedInMetersToTicksPer100ms(velocityForStopMetersPerSecond)
+        && rightDriveFalconMain.getSelectedSensorVelocity()
+            < speedInMetersToTicksPer100ms(velocityForStopMetersPerSecond);
   }
 
-  public void enableRamping() {
-    rampingOn = true;
+  private int speedInMetersToTicksPer100ms(double speed) {
+    return (int) Math.round(speed / (10 * Constants.kEncoderDistancePerPulse));
   }
 
-  public void disableRamping() {
-    rampingOn = false;
+  private double ticksPer100msToSpeedInMeters(int ticks) {
+    return ticks * 10 * Constants.kEncoderDistancePerPulse;
+  }
+
+  public void setRamping(boolean ramping) {
+    rampingOn = ramping;
+  }
+
+  public void stop() {
+    drive.tankDrive(0, 0);
   }
 
   // This is literally just the curvature drive mode from differntial drive - the differnce is that
