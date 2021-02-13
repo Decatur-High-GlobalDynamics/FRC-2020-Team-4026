@@ -13,6 +13,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
+import edu.wpi.first.wpilibj.SlewRateLimiter;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -26,10 +27,8 @@ public class DriveTrainSubsystem extends SubsystemBase {
   WPI_TalonFX leftDriveFalconMain;
   WPI_TalonFX rightDriveFalconSub;
   WPI_TalonFX leftDriveFalconSub;
-  // This was tested to be the lowest value where problems weren't had with the squaring thing that
-  // differential drive does
-  public double maxPowerChangeDefault = 0.43;
-  public double maxPowerChange = maxPowerChangeDefault;
+  // TODO: Fix max power change now that it's in units per second
+  public double maxPowerChange = 0.43;
   public static double maxOutputSlow = .5;
   public static double maxOutputFast = 1;
   public double currentMaxPower = maxOutputSlow;
@@ -38,6 +37,12 @@ public class DriveTrainSubsystem extends SubsystemBase {
   private boolean brakeMode = false;
 
   private double epsilonIsStopped = 100;
+
+  private SlewRateLimiter rightLimiter = new SlewRateLimiter(maxPowerChange);
+  private SlewRateLimiter leftLimiter = new SlewRateLimiter(maxPowerChange);
+
+  private double leftPowerSet = 0;
+  private double rightPowerSet = 0;
 
   // These three are brought over from differential drive in order to bring over it's curvature
   // drive code
@@ -115,43 +120,47 @@ public class DriveTrainSubsystem extends SubsystemBase {
     epsilonIsStopped =
         SmartDashboard.getNumber("Subsystems.DriveTrain.epsilonIsStopped", epsilonIsStopped);
     SmartDashboard.putNumber("Subsystems.DriveTrain.epsilonIsStopped", epsilonIsStopped);
+    // Print the power that's been demanded
+    SmartDashboard.putNumber("Subsystems.DriveTrain.leftPowerDemand", leftPowerSet);
+    SmartDashboard.putNumber("Subsystems.DriveTrain.rightPowerDemand", rightPowerSet);
+    // Scale it by the current max power - so if we're not in fast mode, everything goes at half
+    // speed
+    double cappedLeftPowerDesired = leftPowerSet * currentMaxPower;
+    double cappedRightPowerDesired = rightPowerSet * currentMaxPower;
+    // Set up vars for putting the final power in - they need to be set up here because of scope
+    // stuff
+    double nextRightPower;
+    double nextleftPower;
+    // If you're ramping, use the calculate function on the limiter to calculate the next speed
+    if (rampingOn) {
+      nextleftPower = leftLimiter.calculate(cappedLeftPowerDesired);
+      nextRightPower = rightLimiter.calculate(cappedRightPowerDesired);
+    } else {
+      // If you aren't ramping, just set your next power to whatever asked
+      nextleftPower = cappedLeftPowerDesired;
+      nextRightPower = cappedRightPowerDesired;
+      // This is important - it ensures the limiters always keep up with the current speed. They
+      // usually like to be called with calculate, but that's obviously not
+      // possible when not ramping, so instead we just constantly force the limiters to catch up
+      // with us. This means that whenever we start ramping again they'll be caught up
+      rightLimiter.reset(nextRightPower);
+      leftLimiter.reset(nextleftPower);
+    }
 
-    if (rampingOn) maxPowerChange = maxPowerChangeDefault;
-    else maxPowerChange = 1;
+    // Print the power that's going to the motors
+    SmartDashboard.putNumber("Subsystems.DriveTrain.rightPowerGiven", nextRightPower);
+    SmartDashboard.putNumber("Subsystems.DriveTrain.leftPowerGiven", nextleftPower);
+    // Send it to the motors. The false at the end lets you not square the power - bc that leads to
+    // weird ramping stuff
+    drive.tankDrive(nextleftPower, nextRightPower, false);
   }
 
   // Caps the requested powers then sends them to Differential Drive
   public void setMotorPowers(double leftPowerDesired, double rightPowerDesired) {
     leftPowerDesired = Math.max(Math.min(1, leftPowerDesired), -1);
     rightPowerDesired = Math.max(Math.min(1, rightPowerDesired), -1);
-    // Display the power we are asking for
-    SmartDashboard.putNumber("Subsystems.DriveTrain.leftPowerDemand", leftPowerDesired);
-    SmartDashboard.putNumber("Subsystems.DriveTrain.rightPowerDemand", rightPowerDesired);
-    leftPowerDesired *= currentMaxPower;
-    rightPowerDesired *= currentMaxPower;
-
-    // Divide by current max power bcause it was divided by it earlier, and that puts it back into
-    // the unit of "requested power", instead of "raw power", which is scaled by current max power
-    double curRightPower = rightDriveFalconMain.get();
-    double nextRightPower;
-    if (Math.abs(rightPowerDesired - curRightPower) <= maxPowerChange) {
-      nextRightPower = rightPowerDesired;
-    } else {
-      nextRightPower =
-          curRightPower + Math.signum(rightPowerDesired - curRightPower) * maxPowerChange;
-    }
-
-    double curleftPower = leftDriveFalconMain.get();
-    double nextleftPower;
-    if (Math.abs(leftPowerDesired - curleftPower) <= maxPowerChange) {
-      nextleftPower = leftPowerDesired;
-    } else {
-      nextleftPower = curleftPower + Math.signum(leftPowerDesired - curleftPower) * maxPowerChange;
-    }
-
-    SmartDashboard.putNumber("Subsystems.DriveTrain.rightPowerGiven", nextRightPower);
-    SmartDashboard.putNumber("Subsystems.DriveTrain.leftPowerGiven", nextleftPower);
-    drive.tankDrive(nextleftPower, nextRightPower, false);
+    leftPowerSet = leftPowerDesired;
+    rightPowerSet = rightPowerDesired;
   }
 
   public double getLeftEncoder() {
