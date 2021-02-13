@@ -51,7 +51,7 @@ public class PidParameters {
 
   @Override
   public int hashCode() {
-      return Objects.hash(kP, kI, kD, kF, kIZone, kPeakOutput, errorTolerance);
+    return Objects.hash(kP, kI, kD, kF, kIZone, kPeakOutput, errorTolerance);
   }
 
   /** Use these parameters on a motor */
