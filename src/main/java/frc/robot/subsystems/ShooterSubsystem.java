@@ -124,7 +124,8 @@ public class ShooterSubsystem extends SubsystemBase {
     errorToleranceTop = (int) SmartDashboard.getNumber("Subsystems.Shooter.errorToleranceTop", errorToleranceTop);
     topPidParameters.errorTolerance = errorToleranceTop;
     SmartDashboard.putNumber("Subsystems.Shooter.errorToleranceTop", errorToleranceTop);
-    errorToleranceBot = (int) SmartDashboard.getNumber("Subsystems.Shooter.errorToleranceBot", errorToleranceBot);
+    errorToleranceBot =
+        (int) SmartDashboard.getNumber("Subsystems.Shooter.errorToleranceBot", errorToleranceBot);
     botPidParameters.errorTolerance = errorToleranceBot;
     SmartDashboard.putNumber("Subsystems.Shooter.errorToleranceBot", errorToleranceBot);
   }
