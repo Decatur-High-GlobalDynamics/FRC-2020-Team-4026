@@ -104,8 +104,7 @@ public class ShooterSubsystem extends SubsystemBase {
     targetSpeedTop = (int) SmartDashboard.getNumber("Subsystems.Shooter.targetSpeedTop", targetSpeedTop);
     SmartDashboard.putNumber("Subsystems.Shooter.targetSpeedTop", targetSpeedTop);
     */
-    targetSpeedBot =
-        SmartDashboard.getNumber("Subsystems.Shooter.targetSpeedBot", targetSpeedBot);
+    targetSpeedBot = SmartDashboard.getNumber("Subsystems.Shooter.targetSpeedBot", targetSpeedBot);
     SmartDashboard.putNumber("Subsystems.Shooter.targetSpeedBot", targetSpeedBot);
 
     SmartDashboard.putBoolean("Subsystems.Shooter.isShooterReady", this.isShooterReady());
