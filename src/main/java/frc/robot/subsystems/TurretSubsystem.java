@@ -7,6 +7,7 @@
 
 package frc.robot.subsystems;
 
+import java.util.Objects;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
@@ -21,28 +22,18 @@ import frc.robot.TeamTalonSRX;
 import frc.robot.commands.turretCommands.PrepareTurretCommand;
 
 public class TurretSubsystem extends SubsystemBase {
-  /** Creates a new TurretSubsystem. */
   private final TeamTalonSRX turretMotor;
-
   private final DigitalInput turretLimit;
-
-  private VisionSubsystem visionSubsystem = new VisionSubsystem();
-
+  private final VisionSubsystem visionSubsystem;
   private final double baseTurnSpeed = .1;
   private double maxTurnSpeed = baseTurnSpeed;
-
   private static final boolean sensorPhase = true;
   private static final boolean motorInvert = true;
-
   private boolean hasBeenCalibrated = true;
-
   private final double MinPowerToMove = 0.0425;
-
   private final int stallThresh = 30;
-
   private boolean isTurretCalibrating = false;
-
-  private final PidParameters pidParams = new PidParameters(0.25, 0.001, 0.0, 0, 0, 0.15, 10);
+  private final PidParameters pidParams;
 
   // Number of encoder ticks to go when rotating
   private int rotationSpeed = 500;
@@ -59,22 +50,43 @@ public class TurretSubsystem extends SubsystemBase {
   private final double ticksAtPiOver2Rads = -2914;
 
   public TurretSubsystem() {
-    turretMotor = new TeamTalonSRX("Subsystems.Turret.motor", Ports.TurretCAN);
-    turretMotor.configFactoryDefault();
+    throw new IllegalArgumentException(
+        "not allowed! ctor must provide parameters for all dependencies");
+  }
 
-    turretLimit = new DigitalInput(Ports.TurretLimitDIO);
+  public TurretSubsystem(
+      TeamTalonSRX turretMotor,
+      DigitalInput turretLimit,
+      VisionSubsystem visionSubsystem,
+      PidParameters pidParams) {
+    this.turretMotor = Objects.requireNonNull(turretMotor, "turretMotor must not be null");
+    this.turretLimit = Objects.requireNonNull(turretLimit, "turretLimit must not be null");
+    this.visionSubsystem =
+        Objects.requireNonNull(visionSubsystem, "visionSubsystem must not be null");
+    this.pidParams = Objects.requireNonNull(pidParams, "pidParams must not be null");
+
+    turretMotor.configFactoryDefault();
 
     turretMotor.setNeutralMode(NeutralMode.Brake);
     turretMotor.setInverted(motorInvert);
     turretMotor.setSensorPhase(sensorPhase);
     turretMotor.configNominalOutputForward(MinPowerToMove);
     turretMotor.configNominalOutputReverse(-MinPowerToMove);
+
     turretMotor.configureWithPidParameters(pidParams, 0);
 
     turretMotor.configReverseSoftLimitEnable(false);
     turretMotor.configForwardSoftLimitEnable(false);
 
     turretMotor.setNeutralMode(NeutralMode.Brake);
+  }
+
+  public static TurretSubsystem Create() {
+    TeamTalonSRX turretMotor = new TeamTalonSRX("Subsystems.Turret.motor", Ports.TurretCAN);
+    DigitalInput turretLimit = new DigitalInput(Ports.TurretLimitDIO);
+    VisionSubsystem visionSubsystem = VisionSubsystem.Create();
+    PidParameters pidParams = new PidParameters(0.25, 0.001, 0.0, 0, 0, 0.15, 10);
+    return new TurretSubsystem(turretMotor, turretLimit, visionSubsystem, pidParams);
   }
 
   private boolean isPowerOkay(double powerToCheck) {

@@ -33,11 +33,16 @@ import frc.robot.commands.indexerCommands.VerticalIndexerDownCommand;
 import frc.robot.commands.indexerCommands.VerticalIndexerUpCommand;
 import frc.robot.commands.navigationCommands.UpdateNavigationCommand;
 import frc.robot.commands.drivingCommands.DisableRampingCommand;
+import frc.robot.commands.drivingCommands.DriveStraightCommand;
+import frc.robot.commands.drivingCommands.EnableBrakeModeCommand;
+import frc.robot.commands.drivingCommands.SetSpeedMode;
+import frc.robot.commands.drivingCommands.StopDrivetrainCommand;
+import frc.robot.commands.shooterCommands.MaxPowerShootCommand;
+import frc.robot.commands.drivingCommands.TankDriveCommand;
 import frc.robot.commands.drivingCommands.GTADriveCommand;
 import frc.robot.commands.drivingCommands.SetSpeedMode;
 import frc.robot.commands.drivingCommands.TankDriveCommand;
 import frc.robot.commands.shooterCommands.MaxPowerShootCommand;
-import frc.robot.commands.drivingCommands.ToggleBrakeCommand;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -61,13 +66,13 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 public class RobotContainer {
 
   // The robot's subsystems and commands are defined here...
-  private final DriveTrainSubsystem driveTrain = new DriveTrainSubsystem();
-  private final IntakeSubsystem intake = new IntakeSubsystem();
-  private final ShooterSubsystem shooter = new ShooterSubsystem();
-  private final VerticalIndexerSubsystem verticalIndexer = new VerticalIndexerSubsystem();
-  private final TurretSubsystem turret = new TurretSubsystem();
-  private final HorizontalIndexerSubsystem horizontalIndexer = new HorizontalIndexerSubsystem();
-  private final NavigationSubsystem navigation = new NavigationSubsystem();
+  private final DriveTrainSubsystem driveTrain = DriveTrainSubsystem.Create();
+  private final IntakeSubsystem intake = IntakeSubsystem.Create();
+  private final ShooterSubsystem shooter = ShooterSubsystem.Create();
+  private final VerticalIndexerSubsystem verticalIndexer = VerticalIndexerSubsystem.Create();
+  private final TurretSubsystem turret = TurretSubsystem.Create();
+  private final HorizontalIndexerSubsystem horizontalIndexer = HorizontalIndexerSubsystem.Create();
+  private final NavigationSubsystem navigation = NavigationSubsystem.Create();
   private final ClimberSubsystem climber = ClimberSubsystem.Create();
 
   public static final Joystick driveController = new Joystick(0);
@@ -129,7 +134,7 @@ public class RobotContainer {
       // When left bumper held, enable brake mode
       leftBumper.whileHeld(new DisableRampingCommand(driveTrain));
       // When right bumper held, disable ramping
-      rightBumper.whileHeld(new ToggleBrakeCommand(driveTrain));
+      rightBumper.whileHeld(new EnableBrakeModeCommand(driveTrain));
       // When x is held, set speed mode
       x.whileHeld(new SetSpeedMode(driveTrain));
     } else {
@@ -146,7 +151,7 @@ public class RobotContainer {
       // When left trigger is held, set speed mode
       leftTrigger.whileHeld(new SetSpeedMode(driveTrain));
       // When left bumper held, enable brake mode
-      leftBumper.whileHeld(new ToggleBrakeCommand(driveTrain));
+      leftBumper.whileHeld(new EnableBrakeModeCommand(driveTrain));
       // When right bumper held, disable ramping
       rightBumper.whileHeld(new DisableRampingCommand(driveTrain));
     }
@@ -271,5 +276,9 @@ public class RobotContainer {
     // This drives and spins up, and when driving finishes, shoots for 10 seconds
     return (driveForward.raceWith(spinUpShooter))
         .andThen((shoot.withTimeout(5)).andThen(driveBack));
+  }
+
+  public Command getStopDriveTrainCommand() {
+    return new StopDrivetrainCommand(driveTrain);
   }
 }

@@ -7,6 +7,7 @@
 
 package frc.robot.subsystems;
 
+import java.util.Objects;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.geometry.Pose2d;
@@ -17,22 +18,30 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.SerialPort;
 
 public class NavigationSubsystem extends SubsystemBase {
-  // Change this to whatever type is needed
-
   DifferentialDriveOdometry odometry;
-
   AHRS navx;
-
   double accumulatedHeading = 0;
-
   double lastHeading = 0;
 
-  /** Creates a new NavigationSubsystem. */
   public NavigationSubsystem() {
-    // Create navx
-    navx = new AHRS(SerialPort.Port.kMXP);
+    throw new IllegalArgumentException(
+        "not allowed! ctor must provide parameters for all dependencies");
+  }
+
+  public NavigationSubsystem(AHRS navx, DifferentialDriveOdometry odometry) {
+    this.navx = Objects.requireNonNull(navx, "navx must not be null");
+    this.odometry = Objects.requireNonNull(odometry, "odometry must not be null");
+  }
+
+  public static NavigationSubsystem Create() {
+    AHRS navx = new AHRS(SerialPort.Port.kMXP);
+
     // This keeps a tally of position and heading and updates them based on encoders
-    odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
+    double originalHeading = navx.getYaw();
+    DifferentialDriveOdometry odometry =
+        new DifferentialDriveOdometry(Rotation2d.fromDegrees(originalHeading));
+
+    return new NavigationSubsystem(navx, odometry);
   }
 
   // Returns the robot's pose (position and rotation) in meters

@@ -7,6 +7,7 @@
 
 package frc.robot.subsystems;
 
+import java.util.Objects;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Timer;
@@ -16,31 +17,64 @@ import frc.robot.constants.Ports;
 import frc.robot.TeamTalonSRX;
 
 public class VerticalIndexerSubsystem extends SubsystemBase {
-  /** Creates a new VerticalIndexerSubsystem. */
   private final TeamTalonSRX verticalIndexer;
-
-  private DigitalInput bottomSwitchA = new DigitalInput(Ports.VerticalIndexer_BottomLimit_DIO_A);
-  private DigitalInput bottomSwitchB = new DigitalInput(Ports.VerticalIndexer_BottomLimit_DIO_B);
-  private DigitalInput bottomSwitchC = new DigitalInput(Ports.VerticalIndexer_BottomLimit_DIO_C);
-  private DigitalInput middleSwitch = new DigitalInput(Ports.VerticalIndexer_MiddleLimit_DIO);
-  private DigitalInput topSwitch = new DigitalInput(Ports.VerticalIndexer_TopLimit_DIO);
+  private final DigitalInput bottomSwitchA;
+  private final DigitalInput bottomSwitchB;
+  private final DigitalInput bottomSwitchC;
+  private final DigitalInput middleSwitch;
+  private final DigitalInput topSwitch;
+  private final Timer idleTimerSeconds;
 
   public int ticksUntilTransfered = 6500;
-
   private String currCmd;
-
   private final double upSpeed = .35;
   private final double downSpeed = -.35;
-
   private double epsilonIdleTime = 1;
 
-  private Timer idleTimerSeconds = new Timer();
-
   public VerticalIndexerSubsystem() {
-    verticalIndexer =
+    throw new IllegalArgumentException(
+        "not allowed! ctor must provide parameters for all dependencies");
+  }
+
+  public VerticalIndexerSubsystem(
+      TeamTalonSRX verticalIndexer,
+      DigitalInput bottomSwitchA,
+      DigitalInput bottomSwitchB,
+      DigitalInput bottomSwitchC,
+      DigitalInput middleSwitch,
+      DigitalInput topSwitch,
+      Timer idleTimerSeconds) {
+    this.verticalIndexer =
+        Objects.requireNonNull(verticalIndexer, "verticalIndexer must not be null");
+    this.bottomSwitchA = Objects.requireNonNull(bottomSwitchA, "bottomSwitchA must not be null");
+    this.bottomSwitchB = Objects.requireNonNull(bottomSwitchB, "bottomSwitchB must not be null");
+    this.bottomSwitchC = Objects.requireNonNull(bottomSwitchC, "bottomSwitchC must not be null");
+    this.middleSwitch = Objects.requireNonNull(middleSwitch, "middleSwitch must not be null");
+    this.topSwitch = Objects.requireNonNull(topSwitch, "topSwitch must not be null");
+    this.idleTimerSeconds =
+        Objects.requireNonNull(idleTimerSeconds, "idleTimerSeconds must not be null");
+
+    this.idleTimerSeconds.reset();
+    this.idleTimerSeconds.start();
+  }
+
+  public static VerticalIndexerSubsystem Create() {
+    TeamTalonSRX verticalIndexer =
         new TeamTalonSRX("Subsystems.VerticalIndexer.VIndxMotor", Ports.IndexerVertCAN);
-    idleTimerSeconds.reset();
-    idleTimerSeconds.start();
+    DigitalInput bottomSwitchA = new DigitalInput(Ports.VerticalIndexer_BottomLimit_DIO_A);
+    DigitalInput bottomSwitchB = new DigitalInput(Ports.VerticalIndexer_BottomLimit_DIO_B);
+    DigitalInput bottomSwitchC = new DigitalInput(Ports.VerticalIndexer_BottomLimit_DIO_C);
+    DigitalInput middleSwitch = new DigitalInput(Ports.VerticalIndexer_MiddleLimit_DIO);
+    DigitalInput topSwitch = new DigitalInput(Ports.VerticalIndexer_TopLimit_DIO);
+    Timer idleTimerSeconds = new Timer();
+    return new VerticalIndexerSubsystem(
+        verticalIndexer,
+        bottomSwitchA,
+        bottomSwitchB,
+        bottomSwitchC,
+        middleSwitch,
+        topSwitch,
+        idleTimerSeconds);
   }
 
   @Override

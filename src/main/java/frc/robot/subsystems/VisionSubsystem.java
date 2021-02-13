@@ -16,7 +16,14 @@ public class VisionSubsystem extends SubsystemBase {
   private double ballX = 0;
   private double ballY = 0;
 
-  public VisionSubsystem() {}
+  // If object dependencies are introduced, then refactor to provide
+  // constructor that injects all its object dependencies and disallow
+  // default constructor (see other classes for implementation)
+  protected VisionSubsystem() {}
+
+  public static VisionSubsystem Create() {
+    return new VisionSubsystem();
+  }
 
   @Override
   public void periodic() {
