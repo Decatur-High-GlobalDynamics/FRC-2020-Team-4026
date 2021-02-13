@@ -29,11 +29,11 @@ public class ShooterSubsystem extends SubsystemBase {
 
   private double shooterPowerBot = 0.95;
 
-  private PidParameters topPidParameters = new PidParameters(0.3, 0.00015, 0.1, 0.031, 0, 1, 10);
-  private PidParameters botPidParameters = new PidParameters(0.1, 0.00005, 0.1, 0.026, 250, 1, 10);
+  private double kPTop = 0, kPBot = 0, kITop = 0, kIBot = 0, kDTop = 0, kDBot = 0, kFTop = 0, kFBot = 0, kIZoneTop = 0, kIZoneBot = 0, kPeakOutputTop = 1, kPeakOutputBot = 1, maxVelTop = 0, maxVelBot = 0, maxAccTop = 0, maxAccBot = 0;
+  private int errorToleranceTop = 10, errorToleranceBot = 10;
 
-  private double kPTop, kPBot, kITop, kIBot, kDTop, kDBot, kFTop, kFBot, kIZoneTop, kIZoneBot, kPeakOutputTop, kPeakOutputBot, maxVelTop, maxVelBot, maxAccTop, maxAccBot;
-  private int errorToleranceTop, errorToleranceBot;
+  private PidParameters topPidParameters = new PidParameters(kPTop, kITop, kDTop, kFTop, kIZoneTop, kPeakOutputTop, errorToleranceTop);
+  private PidParameters botPidParameters = new PidParameters(kPBot, kIBot, kDBot, kFBot, kIZoneBot, kPeakOutputBot, errorToleranceBot);
 
   public ShooterSubsystem() {
     shooter_bottom = new TeamSparkMAX("Subsystems.Shooter.Bottom", Constants.BotShooterMotorCAN);
@@ -108,7 +108,7 @@ public class ShooterSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Subsystems.Shooter.kPeakOutputTop", kPeakOutputTop);
     kPeakOutputBot = SmartDashboard.getNumber("Subsystems.Shooter.kPeakOutputBot", kPeakOutputBot);
     botPidParameters.kPeakOutput = kPeakOutputBot;
-    SmartDashboard.putNumber("Subsystems.Shooter.kPeakOutputBot", kPeakOutputBot);
+    /*SmartDashboard.putNumber("Subsystems.Shooter.kPeakOutputBot", kPeakOutputBot);
     maxVelTop = SmartDashboard.getNumber("Subsystems.Shooter.maxVelTop", maxVelTop);
     topPidParameters.maxVel = maxVelTop;
     SmartDashboard.putNumber("Subsystems.Shooter.maxVelTop", maxVelTop);
@@ -120,7 +120,7 @@ public class ShooterSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Subsystems.Shooter.maxAccTop", maxAccTop);
     maxAccBot = SmartDashboard.getNumber("Subsystems.Shooter.maxAccBot", maxAccBot);
     botPidParameters.maxAcc = maxAccBot;
-    SmartDashboard.putNumber("Subsystems.Shooter.maxAccBot", maxAccBot);
+    SmartDashboard.putNumber("Subsystems.Shooter.maxAccBot", maxAccBot);*/
     errorToleranceTop = (int) SmartDashboard.getNumber("Subsystems.Shooter.errorToleranceTop", errorToleranceTop);
     topPidParameters.errorTolerance = errorToleranceTop;
     SmartDashboard.putNumber("Subsystems.Shooter.errorToleranceTop", errorToleranceTop);
