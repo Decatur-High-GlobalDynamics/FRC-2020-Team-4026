@@ -4,6 +4,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANPIDController;
+
+import java.util.ResourceBundle.Control;
+
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANError;
 import com.revrobotics.ControlType;
@@ -26,7 +29,7 @@ public class TeamSparkMAX extends CANSparkMax {
 
   protected PidParameters pidProfiles[] = new PidParameters[4];
 
-  private ControlType ctrlType;
+  private ControlType ctrlType = ControlType.kCurrent;
 
   public TeamSparkMAX(String smartDashboardPrefix, int deviceID) {
     super(deviceID, MotorType.kBrushless); // Neos are brushless
@@ -41,7 +44,9 @@ public class TeamSparkMAX extends CANSparkMax {
 
     // Are all possible values. If one of these are not part of PID, add case for them and return
     // false.
-
+    if (mode == null) {
+      return false;
+    }
     switch (mode) {
       case kCurrent:
         return false;
