@@ -32,7 +32,22 @@ public class ShooterSubsystem extends SubsystemBase {
   private PidParameters topPidParameters = new PidParameters(0.3, 0.00015, 0.1, 0.031, 0, 1, 10);
   private PidParameters botPidParameters = new PidParameters(0.1, 0.00005, 0.1, 0.026, 250, 1, 10);
 
-  private double kPTop, kPBot, kITop, kIBot, kDTop, kDBot, kFTop, kFBot, kIZoneTop, kIZoneBot, kPeakOutputTop, kPeakOutputBot, maxVelTop, maxVelBot, maxAccTop, maxAccBot;
+  private double kPTop,
+      kPBot,
+      kITop,
+      kIBot,
+      kDTop,
+      kDBot,
+      kFTop,
+      kFBot,
+      kIZoneTop,
+      kIZoneBot,
+      kPeakOutputTop,
+      kPeakOutputBot,
+      maxVelTop,
+      maxVelBot,
+      maxAccTop,
+      maxAccBot;
   private int errorToleranceTop, errorToleranceBot;
 
   public ShooterSubsystem() {
@@ -121,10 +136,12 @@ public class ShooterSubsystem extends SubsystemBase {
     maxAccBot = SmartDashboard.getNumber("Subsystems.Shooter.maxAccBot", maxAccBot);
     botPidParameters.maxAcc = maxAccBot;
     SmartDashboard.putNumber("Subsystems.Shooter.maxAccBot", maxAccBot);
-    errorToleranceTop = (int) SmartDashboard.getNumber("Subsystems.Shooter.errorToleranceTop", errorToleranceTop);
+    errorToleranceTop =
+        (int) SmartDashboard.getNumber("Subsystems.Shooter.errorToleranceTop", errorToleranceTop);
     topPidParameters.errorTolerance = errorToleranceTop;
     SmartDashboard.putNumber("Subsystems.Shooter.errorToleranceTop", errorToleranceTop);
-    errorToleranceBot = (int) SmartDashboard.getNumber("Subsystems.Shooter.errorToleranceBot", errorToleranceBot);
+    errorToleranceBot =
+        (int) SmartDashboard.getNumber("Subsystems.Shooter.errorToleranceBot", errorToleranceBot);
     botPidParameters.errorTolerance = errorToleranceBot;
     SmartDashboard.putNumber("Subsystems.Shooter.errorToleranceBot", errorToleranceBot);
   }
