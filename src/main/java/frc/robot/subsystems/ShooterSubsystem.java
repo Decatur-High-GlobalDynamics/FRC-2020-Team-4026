@@ -8,7 +8,6 @@
 package frc.robot.subsystems;
 
 import java.util.Objects;
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
@@ -54,7 +53,6 @@ public class ShooterSubsystem extends SubsystemBase {
   private PidParameters botPidParameters =
       new PidParameters(kPBot, kIBot, kDBot, kFBot, kIZoneBot, kPeakOutputBot, errorToleranceBot);
 
-
   public ShooterSubsystem() {
     throw new IllegalArgumentException(
         "not allowed! ctor must provide parameters for all dependencies");
@@ -79,11 +77,11 @@ public class ShooterSubsystem extends SubsystemBase {
   public static ShooterSubsystem Create() {
     TeamSparkMAX shooter_bottom =
         new TeamSparkMAX("Subsystems.Shooter.Bottom", Ports.BotShooterMotorCAN);
-        TeamSparkMAX shooter_top = new TeamSparkMAX("Subsystems.Shooter.Top", Ports.TopShooterMotorCAN);
+    TeamSparkMAX shooter_top = new TeamSparkMAX("Subsystems.Shooter.Top", Ports.TopShooterMotorCAN);
     PidParameters topPidParameters =
-      new PidParameters(kPTop, kITop, kDTop, kFTop, kIZoneTop, kPeakOutputTop, errorToleranceTop);
+        new PidParameters(kPTop, kITop, kDTop, kFTop, kIZoneTop, kPeakOutputTop, errorToleranceTop);
     PidParameters botPidParameters =
-      new PidParameters(kPBot, kIBot, kDBot, kFBot, kIZoneBot, kPeakOutputBot, errorToleranceBot);
+        new PidParameters(kPBot, kIBot, kDBot, kFBot, kIZoneBot, kPeakOutputBot, errorToleranceBot);
     return new ShooterSubsystem(shooter_bottom, shooter_top, topPidParameters, botPidParameters);
   }
 
