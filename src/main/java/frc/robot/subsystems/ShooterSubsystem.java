@@ -47,7 +47,6 @@ public class ShooterSubsystem extends SubsystemBase {
       maxAccTop = 0,
       maxAccBot = 0;
   private static int errorToleranceTop = 10, errorToleranceBot = 10;
-
   private PidParameters topPidParameters, botPidParameters;
 
   public ShooterSubsystem() {

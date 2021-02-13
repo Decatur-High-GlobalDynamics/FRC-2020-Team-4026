@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANPIDController;
 
-
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANError;
 import com.revrobotics.ControlType;
