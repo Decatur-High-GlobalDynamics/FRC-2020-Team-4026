@@ -13,28 +13,50 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.robot.constants.Ports;
+import java.util.Objects;
 
 public class ClimberSubsystem extends SubsystemBase {
-
   private final WPI_VictorSPX leftClimber;
   private final WPI_TalonSRX rightClimber;
-
   private final DigitalInput leftLimit;
   private final DigitalInput rightLimit;
-
   private final DigitalInput leftHookLimit;
   private final DigitalInput rightHookLimit;
-  /** Creates a new ClimberSubsystem. */
+
+  // constructors
+
   public ClimberSubsystem() {
-    leftClimber = new WPI_VictorSPX(Constants.LeftClimbCAN);
-    rightClimber = new WPI_TalonSRX(Constants.RightClimbCAN);
+    throw new IllegalArgumentException(
+        "not allowed! ctor must provide parameters for all dependencies");
+  }
 
-    leftLimit = new DigitalInput(Constants.Climber_LeftLimitDIO);
-    rightLimit = new DigitalInput(Constants.Climber_RightLimitDIO);
+  // decouple external dependencies to allow dependency injection for testing
+  public ClimberSubsystem(
+      WPI_VictorSPX leftClimber,
+      WPI_TalonSRX rightClimber,
+      DigitalInput leftLimit,
+      DigitalInput rightLimit,
+      DigitalInput leftHookLimit,
+      DigitalInput rightHookLimit) {
+    this.leftClimber = Objects.requireNonNull(leftClimber, "leftClimber must not be null");
+    this.rightClimber = Objects.requireNonNull(rightClimber, "rightClimber must not be null");
+    this.leftLimit = Objects.requireNonNull(leftLimit, "leftLimit must not be null");
+    this.rightLimit = Objects.requireNonNull(rightLimit, "rightLimit must not be null");
+    this.rightHookLimit = Objects.requireNonNull(rightHookLimit, "rightHookLimit must not be null");
+    this.leftHookLimit = Objects.requireNonNull(leftHookLimit, "leftHookLimit must not be null");
+  }
 
-    rightHookLimit = new DigitalInput(Constants.Hook_RightDIO);
-    leftHookLimit = new DigitalInput(Constants.Hook_LeftDIO);
+  // ClimberSubsystem Factory
+  public static ClimberSubsystem Create() {
+    WPI_VictorSPX leftClimber = new WPI_VictorSPX(Ports.LeftClimbCAN);
+    WPI_TalonSRX rightClimber = new WPI_TalonSRX(Ports.RightClimbCAN);
+    DigitalInput leftLimit = new DigitalInput(Ports.Climber_LeftLimitDIO);
+    DigitalInput rightLimit = new DigitalInput(Ports.Climber_RightLimitDIO);
+    DigitalInput leftHookLimit = new DigitalInput(Ports.Hook_LeftDIO);
+    DigitalInput rightHookLimit = new DigitalInput(Ports.Hook_RightDIO);
+    return new ClimberSubsystem(
+        leftClimber, rightClimber, leftLimit, rightLimit, leftHookLimit, rightHookLimit);
   }
 
   @Override

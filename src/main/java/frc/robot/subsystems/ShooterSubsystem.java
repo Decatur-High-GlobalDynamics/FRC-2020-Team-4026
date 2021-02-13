@@ -7,10 +7,12 @@
 
 package frc.robot.subsystems;
 
+import java.util.Objects;
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
-import frc.robot.Constants;
+import frc.robot.constants.Ports;
 import frc.robot.PidParameters;
 import frc.robot.TeamSparkMAX;
 import frc.robot.TeamUtils;
@@ -29,7 +31,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   private double shooterPowerBot = 0.95;
 
-  private double kPTop = 0,
+  private static double kPTop = 0,
       kPBot = 0,
       kITop = 0,
       kIBot = 0,
@@ -45,18 +47,44 @@ public class ShooterSubsystem extends SubsystemBase {
       maxVelBot = 0,
       maxAccTop = 0,
       maxAccBot = 0;
-  private int errorToleranceTop = 10, errorToleranceBot = 10;
+  private static int errorToleranceTop = 10, errorToleranceBot = 10;
 
   private PidParameters topPidParameters =
       new PidParameters(kPTop, kITop, kDTop, kFTop, kIZoneTop, kPeakOutputTop, errorToleranceTop);
   private PidParameters botPidParameters =
       new PidParameters(kPBot, kIBot, kDBot, kFBot, kIZoneBot, kPeakOutputBot, errorToleranceBot);
 
+
   public ShooterSubsystem() {
-    shooter_bottom = new TeamSparkMAX("Subsystems.Shooter.Bottom", Constants.BotShooterMotorCAN);
-    shooter_top = new TeamSparkMAX("Subsystems.Shooter.Top", Constants.TopShooterMotorCAN);
+    throw new IllegalArgumentException(
+        "not allowed! ctor must provide parameters for all dependencies");
+  }
+
+  public ShooterSubsystem(
+      TeamSparkMAX shooter_bottom,
+      TeamSparkMAX shooter_top,
+      PidParameters topPidParameters,
+      PidParameters botPidParameters) {
+    this.shooter_bottom = Objects.requireNonNull(shooter_bottom, "shooter_bottom must not be null");
+    this.shooter_top = Objects.requireNonNull(shooter_top, "shooter_top must not be null");
+    this.topPidParameters =
+        Objects.requireNonNull(topPidParameters, "topPidParameters must not be null");
+    this.botPidParameters =
+        Objects.requireNonNull(botPidParameters, "botPidParameters must not be null");
+
     shooter_bottom.setInverted(true);
     shooter_top.setInverted(false);
+  }
+
+  public static ShooterSubsystem Create() {
+    TeamSparkMAX shooter_bottom =
+        new TeamSparkMAX("Subsystems.Shooter.Bottom", Ports.BotShooterMotorCAN);
+        TeamSparkMAX shooter_top = new TeamSparkMAX("Subsystems.Shooter.Top", Ports.TopShooterMotorCAN);
+    PidParameters topPidParameters =
+      new PidParameters(kPTop, kITop, kDTop, kFTop, kIZoneTop, kPeakOutputTop, errorToleranceTop);
+    PidParameters botPidParameters =
+      new PidParameters(kPBot, kIBot, kDBot, kFBot, kIZoneBot, kPeakOutputBot, errorToleranceBot);
+    return new ShooterSubsystem(shooter_bottom, shooter_top, topPidParameters, botPidParameters);
   }
 
   @Override
