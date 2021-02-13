@@ -35,7 +35,7 @@ public class AutoShootTesting extends CommandBase {
     // In the future, get speeds from the lookup table based on vision
     // Also, potentially rotate turret
     targetSpeedBot = shooter.getTargetSpeedBot();
-    targetSpeedTop = (double) (targetSpeedBot * (2.5 / 6.5));
+    targetSpeedTop = (targetSpeedBot * (2.5 / 6.5));
     shooter.setShooterVelBot(targetSpeedBot);
     shooter.setShooterVelTop(targetSpeedTop);
   }
