@@ -29,11 +29,28 @@ public class ShooterSubsystem extends SubsystemBase {
 
   private double shooterPowerBot = 0.95;
 
-  private double kPTop = 0, kPBot = 0, kITop = 0, kIBot = 0, kDTop = 0, kDBot = 0, kFTop = 0, kFBot = 0, kIZoneTop = 0, kIZoneBot = 0, kPeakOutputTop = 1, kPeakOutputBot = 1, maxVelTop = 0, maxVelBot = 0, maxAccTop = 0, maxAccBot = 0;
+  private double kPTop = 0,
+      kPBot = 0,
+      kITop = 0,
+      kIBot = 0,
+      kDTop = 0,
+      kDBot = 0,
+      kFTop = 0,
+      kFBot = 0,
+      kIZoneTop = 0,
+      kIZoneBot = 0,
+      kPeakOutputTop = 1,
+      kPeakOutputBot = 1,
+      maxVelTop = 0,
+      maxVelBot = 0,
+      maxAccTop = 0,
+      maxAccBot = 0;
   private int errorToleranceTop = 10, errorToleranceBot = 10;
 
-  private PidParameters topPidParameters = new PidParameters(kPTop, kITop, kDTop, kFTop, kIZoneTop, kPeakOutputTop, errorToleranceTop);
-  private PidParameters botPidParameters = new PidParameters(kPBot, kIBot, kDBot, kFBot, kIZoneBot, kPeakOutputBot, errorToleranceBot);
+  private PidParameters topPidParameters =
+      new PidParameters(kPTop, kITop, kDTop, kFTop, kIZoneTop, kPeakOutputTop, errorToleranceTop);
+  private PidParameters botPidParameters =
+      new PidParameters(kPBot, kIBot, kDBot, kFBot, kIZoneBot, kPeakOutputBot, errorToleranceBot);
 
   public ShooterSubsystem() {
     shooter_bottom = new TeamSparkMAX("Subsystems.Shooter.Bottom", Constants.BotShooterMotorCAN);
@@ -121,7 +138,8 @@ public class ShooterSubsystem extends SubsystemBase {
     maxAccBot = SmartDashboard.getNumber("Subsystems.Shooter.maxAccBot", maxAccBot);
     botPidParameters.maxAcc = maxAccBot;
     SmartDashboard.putNumber("Subsystems.Shooter.maxAccBot", maxAccBot);*/
-    errorToleranceTop = (int) SmartDashboard.getNumber("Subsystems.Shooter.errorToleranceTop", errorToleranceTop);
+    errorToleranceTop =
+        (int) SmartDashboard.getNumber("Subsystems.Shooter.errorToleranceTop", errorToleranceTop);
     topPidParameters.errorTolerance = errorToleranceTop;
     SmartDashboard.putNumber("Subsystems.Shooter.errorToleranceTop", errorToleranceTop);
     errorToleranceBot =
