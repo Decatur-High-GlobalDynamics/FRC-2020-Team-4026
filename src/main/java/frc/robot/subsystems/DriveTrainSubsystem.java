@@ -190,11 +190,11 @@ public class DriveTrainSubsystem extends SubsystemBase {
   }
 
   private int speedInMetersToTicksPer100ms(double speed) {
-    return (int) Math.round(speed / (10 * Constants.kDriveEncoderDistancePerPulse));
+    return (int) Math.round(speed / (10 * Constants.kEncoderDistancePerPulse));
   }
 
   private double ticksPer100msToSpeedInMeters(int ticks) {
-    return ticks * 10 * Constants.kDriveEncoderDistancePerPulse;
+    return ticks * 10 * Constants.kEncoderDistancePerPulse;
   }
 
   public void setRamping(boolean ramping) {
