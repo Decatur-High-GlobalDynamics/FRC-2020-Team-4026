@@ -10,7 +10,7 @@ package frc.robot.subsystems;
 import java.util.Objects;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.robot.constants.Ports;
 import frc.robot.TeamTalonSRX;
 
 public class HorizontalIndexerSubsystem extends SubsystemBase {
@@ -31,7 +31,7 @@ public class HorizontalIndexerSubsystem extends SubsystemBase {
 
   public static HorizontalIndexerSubsystem Create() {
     TeamTalonSRX horizontalIndexer =
-        new TeamTalonSRX("Subsystems.HorizontalIndexer.HIndxMotor", Constants.IndexerHorizCAN);
+        new TeamTalonSRX("Subsystems.HorizontalIndexer.HIndxMotor", Ports.IndexerHorizCAN);
     return new HorizontalIndexerSubsystem(horizontalIndexer);
   }
 

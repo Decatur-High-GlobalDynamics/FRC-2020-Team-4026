@@ -13,7 +13,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.robot.constants.Ports;
 import java.util.Objects;
 
 public class ClimberSubsystem extends SubsystemBase {
@@ -49,12 +49,12 @@ public class ClimberSubsystem extends SubsystemBase {
 
   // ClimberSubsystem Factory
   public static ClimberSubsystem Create() {
-    WPI_VictorSPX leftClimber = new WPI_VictorSPX(Constants.LeftClimbCAN);
-    WPI_TalonSRX rightClimber = new WPI_TalonSRX(Constants.RightClimbCAN);
-    DigitalInput leftLimit = new DigitalInput(Constants.Climber_LeftLimitDIO);
-    DigitalInput rightLimit = new DigitalInput(Constants.Climber_RightLimitDIO);
-    DigitalInput leftHookLimit = new DigitalInput(Constants.Hook_LeftDIO);
-    DigitalInput rightHookLimit = new DigitalInput(Constants.Hook_RightDIO);
+    WPI_VictorSPX leftClimber = new WPI_VictorSPX(Ports.LeftClimbCAN);
+    WPI_TalonSRX rightClimber = new WPI_TalonSRX(Ports.RightClimbCAN);
+    DigitalInput leftLimit = new DigitalInput(Ports.Climber_LeftLimitDIO);
+    DigitalInput rightLimit = new DigitalInput(Ports.Climber_RightLimitDIO);
+    DigitalInput leftHookLimit = new DigitalInput(Ports.Hook_LeftDIO);
+    DigitalInput rightHookLimit = new DigitalInput(Ports.Hook_RightDIO);
     return new ClimberSubsystem(
         leftClimber, rightClimber, leftLimit, rightLimit, leftHookLimit, rightHookLimit);
   }

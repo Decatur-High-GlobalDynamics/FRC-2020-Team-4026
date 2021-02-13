@@ -17,8 +17,9 @@ import edu.wpi.first.wpilibj.SlewRateLimiter;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.constants.DriveTrainConstants;
+import frc.robot.constants.Ports;
 import edu.wpi.first.wpiutil.math.MathUtil;
-import frc.robot.Constants;
 
 public class DriveTrainSubsystem extends SubsystemBase {
   final DifferentialDrive drive;
@@ -96,10 +97,10 @@ public class DriveTrainSubsystem extends SubsystemBase {
   }
 
   public static DriveTrainSubsystem Create() {
-    WPI_TalonFX rightDriveFalconMainCAN = new WPI_TalonFX(Constants.RightDriveFalconMainCAN);
-    WPI_TalonFX leftDriveFalconMainCAN = new WPI_TalonFX(Constants.LeftDriveFalconMainCAN);
-    WPI_TalonFX rightDriveFalconSubCAN = new WPI_TalonFX(Constants.RightDriveFalconSubCAN);
-    WPI_TalonFX leftDriveFalconSub = new WPI_TalonFX(Constants.LeftDriveFalconSubCAN);
+    WPI_TalonFX rightDriveFalconMainCAN = new WPI_TalonFX(Ports.RightDriveFalconMainCAN);
+    WPI_TalonFX leftDriveFalconMainCAN = new WPI_TalonFX(Ports.LeftDriveFalconMainCAN);
+    WPI_TalonFX rightDriveFalconSubCAN = new WPI_TalonFX(Ports.RightDriveFalconSubCAN);
+    WPI_TalonFX leftDriveFalconSub = new WPI_TalonFX(Ports.LeftDriveFalconSubCAN);
     return new DriveTrainSubsystem(
         rightDriveFalconMainCAN,
         leftDriveFalconMainCAN,
@@ -233,11 +234,11 @@ public class DriveTrainSubsystem extends SubsystemBase {
   }
 
   private int speedInMetersToTicksPer100ms(double speed) {
-    return (int) Math.round(speed / (10 * Constants.kEncoderDistancePerPulse));
+    return (int) Math.round(speed / (10 * DriveTrainConstants.kEncoderDistancePerPulse));
   }
 
   private double ticksPer100msToSpeedInMeters(int ticks) {
-    return ticks * 10 * Constants.kEncoderDistancePerPulse;
+    return ticks * 10 * DriveTrainConstants.kEncoderDistancePerPulse;
   }
 
   public void setRamping(boolean ramping) {

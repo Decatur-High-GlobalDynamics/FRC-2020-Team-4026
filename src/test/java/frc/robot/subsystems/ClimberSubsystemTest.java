@@ -3,7 +3,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj.*;
-import frc.robot.Constants;
+import frc.robot.constants.Ports;
 
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -79,7 +79,7 @@ public class ClimberSubsystemTest {
   public void itShouldReferenceDevice7ForLeftClimber() {
     assertEquals(
         7,
-        Constants.LeftClimbCAN,
+        Ports.LeftClimbCAN,
         "Tell electrical that LeftClimbCAN Device ID has changed and update this test.");
   }
 
@@ -87,7 +87,7 @@ public class ClimberSubsystemTest {
   public void itShouldReferenceDevice7ForRightClimber() {
     assertEquals(
         12,
-        Constants.RightClimbCAN,
+        Ports.RightClimbCAN,
         "Tell electrical that RightClimbCAN Device ID has changed and update this test.");
   }
 
@@ -95,7 +95,7 @@ public class ClimberSubsystemTest {
   public void itShouldReferenceChannel6ForLeftLimitDIO() {
     assertEquals(
         6,
-        Constants.Climber_LeftLimitDIO,
+        Ports.Climber_LeftLimitDIO,
         "Tell electrical that LeftLimitDIO Channel ID has changed and update this test.");
   }
 
@@ -103,7 +103,7 @@ public class ClimberSubsystemTest {
   public void itShouldReferenceChannel7ForRightLimitDIO() {
     assertEquals(
         7,
-        Constants.Climber_RightLimitDIO,
+        Ports.Climber_RightLimitDIO,
         "Tell electrical that RightLimitDIO Channel ID has changed and update this test.");
   }
 
@@ -111,7 +111,7 @@ public class ClimberSubsystemTest {
   public void itShouldReferenceChannel9ForLeftHookDIO() {
     assertEquals(
         9,
-        Constants.Hook_LeftDIO,
+        Ports.Hook_LeftDIO,
         "Tell electrical that Hook_LeftDIO Channel ID has changed and update this test.");
   }
 
@@ -119,7 +119,7 @@ public class ClimberSubsystemTest {
   public void itShouldReferenceChannel8ForRightHookDIO() {
     assertEquals(
         8,
-        Constants.Hook_RightDIO,
+        Ports.Hook_RightDIO,
         "Tell electrical that Hook_RightDIO Channel ID has changed and update this test.");
   }
 }

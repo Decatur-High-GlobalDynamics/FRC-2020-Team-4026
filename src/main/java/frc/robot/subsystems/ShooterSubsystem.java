@@ -12,7 +12,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
-import frc.robot.Constants;
+import frc.robot.constants.Ports;
 import frc.robot.PidParameters;
 import frc.robot.TeamTalonSRX;
 import frc.robot.TeamUtils;
@@ -58,9 +58,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public static ShooterSubsystem Create() {
     TeamTalonSRX shooter_bottom =
-        new TeamTalonSRX("Subsystems.Shooter.Bottom", Constants.BotShooterMotorCAN);
-    TeamTalonSRX shooter_top =
-        new TeamTalonSRX("Subsystems.Shooter.Top", Constants.TopShooterMotorCAN);
+        new TeamTalonSRX("Subsystems.Shooter.Bottom", Ports.BotShooterMotorCAN);
+    TeamTalonSRX shooter_top = new TeamTalonSRX("Subsystems.Shooter.Top", Ports.TopShooterMotorCAN);
     PidParameters topPidParameters = new PidParameters(0.3, 0.00015, 0.1, 0.031, 0, 1, 10);
     PidParameters botPidParameters = new PidParameters(0.1, 0.00005, 0.1, 0.026, 250, 1, 10);
     return new ShooterSubsystem(shooter_bottom, shooter_top, topPidParameters, botPidParameters);

@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
-import frc.robot.Constants;
+import frc.robot.constants.Ports;
 import frc.robot.PidParameters;
 import frc.robot.TeamTalonSRX;
 import frc.robot.commands.turretCommands.PrepareTurretCommand;
@@ -82,8 +82,8 @@ public class TurretSubsystem extends SubsystemBase {
   }
 
   public static TurretSubsystem Create() {
-    TeamTalonSRX turretMotor = new TeamTalonSRX("Subsystems.Turret.motor", Constants.TurretCAN);
-    DigitalInput turretLimit = new DigitalInput(Constants.TurretLimitDIO);
+    TeamTalonSRX turretMotor = new TeamTalonSRX("Subsystems.Turret.motor", Ports.TurretCAN);
+    DigitalInput turretLimit = new DigitalInput(Ports.TurretLimitDIO);
     VisionSubsystem visionSubsystem = VisionSubsystem.Create();
     PidParameters pidParams = new PidParameters(0.25, 0.001, 0.0, 0, 0, 0.15, 10);
     return new TurretSubsystem(turretMotor, turretLimit, visionSubsystem, pidParams);

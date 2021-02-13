@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.robot.constants.Ports;
 import frc.robot.TeamTalonSRX;
 
 public class VerticalIndexerSubsystem extends SubsystemBase {
@@ -60,12 +60,12 @@ public class VerticalIndexerSubsystem extends SubsystemBase {
 
   public static VerticalIndexerSubsystem Create() {
     TeamTalonSRX verticalIndexer =
-        new TeamTalonSRX("Subsystems.VerticalIndexer.VIndxMotor", Constants.IndexerVertCAN);
-    DigitalInput bottomSwitchA = new DigitalInput(Constants.VerticalIndexer_BottomLimit_DIO_A);
-    DigitalInput bottomSwitchB = new DigitalInput(Constants.VerticalIndexer_BottomLimit_DIO_B);
-    DigitalInput bottomSwitchC = new DigitalInput(Constants.VerticalIndexer_BottomLimit_DIO_C);
-    DigitalInput middleSwitch = new DigitalInput(Constants.VerticalIndexer_MiddleLimit_DIO);
-    DigitalInput topSwitch = new DigitalInput(Constants.VerticalIndexer_TopLimit_DIO);
+        new TeamTalonSRX("Subsystems.VerticalIndexer.VIndxMotor", Ports.IndexerVertCAN);
+    DigitalInput bottomSwitchA = new DigitalInput(Ports.VerticalIndexer_BottomLimit_DIO_A);
+    DigitalInput bottomSwitchB = new DigitalInput(Ports.VerticalIndexer_BottomLimit_DIO_B);
+    DigitalInput bottomSwitchC = new DigitalInput(Ports.VerticalIndexer_BottomLimit_DIO_C);
+    DigitalInput middleSwitch = new DigitalInput(Ports.VerticalIndexer_MiddleLimit_DIO);
+    DigitalInput topSwitch = new DigitalInput(Ports.VerticalIndexer_TopLimit_DIO);
     Timer idleTimerSeconds = new Timer();
     return new VerticalIndexerSubsystem(
         verticalIndexer,
