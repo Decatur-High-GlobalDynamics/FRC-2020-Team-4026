@@ -17,8 +17,8 @@ public class AutoShootTesting extends CommandBase {
   private final ShooterSubsystem shooter;
 
   private final VerticalIndexerSubsystem verticalIndexer;
-  private int targetSpeedTop;
-  private int targetSpeedBot;
+  private double targetSpeedTop;
+  private double targetSpeedBot;
 
   public AutoShootTesting(ShooterSubsystem shooter, VerticalIndexerSubsystem verticalIndexer) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -35,7 +35,7 @@ public class AutoShootTesting extends CommandBase {
     // In the future, get speeds from the lookup table based on vision
     // Also, potentially rotate turret
     targetSpeedBot = shooter.getTargetSpeedBot();
-    targetSpeedTop = (int) (targetSpeedBot * (2.5 / 6.5));
+    targetSpeedTop = (double) (targetSpeedBot * (2.5 / 6.5));
     shooter.setShooterVelBot(targetSpeedBot);
     shooter.setShooterVelTop(targetSpeedTop);
   }

@@ -16,11 +16,11 @@ import frc.robot.TeamSparkMAX;
 import frc.robot.TeamUtils;
 
 public class ShooterSubsystem extends SubsystemBase {
-  private int maxRotationSpeedBot = 38000;
-  private int maxRotationSpeedTop = 28000;
+  private double maxRotationSpeedBot = 2226.5625;
+  private double maxRotationSpeedTop = 1640.625;
   // Use 24500 for bot at init line
 
-  private int targetSpeedBot = 10000;
+  private double targetSpeedBot = 585.9375;
   // Values for 95% (max power for shooting)
   private final TeamSparkMAX shooter_bottom;
   private final TeamSparkMAX shooter_top;
@@ -31,6 +31,9 @@ public class ShooterSubsystem extends SubsystemBase {
 
   private PidParameters topPidParameters = new PidParameters(0.3, 0.00015, 0.1, 0.031, 0, 1, 10);
   private PidParameters botPidParameters = new PidParameters(0.1, 0.00005, 0.1, 0.026, 250, 1, 10);
+
+  private double kPTop, kPBot, kITop, kIBot, kDTop, kDBot, kFTop, kFBot, kIZoneTop, kIZoneBot, kPeakOutputTop, kPeakOutputBot, maxVelTop, maxVelBot, maxAccTop, maxAccBot;
+  private int errorToleranceTop, errorToleranceBot;
 
   public ShooterSubsystem() {
     shooter_bottom = new TeamSparkMAX("Subsystems.Shooter.Bottom", Constants.BotShooterMotorCAN);
@@ -62,13 +65,68 @@ public class ShooterSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Subsystems.Shooter.targetSpeedTop", targetSpeedTop);
     */
     targetSpeedBot =
-        (int) SmartDashboard.getNumber("Subsystems.Shooter.targetSpeedBot", targetSpeedBot);
+        (double) SmartDashboard.getNumber("Subsystems.Shooter.targetSpeedBot", targetSpeedBot);
     SmartDashboard.putNumber("Subsystems.Shooter.targetSpeedBot", targetSpeedBot);
 
     SmartDashboard.putBoolean("Subsystems.Shooter.isShooterReady", this.isShooterReady());
 
     SmartDashboard.putNumber("Subsystems.Shooter.yAngleAdjusted", this.getVisionYAngle());
     SmartDashboard.putNumber("Subsystems.Shooter.knotDistance", this.getKnotDistance());
+
+    kPTop = SmartDashboard.getNumber("Subsystems.Shooter.kPTop", kPTop);
+    topPidParameters.kP = kPTop;
+    SmartDashboard.putNumber("Subsystems.Shooter.kPTop", kPTop);
+    kPBot = SmartDashboard.getNumber("Subsystems.Shooter.kPBot", kPBot);
+    botPidParameters.kP = kPBot;
+    SmartDashboard.putNumber("Subsystems.Shooter.kPBot", kPBot);
+    kITop = SmartDashboard.getNumber("Subsystems.Shooter.kITop", kITop);
+    topPidParameters.kI = kITop;
+    SmartDashboard.putNumber("Subsystems.Shooter.kITop", kITop);
+    kIBot = SmartDashboard.getNumber("Subsystems.Shooter.kIBot", kIBot);
+    botPidParameters.kI = kIBot;
+    SmartDashboard.putNumber("Subsystems.Shooter.kIBot", kIBot);
+    kDTop = SmartDashboard.getNumber("Subsystems.Shooter.kDTop", kDTop);
+    topPidParameters.kD = kDTop;
+    SmartDashboard.putNumber("Subsystems.Shooter.kDTop", kDTop);
+    kDBot = SmartDashboard.getNumber("Subsystems.Shooter.kDBot", kDBot);
+    botPidParameters.kD = kDBot;
+    SmartDashboard.putNumber("Subsystems.Shooter.kDBot", kDBot);
+    kFTop = SmartDashboard.getNumber("Subsystems.Shooter.kFTop", kFTop);
+    topPidParameters.kF = kFTop;
+    SmartDashboard.putNumber("Subsystems.Shooter.kFTop", kFTop);
+    kFBot = SmartDashboard.getNumber("Subsystems.Shooter.kFBot", kFBot);
+    botPidParameters.kF = kFBot;
+    SmartDashboard.putNumber("Subsystems.Shooter.kFBot", kFBot);
+    kIZoneTop = SmartDashboard.getNumber("Subsystems.Shooter.kIZoneTop", kIZoneTop);
+    topPidParameters.kIZone = kIZoneTop;
+    SmartDashboard.putNumber("Subsystems.Shooter.kIZoneTop", kIZoneTop);
+    kIZoneBot = SmartDashboard.getNumber("Subsystems.Shooter.kIZoneBot", kIZoneBot);
+    botPidParameters.kIZone = kIZoneBot;
+    SmartDashboard.putNumber("Subsystems.Shooter.kIZoneBot", kIZoneBot);
+    kPeakOutputTop = SmartDashboard.getNumber("Subsystems.Shooter.kPeakOutputTop", kPeakOutputTop);
+    topPidParameters.kPeakOutput = kPeakOutputTop;
+    SmartDashboard.putNumber("Subsystems.Shooter.kPeakOutputTop", kPeakOutputTop);
+    kPeakOutputBot = SmartDashboard.getNumber("Subsystems.Shooter.kPeakOutputBot", kPeakOutputBot);
+    botPidParameters.kPeakOutput = kPeakOutputBot;
+    SmartDashboard.putNumber("Subsystems.Shooter.kPeakOutputBot", kPeakOutputBot);
+    maxVelTop = SmartDashboard.getNumber("Subsystems.Shooter.maxVelTop", maxVelTop);
+    topPidParameters.maxVel = maxVelTop;
+    SmartDashboard.putNumber("Subsystems.Shooter.maxVelTop", maxVelTop);
+    maxVelBot = SmartDashboard.getNumber("Subsystems.Shooter.maxVelBot", maxVelBot);
+    botPidParameters.maxVel = maxVelBot;
+    SmartDashboard.putNumber("Subsystems.Shooter.maxVelBot", maxVelBot);
+    kIZoneTop = SmartDashboard.getNumber("Subsystems.Shooter.maxAccTop", maxAccTop);
+    topPidParameters.maxAcc = maxAccTop;
+    SmartDashboard.putNumber("Subsystems.Shooter.maxAccTop", maxAccTop);
+    maxAccBot = SmartDashboard.getNumber("Subsystems.Shooter.maxAccBot", maxAccBot);
+    botPidParameters.maxAcc = maxAccBot;
+    SmartDashboard.putNumber("Subsystems.Shooter.maxAccBot", maxAccBot);
+    errorToleranceTop = (int) SmartDashboard.getNumber("Subsystems.Shooter.errorToleranceTop", errorToleranceTop);
+    topPidParameters.errorTolerance = errorToleranceTop;
+    SmartDashboard.putNumber("Subsystems.Shooter.errorToleranceTop", errorToleranceTop);
+    errorToleranceBot = (int) SmartDashboard.getNumber("Subsystems.Shooter.errorToleranceBot", errorToleranceBot);
+    botPidParameters.errorTolerance = errorToleranceBot;
+    SmartDashboard.putNumber("Subsystems.Shooter.errorToleranceBot", errorToleranceBot);
   }
 
   public boolean isShooterReady() {
@@ -109,31 +167,31 @@ public class ShooterSubsystem extends SubsystemBase {
     return shooter_bottom.canEncoder.getVelocity();
   }
 
-  public void setShooterVelTop(int speed) {
-    speed = (int) MathUtil.clamp(speed, 0, maxRotationSpeedTop);
+  public void setShooterVelTop(double speed) {
+    speed = (double) MathUtil.clamp(speed, 0, maxRotationSpeedTop);
     shooter_top.configureWithPidParameters(topPidParameters, 0);
     shooter_top.setSmartMotionVelocity(speed);
     // this.shooter_top.set(speed);
   }
 
-  public void setShooterVelBot(int speed) {
-    speed = (int) MathUtil.clamp(speed, 0, maxRotationSpeedBot);
+  public void setShooterVelBot(double speed) {
+    speed = (double) MathUtil.clamp(speed, 0, maxRotationSpeedBot);
     shooter_bottom.configureWithPidParameters(botPidParameters, 0);
     shooter_bottom.setSmartMotionVelocity(speed);
     // this.shooter_bottom.set(speed);
   }
 
-  public int getMaxVelTop() {
-    return (int) maxRotationSpeedTop;
+  public double getMaxVelTop() {
+    return (double) maxRotationSpeedTop;
   }
 
-  public int getMaxVelBot() {
-    return (int) maxRotationSpeedBot;
+  public double getMaxVelBot() {
+    return (double) maxRotationSpeedBot;
   }
 
   public void setMotorVelocities(double topSpeedFraction, double botSpeedFraction) {
-    setShooterVelTop((int) (topSpeedFraction * maxRotationSpeedTop));
-    setShooterVelBot((int) (botSpeedFraction * maxRotationSpeedBot));
+    setShooterVelTop((double) (topSpeedFraction * maxRotationSpeedTop));
+    setShooterVelBot((double) (botSpeedFraction * maxRotationSpeedBot));
   }
 
   /*
@@ -142,7 +200,7 @@ public class ShooterSubsystem extends SubsystemBase {
   }
   */
 
-  public int getTargetSpeedBot() {
+  public double getTargetSpeedBot() {
     return targetSpeedBot;
   }
 
