@@ -15,8 +15,8 @@ import frc.robot.subsystems.NavigationSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 
 /**
- * ISSUE #114: in the future: make this better, we want to have real pathing once pathfinding is a thing,
- * instead of turning in place then going forwards
+ * ISSUE #114: in the future: make this better, we want to have real pathing once pathfinding is a
+ * thing, instead of turning in place then going forwards
  */
 public class HunterKillerCommand extends CommandBase {
   DriveTrainSubsystem driveTrain;
