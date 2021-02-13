@@ -125,11 +125,9 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
   private void updateMaxDrivetrainOutputs() {
     maxOutputSlow =
-        SmartDashboard.getNumber(
-            "Subsystems.DriveTrain.maxPercentOutputSlow", maxOutputSlow);
-            maxOutputFast =
-        SmartDashboard.getNumber(
-            "Subsystems.DriveTrain.maxPercentOutputFast", maxOutputFast);
+        SmartDashboard.getNumber("Subsystems.DriveTrain.maxPercentOutputSlow", maxOutputSlow);
+    maxOutputFast =
+        SmartDashboard.getNumber("Subsystems.DriveTrain.maxPercentOutputFast", maxOutputFast);
     SmartDashboard.putNumber("Subsystems.DriveTrain.maxOutputSlow", maxOutputSlow);
     SmartDashboard.putNumber("Subsystems.DriveTrain.maxOutputFast", maxOutputFast);
   }
@@ -150,41 +148,39 @@ public class DriveTrainSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Subsystems.DriveTrain.rightPowerDemand", rightPowerSet);
   }
 
-  
-
-    private void updateMotorOutputs() {
-      // Scale it by the current max power - so if we're not in fast mode, everything goes at half
-      // speed
-      double cappedLeftPowerDesired = leftPowerSet * currentMaxPower;
-      double cappedRightPowerDesired = rightPowerSet * currentMaxPower;
-      // Set up vars for putting the final power in - they need to be set up here because of scope
-      // stuff
-      double nextRightPower;
-      double nextleftPower;
-      // If you're ramping, use the calculate function on the limiter to calculate the next speed
-      if (rampingOn) {
-        nextleftPower = leftLimiter.calculate(cappedLeftPowerDesired);
-        nextRightPower = rightLimiter.calculate(cappedRightPowerDesired);
-      } else {
-        // If you aren't ramping, just set your next power to whatever asked
-        nextleftPower = cappedLeftPowerDesired;
-        nextRightPower = cappedRightPowerDesired;
-        // This is important - it ensures the limiters always keep up with the current speed. They
-        // usually like to be called with calculate, but that's obviously not
-        // possible when not ramping, so instead we just constantly force the limiters to catch up
-        // with us. This means that whenever we start ramping again they'll be caught up
-        rightLimiter.reset(nextRightPower);
-        leftLimiter.reset(nextleftPower);
-      }
-
-      // Print the power that's going to the motors
-      SmartDashboard.putNumber("Subsystems.DriveTrain.rightPowerGiven", nextRightPower);
-      SmartDashboard.putNumber("Subsystems.DriveTrain.leftPowerGiven", nextleftPower);
-      // Send it to the motors. The false at the end lets you not square the power - bc that leads to
-      // weird ramping stuff
-      drive.tankDrive(nextleftPower, nextRightPower, false);
+  private void updateMotorOutputs() {
+    // Scale it by the current max power - so if we're not in fast mode, everything goes at half
+    // speed
+    double cappedLeftPowerDesired = leftPowerSet * currentMaxPower;
+    double cappedRightPowerDesired = rightPowerSet * currentMaxPower;
+    // Set up vars for putting the final power in - they need to be set up here because of scope
+    // stuff
+    double nextRightPower;
+    double nextleftPower;
+    // If you're ramping, use the calculate function on the limiter to calculate the next speed
+    if (rampingOn) {
+      nextleftPower = leftLimiter.calculate(cappedLeftPowerDesired);
+      nextRightPower = rightLimiter.calculate(cappedRightPowerDesired);
+    } else {
+      // If you aren't ramping, just set your next power to whatever asked
+      nextleftPower = cappedLeftPowerDesired;
+      nextRightPower = cappedRightPowerDesired;
+      // This is important - it ensures the limiters always keep up with the current speed. They
+      // usually like to be called with calculate, but that's obviously not
+      // possible when not ramping, so instead we just constantly force the limiters to catch up
+      // with us. This means that whenever we start ramping again they'll be caught up
+      rightLimiter.reset(nextRightPower);
+      leftLimiter.reset(nextleftPower);
     }
-  
+
+    // Print the power that's going to the motors
+    SmartDashboard.putNumber("Subsystems.DriveTrain.rightPowerGiven", nextRightPower);
+    SmartDashboard.putNumber("Subsystems.DriveTrain.leftPowerGiven", nextleftPower);
+    // Send it to the motors. The false at the end lets you not square the power - bc that leads to
+    // weird ramping stuff
+    drive.tankDrive(nextleftPower, nextRightPower, false);
+  }
+
   /**
    * caps the input power between -1 and +1
    *
@@ -214,10 +210,10 @@ public class DriveTrainSubsystem extends SubsystemBase {
   public void setDriveTrainMode(DriveTrainMode mode) {
     switch (mode) {
       case SLOW:
-      currentMaxPower = maxOutputSlow;
+        currentMaxPower = maxOutputSlow;
         break;
       case FAST:
-      currentMaxPower = maxOutputFast;
+        currentMaxPower = maxOutputFast;
         break;
     }
   }
