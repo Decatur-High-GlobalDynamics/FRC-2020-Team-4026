@@ -28,7 +28,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
   final WPI_TalonFX leftDriveFalconMain;
   final WPI_TalonFX rightDriveFalconSub;
   final WPI_TalonFX leftDriveFalconSub;
-  // TODO: Fix max power change now that it's in units per second
+  // ISSUE #115: Fix max power change now that it's in units per second
   public double maxPowerChange = 0.43;
   public static double maxOutputSlow = .5;
   public static double maxOutputFast = 1;
@@ -237,9 +237,11 @@ public class DriveTrainSubsystem extends SubsystemBase {
     return (int) Math.round(speed / (10 * DriveTrainConstants.kEncoderDistancePerPulse));
   }
 
+  /* Never used...
   private double ticksPer100msToSpeedInMeters(int ticks) {
     return ticks * 10 * DriveTrainConstants.kEncoderDistancePerPulse;
   }
+  */
 
   public void setRamping(boolean ramping) {
     rampingOn = ramping;

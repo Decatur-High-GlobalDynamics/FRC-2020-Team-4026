@@ -1,5 +1,6 @@
 package frc.robot;
 
+import java.util.Objects;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class PidParameters {
@@ -46,6 +47,11 @@ public class PidParameters {
         && otherPP.kIZone == kIZone
         && otherPP.kPeakOutput == kPeakOutput
         && otherPP.errorTolerance == errorTolerance;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(kP, kI, kD, kF, kIZone, kPeakOutput, errorTolerance);
   }
 
   /** Use these parameters on a motor */

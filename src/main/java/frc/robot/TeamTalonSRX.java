@@ -117,7 +117,7 @@ public class TeamTalonSRX extends WPI_TalonSRX {
       return 0;
     }
     double currentSpeed = getSelectedSensorVelocity();
-    return (double) (getClosedLoopTarget() - currentSpeed);
+    return (getClosedLoopTarget() - currentSpeed);
   }
 
   public void configureWithPidParameters(PidParameters pidParameters, int pidSlotIndex) {

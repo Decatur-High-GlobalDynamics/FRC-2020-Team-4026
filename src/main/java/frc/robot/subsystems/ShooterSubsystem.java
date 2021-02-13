@@ -132,23 +132,23 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void setShooterVelTop(int speed) {
-    speed = (int) MathUtil.clamp(speed, 0, maxRotationSpeedTop);
+    speed = MathUtil.clamp(speed, 0, maxRotationSpeedTop);
     shooter_top.configureWithPidParameters(topPidParameters, 0);
     this.shooter_top.set(ControlMode.Velocity, speed);
   }
 
   public void setShooterVelBot(int speed) {
-    speed = (int) MathUtil.clamp(speed, 0, maxRotationSpeedBot);
+    speed = MathUtil.clamp(speed, 0, maxRotationSpeedBot);
     shooter_bottom.configureWithPidParameters(botPidParameters, 0);
     this.shooter_bottom.set(ControlMode.Velocity, speed);
   }
 
   public int getMaxVelTop() {
-    return (int) maxRotationSpeedTop;
+    return maxRotationSpeedTop;
   }
 
   public int getMaxVelBot() {
-    return (int) maxRotationSpeedBot;
+    return maxRotationSpeedBot;
   }
 
   public void setMotorVelocities(double topSpeedFraction, double botSpeedFraction) {
