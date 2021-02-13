@@ -91,3 +91,8 @@ jar {
     from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
     manifest edu.wpi.first.gradlerio.GradleRIOPlugin.javaManifest(ROBOT_MAIN_CLASS)
 }
+
+// https://github.com/markkolich/blog/blob/master/content/entries/fail-build-on-java-compiler-warnings.md
+tasks.withType(JavaCompile) {
+    options.compilerArgs << "-Xlint:all" << "-Xlint:-processing" << "-Werror"
+}
