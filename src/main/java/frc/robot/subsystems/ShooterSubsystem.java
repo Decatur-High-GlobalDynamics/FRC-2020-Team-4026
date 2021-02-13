@@ -48,10 +48,7 @@ public class ShooterSubsystem extends SubsystemBase {
       maxAccBot = 0;
   private static int errorToleranceTop = 10, errorToleranceBot = 10;
 
-  private PidParameters topPidParameters =
-      new PidParameters(kPTop, kITop, kDTop, kFTop, kIZoneTop, kPeakOutputTop, errorToleranceTop);
-  private PidParameters botPidParameters =
-      new PidParameters(kPBot, kIBot, kDBot, kFBot, kIZoneBot, kPeakOutputBot, errorToleranceBot);
+  private PidParameters topPidParameters, botPidParameters;
 
   public ShooterSubsystem() {
     throw new IllegalArgumentException(
@@ -72,6 +69,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     shooter_bottom.setInverted(true);
     shooter_top.setInverted(false);
+    stop();
   }
 
   public static ShooterSubsystem Create() {
