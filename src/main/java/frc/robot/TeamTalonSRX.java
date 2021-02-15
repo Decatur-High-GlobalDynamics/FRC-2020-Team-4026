@@ -9,7 +9,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
  * information
  */
 public class TeamTalonSRX extends WPI_TalonSRX implements TeamTalon {
-  
+
   private double lastTelemetryUpdate = 0;
 
   protected final String smartDashboardPrefix;
@@ -52,7 +52,7 @@ public class TeamTalonSRX extends WPI_TalonSRX implements TeamTalon {
     return numEStops;
   }
 
-  public void setNumEStops (int val) {
+  public void setNumEStops(int val) {
     numEStops = val;
   }
 

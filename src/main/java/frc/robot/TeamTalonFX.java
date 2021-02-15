@@ -4,12 +4,12 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 /**
- * A wrapper class for Motors that helps to consistently and easily perform the
- * following functions: -Keep current and max speeds -Get and Reset encoder
- * values -Lots and lots of SmartDashboard information
+ * A wrapper class for Motors that helps to consistently and easily perform the following functions:
+ * -Keep current and max speeds -Get and Reset encoder values -Lots and lots of SmartDashboard
+ * information
  */
 public class TeamTalonFX extends WPI_TalonFX implements TeamTalon {
-  
+
   private double lastTelemetryUpdate = 0;
 
   protected final String smartDashboardPrefix;
@@ -52,7 +52,7 @@ public class TeamTalonFX extends WPI_TalonFX implements TeamTalon {
     return numEStops;
   }
 
-  public void setNumEStops (int val) {
+  public void setNumEStops(int val) {
     numEStops = val;
   }
 
