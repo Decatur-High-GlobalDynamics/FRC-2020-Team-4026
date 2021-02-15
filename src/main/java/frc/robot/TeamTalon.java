@@ -1,8 +1,11 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.IMotorControllerEnhanced;
 
-public interface TeamTalon {
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+public interface TeamTalon extends IMotorControllerEnhanced {
     public static boolean isPidControlMode(ControlMode mode) {
         switch (mode) {
             case Current:
@@ -16,12 +19,30 @@ public interface TeamTalon {
           }
     }
 
+    public int getNumEStops();
+
+    public void setNumEStops(int val);
+
+    public double getLastTelemetryUpdate();
+
+    public void setLastTelemetryUpdate(double val);
+
+    public double getMaxSpeed();
+
+    public void setMaxSpeed(double val);
+
+    public String getSmartDashboardPrefix();
+
+    public PidParameters[] getPidProfiles();
+
+    public static double telemetryUpdateInterval_secs = 0.0;
+
     public default boolean isRunningPidControlMode() {
         return TeamTalon.isPidControlMode(getControlMode());
     }
 
     public default void noteEmergencyStop() {
-        numEStops++;
+        setNumEStops(getNumEStops() + 1);
     }
 
     public long getCurrentEncoderValue();
@@ -31,74 +52,74 @@ public interface TeamTalon {
     public default void periodic() {
         double now = TeamUtils.getCurrentTime();
 
-        if ((now - lastTelemetryUpdate) < telemetryUpdateInterval_secs) {
+        if ((now - getLastTelemetryUpdate()) < telemetryUpdateInterval_secs) {
         return;
         }
 
-        lastTelemetryUpdate = now;
+        setLastTelemetryUpdate(now);
 
         long currentEncoderValue = getCurrentEncoderValue();
-        double currentSpeed = getSelectedSensorVelocity();
+        double currentSpeed = getSelectedSensorVelocity(0);
 
-        if (maxSpeed == Double.MAX_VALUE || currentSpeed > maxSpeed) maxSpeed = currentSpeed;
+        if (getMaxSpeed() == Double.MAX_VALUE || currentSpeed > getMaxSpeed()) setMaxSpeed(currentSpeed);
 
         if (isRunningPidControlMode()) {
-        SmartDashboard.putBoolean(smartDashboardPrefix + ".PID", true);
+        SmartDashboard.putBoolean(getSmartDashboardPrefix() + ".PID", true);
         } else {
-        SmartDashboard.putBoolean(smartDashboardPrefix + ".PID", false);
+        SmartDashboard.putBoolean(getSmartDashboardPrefix() + ".PID", false);
         }
 
         if (getControlMode() == ControlMode.Velocity) {
         double currentError = getVelocityError();
-        SmartDashboard.putNumber(smartDashboardPrefix + ".VelocityError", currentError);
+        SmartDashboard.putNumber(getSmartDashboardPrefix() + ".VelocityError", currentError);
         } else {
-        SmartDashboard.putNumber(smartDashboardPrefix + ".VelocityError", 0);
+        SmartDashboard.putNumber(getSmartDashboardPrefix() + ".VelocityError", 0);
         }
 
-        SmartDashboard.putNumber(smartDashboardPrefix + ".PowerPercent", getMotorOutputPercent());
+        SmartDashboard.putNumber(getSmartDashboardPrefix() + ".PowerPercent", getMotorOutputPercent());
 
-        SmartDashboard.putNumber(smartDashboardPrefix + ".Position-ticks", currentEncoderValue);
+        SmartDashboard.putNumber(getSmartDashboardPrefix() + ".Position-ticks", currentEncoderValue);
 
-        SmartDashboard.putNumber(smartDashboardPrefix + ".speedPer100ms", currentSpeed);
-        SmartDashboard.putNumber(smartDashboardPrefix + ".speedPerSec", currentSpeed * 10);
+        SmartDashboard.putNumber(getSmartDashboardPrefix() + ".speedPer100ms", currentSpeed);
+        SmartDashboard.putNumber(getSmartDashboardPrefix() + ".speedPerSec", currentSpeed * 10);
 
-        SmartDashboard.putNumber(smartDashboardPrefix + ".maxSpeedPer100ms", maxSpeed);
-        SmartDashboard.putNumber(smartDashboardPrefix + ".maxSpeedPerSec", maxSpeed * 10);
+        SmartDashboard.putNumber(getSmartDashboardPrefix() + ".maxSpeedPer100ms", getMaxSpeed());
+        SmartDashboard.putNumber(getSmartDashboardPrefix() + ".maxSpeedPerSec", getMaxSpeed() * 10);
 
-        SmartDashboard.putString(smartDashboardPrefix + "Mode", getControlMode().toString());
-        SmartDashboard.putNumber(smartDashboardPrefix + "EmergencyStops", numEStops);
+        SmartDashboard.putString(getSmartDashboardPrefix() + "Mode", getControlMode().toString());
+        SmartDashboard.putNumber(getSmartDashboardPrefix() + "EmergencyStops", getNumEStops());
 
         switch (getControlMode()) {
         case Position:
         case Velocity:
-            SmartDashboard.putNumber(smartDashboardPrefix + "Target", getClosedLoopTarget(0));
-            SmartDashboard.putNumber(smartDashboardPrefix + "Error", getClosedLoopError(0));
+            SmartDashboard.putNumber(getSmartDashboardPrefix() + "Target", getClosedLoopTarget(0));
+            SmartDashboard.putNumber(getSmartDashboardPrefix() + "Error", getClosedLoopError(0));
             break;
         default:
             // Fill in Zeros when we're not in a mode that is using it
-            SmartDashboard.putNumber(smartDashboardPrefix + "Target", 0);
-            SmartDashboard.putNumber(smartDashboardPrefix + "Error", 0);
+            SmartDashboard.putNumber(getSmartDashboardPrefix() + "Target", 0);
+            SmartDashboard.putNumber(getSmartDashboardPrefix() + "Error", 0);
         }
     };
 
-    public double getVelocityError()
+    public default double getVelocityError()
     {
         if (getControlMode() != ControlMode.Velocity) {
             return 0;
         }
-        double currentSpeed = getSelectedSensorVelocity();
-        return (getClosedLoopTarget() - currentSpeed);
+        double currentSpeed = getSelectedSensorVelocity(0);
+        return (getClosedLoopTarget(0) - currentSpeed);
     }
 
-    public void configureWithPidParameters(PidParameters pidParameters, int pidSlotIndex) {
-        pidProfiles[pidSlotIndex] = pidParameters;
+    public default void configureWithPidParameters(PidParameters pidParameters, int pidSlotIndex) {
+        getPidProfiles()[pidSlotIndex] = pidParameters;
 
-        config_kF(pidSlotIndex, pidParameters.kF);
-        config_kP(pidSlotIndex, pidParameters.kP);
-        config_kI(pidSlotIndex, pidParameters.kI);
-        config_kD(pidSlotIndex, pidParameters.kD);
-        configPeakOutputForward(pidParameters.kPeakOutput);
-        configPeakOutputReverse(-pidParameters.kPeakOutput);
+        config_kF(pidSlotIndex, pidParameters.kF, 30);
+        config_kP(pidSlotIndex, pidParameters.kP, 30);
+        config_kI(pidSlotIndex, pidParameters.kI, 30);
+        config_kD(pidSlotIndex, pidParameters.kD, 30);
+        configPeakOutputForward(pidParameters.kPeakOutput, 30);
+        configPeakOutputReverse(-pidParameters.kPeakOutput, 30);
         configAllowableClosedloopError(pidSlotIndex, pidParameters.errorTolerance, 30);
     }
 }
