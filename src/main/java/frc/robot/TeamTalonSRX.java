@@ -8,7 +8,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
  * -Keep current and max speeds -Get and Reset encoder values -Lots and lots of SmartDashboard
  * information
  */
-public class TeamTalonSRX extends WPI_TalonSRX implements TeamTalon {
+public class TeamTalonSRX extends WPI_TalonSRX implements ITeamTalon {
 
   private double lastTelemetryUpdate = 0;
 

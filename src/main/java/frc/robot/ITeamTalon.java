@@ -5,7 +5,7 @@ import com.ctre.phoenix.motorcontrol.IMotorControllerEnhanced;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public interface TeamTalon extends IMotorControllerEnhanced {
+public interface ITeamTalon extends IMotorControllerEnhanced {
   public static boolean isPidControlMode(ControlMode mode) {
     switch (mode) {
       case Current:
@@ -38,7 +38,7 @@ public interface TeamTalon extends IMotorControllerEnhanced {
   public static double telemetryUpdateInterval_secs = 0.0;
 
   public default boolean isRunningPidControlMode() {
-    return TeamTalon.isPidControlMode(getControlMode());
+    return ITeamTalon.isPidControlMode(getControlMode());
   }
 
   public default void noteEmergencyStop() {
