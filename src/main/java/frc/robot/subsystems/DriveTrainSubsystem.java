@@ -28,8 +28,8 @@ public class DriveTrainSubsystem extends SubsystemBase {
   final WPI_TalonFX leftDriveFalconMain;
   final WPI_TalonFX rightDriveFalconSub;
   final WPI_TalonFX leftDriveFalconSub;
-  // ISSUE #115: Fix max power change now that it's in units per second
-  public double maxPowerChange = 0.43;
+  // This is a temp number that's theoretically best
+  public double maxPowerChange = 21.5;
   public static double maxOutputSlow = .5;
   public static double maxOutputFast = 1;
   public double currentMaxPower = maxOutputSlow;
