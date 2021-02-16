@@ -36,7 +36,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
   TalonSRXSimCollection leftDriveFalconMainSim;
   TalonSRXSimCollection rightDriveFalconSubSim;
   TalonSRXSimCollection leftDriveFalconSubSim;
-  
+
   // This was tested to be the lowest value where problems weren't had with the squaring thing that
   // differential drive does
   public double maxPowerChangeDefault = 0.43;
@@ -71,10 +71,10 @@ public class DriveTrainSubsystem extends SubsystemBase {
   }
 
   public DriveTrainSubsystem(
-    ITeamTalon rightDriveFalconMain,
-    ITeamTalon leftDriveFalconMain,
-    ITeamTalon rightDriveFalconSub,
-    ITeamTalon leftDriveFalconSub) {
+      ITeamTalon rightDriveFalconMain,
+      ITeamTalon leftDriveFalconMain,
+      ITeamTalon rightDriveFalconSub,
+      ITeamTalon leftDriveFalconSub) {
     this.rightDriveFalconMain =
         Objects.requireNonNull(rightDriveFalconMain, "rightDriveFalconMain must not be null");
     this.leftDriveFalconMain =
@@ -95,7 +95,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
     configs.primaryPID.selectedFeedbackSensor = FeedbackDevice.IntegratedSensor;
     rightDriveFalconMain.configBaseAllSettings(configs);
     leftDriveFalconMain.configBaseAllSettings(configs);
-    
+
     leftDriveFalconSub.follow(leftDriveFalconMain);
     rightDriveFalconSub.follow(rightDriveFalconMain);
 
@@ -109,10 +109,14 @@ public class DriveTrainSubsystem extends SubsystemBase {
   }
 
   public static DriveTrainSubsystem Create() {
-    ITeamTalon rightDriveFalconMainCAN = new TeamTalonFX("Subsystems.DriveTrain.RightMain", Ports.RightDriveFalconMainCAN);
-    ITeamTalon leftDriveFalconMainCAN = new TeamTalonFX("Subsystems.DriveTrain.LeftMain", Ports.LeftDriveFalconMainCAN);
-    ITeamTalon rightDriveFalconSubCAN = new TeamTalonFX("Subsystems.DriveTrain.RightSub", Ports.RightDriveFalconSubCAN);
-    ITeamTalon leftDriveFalconSub = new TeamTalonFX("Subsystems.DriveTrain.LeftSub", Ports.LeftDriveFalconSubCAN);
+    ITeamTalon rightDriveFalconMainCAN =
+        new TeamTalonFX("Subsystems.DriveTrain.RightMain", Ports.RightDriveFalconMainCAN);
+    ITeamTalon leftDriveFalconMainCAN =
+        new TeamTalonFX("Subsystems.DriveTrain.LeftMain", Ports.LeftDriveFalconMainCAN);
+    ITeamTalon rightDriveFalconSubCAN =
+        new TeamTalonFX("Subsystems.DriveTrain.RightSub", Ports.RightDriveFalconSubCAN);
+    ITeamTalon leftDriveFalconSub =
+        new TeamTalonFX("Subsystems.DriveTrain.LeftSub", Ports.LeftDriveFalconSubCAN);
     return new DriveTrainSubsystem(
         rightDriveFalconMainCAN,
         leftDriveFalconMainCAN,

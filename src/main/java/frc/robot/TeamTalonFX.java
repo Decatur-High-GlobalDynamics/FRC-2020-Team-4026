@@ -77,5 +77,4 @@ public class TeamTalonFX extends WPI_TalonFX implements ITeamTalon {
   public ErrorCode configBaseAllSettings(BaseTalonConfiguration allConfigs) {
     return configAllSettings(allConfigs);
   }
-
 }
