@@ -13,12 +13,9 @@ import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.commands.AutoIntakeIndex;
-import frc.robot.commands.AutoShootWithHorizontal;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.commands.shooterCommands.ConstantShootCommand;
 import frc.robot.commands.indexerCommands.HorizontalIndexerIntakeCommand;
 import frc.robot.commands.indexerCommands.HorizontalIndexerOuttakeCommand;
-import frc.robot.commands.shooterCommands.PidShootCommand;
 import frc.robot.commands.climberCommands.SimpleClimberControlCommand;
 import frc.robot.commands.intakeCommands.SimpleIntakeCommand;
 import frc.robot.commands.intakeCommands.SimpleOuttakeCommand;
@@ -26,7 +23,6 @@ import frc.robot.commands.turretCommands.SimpleTurretCCWCommand;
 import frc.robot.commands.turretCommands.SimpleTurretCWCommand;
 import frc.robot.commands.turretCommands.PointTurretAtTargetWithAngleCommand;
 import frc.robot.commands.turretCommands.PrepareTurretCommand;
-import frc.robot.commands.drivingCommands.DriveEncoders;
 import frc.robot.commands.drivingCommands.DriveStraightCommand;
 import frc.robot.commands.turretCommands.TurretToLimitCommand;
 import frc.robot.commands.indexerCommands.VerticalIndexerDownCommand;
@@ -36,14 +32,12 @@ import frc.robot.commands.drivingCommands.DisableRampingCommand;
 import frc.robot.commands.drivingCommands.EnableBrakeModeCommand;
 import frc.robot.commands.drivingCommands.SetSpeedMode;
 import frc.robot.commands.drivingCommands.StopDrivetrainCommand;
-import frc.robot.commands.shooterCommands.MaxPowerShootCommand;
 import frc.robot.commands.drivingCommands.TankDriveCommand;
 import frc.robot.commands.drivingCommands.GTADriveCommand;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.NavigationSubsystem;
-import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
 import frc.robot.subsystems.VerticalIndexerSubsystem;
 import frc.robot.subsystems.HorizontalIndexerSubsystem;
@@ -64,7 +58,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DriveTrainSubsystem driveTrain = DriveTrainSubsystem.Create();
   private final IntakeSubsystem intake = IntakeSubsystem.Create();
-  //private final ShooterSubsystem shooter = ShooterSubsystem.Create();
+  // private final ShooterSubsystem shooter = ShooterSubsystem.Create();
   private final VerticalIndexerSubsystem verticalIndexer = VerticalIndexerSubsystem.Create();
   private final TurretSubsystem turret = TurretSubsystem.Create();
   private final HorizontalIndexerSubsystem horizontalIndexer = HorizontalIndexerSubsystem.Create();
@@ -195,7 +189,7 @@ public class RobotContainer {
     // When Left Trigger is held, Vertical Indexer down
     leftTrigger.whileHeld(new VerticalIndexerDownCommand(this.verticalIndexer));
     // When button 5 is pressed (Right Bumper), shoot at constant speed
-    //rightBumper.whileHeld(new PidShootCommand(this.shooter, 1, 1));
+    // rightBumper.whileHeld(new PidShootCommand(this.shooter, 1, 1));
     // --------Turret Button Bindings--------
     // When right bumper pressed, aim at vision target if possible
     leftBumper.whileHeld(new PointTurretAtTargetWithAngleCommand(this.turret));
@@ -208,7 +202,7 @@ public class RobotContainer {
     // When button 10 is pressed, get the turret out of the way for climbing
     start.whenPressed(new PrepareTurretCommand(this.turret));
 
-    //dPadUp.whileHeld(new MaxPowerShootCommand(shooter));
+    // dPadUp.whileHeld(new MaxPowerShootCommand(shooter));
 
     // --------Shooting Button Bindings--------
     // When button 8 (Right Trigger) is pressed, start constant shooting
