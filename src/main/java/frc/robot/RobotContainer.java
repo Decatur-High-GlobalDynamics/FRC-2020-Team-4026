@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.commands.AutoIntakeIndex;
+import frc.robot.commands.AutoShootWithHorizontal;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.indexerCommands.HorizontalIndexerIntakeCommand;
 import frc.robot.commands.indexerCommands.HorizontalIndexerOuttakeCommand;
@@ -28,7 +29,9 @@ import frc.robot.commands.turretCommands.TurretToLimitCommand;
 import frc.robot.commands.indexerCommands.VerticalIndexerDownCommand;
 import frc.robot.commands.indexerCommands.VerticalIndexerUpCommand;
 import frc.robot.commands.navigationCommands.UpdateNavigationCommand;
+import frc.robot.commands.shooterCommands.ConstantShootCommand;
 import frc.robot.commands.drivingCommands.DisableRampingCommand;
+import frc.robot.commands.drivingCommands.DriveEncoders;
 import frc.robot.commands.drivingCommands.EnableBrakeModeCommand;
 import frc.robot.commands.drivingCommands.SetSpeedMode;
 import frc.robot.commands.drivingCommands.StopDrivetrainCommand;
@@ -38,6 +41,7 @@ import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.NavigationSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
 import frc.robot.subsystems.VerticalIndexerSubsystem;
 import frc.robot.subsystems.HorizontalIndexerSubsystem;
@@ -58,7 +62,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DriveTrainSubsystem driveTrain = DriveTrainSubsystem.Create();
   private final IntakeSubsystem intake = IntakeSubsystem.Create();
-  // private final ShooterSubsystem shooter = ShooterSubsystem.Create();
+  private final ShooterSubsystem shooter = ShooterSubsystem.Create();
   private final VerticalIndexerSubsystem verticalIndexer = VerticalIndexerSubsystem.Create();
   private final TurretSubsystem turret = TurretSubsystem.Create();
   private final HorizontalIndexerSubsystem horizontalIndexer = HorizontalIndexerSubsystem.Create();
@@ -225,7 +229,7 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  /*public Command getAutonomousCommand() {
+  public Command getAutonomousCommand() {
     PossibleAutos choice = autoChoice.getSelected();
     switch (choice) {
       case IN_FRONT_OF_TARGET_MAX_POWER:
@@ -241,7 +245,7 @@ public class RobotContainer {
     // This command drives forward 4 feet when run
     Command driveForward = new DriveEncoders(1.2192, .5, driveTrain);
     // This shoots when shooter speed is over 80%
-    //Command shoot =
+    Command shoot =
         new AutoShootWithHorizontal(
             shooter, verticalIndexer, horizontalIndexer, (int) (shooter.getMaxVelBot() * 0.80));
     // This spins up the shooter when run
@@ -266,7 +270,7 @@ public class RobotContainer {
     // This drives and spins up, and when driving finishes, shoots for 10 seconds
     return (driveForward.raceWith(spinUpShooter))
         .andThen((shoot.withTimeout(5)).andThen(driveBack));
-  }*/
+  }
 
   public Command getStopDriveTrainCommand() {
     return new StopDrivetrainCommand(driveTrain);
