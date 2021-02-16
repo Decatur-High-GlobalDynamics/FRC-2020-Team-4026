@@ -8,26 +8,34 @@
 package frc.robot.subsystems;
 
 import java.util.Objects;
+
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.TalonSRXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.wpilibj.SlewRateLimiter;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpiutil.math.MathUtil;
+
 import frc.robot.constants.DriveTrainConstants;
 import frc.robot.constants.Ports;
-import edu.wpi.first.wpiutil.math.MathUtil;
+import frc.robot.ITeamTalon;
+import frc.robot.TeamTalonFX;
 
 public class DriveTrainSubsystem extends SubsystemBase {
   final DifferentialDrive drive;
 
-  final WPI_TalonFX rightDriveFalconMain;
-  final WPI_TalonFX leftDriveFalconMain;
-  final WPI_TalonFX rightDriveFalconSub;
-  final WPI_TalonFX leftDriveFalconSub;
+  ITeamTalon rightDriveFalconMain;
+  ITeamTalon leftDriveFalconMain;
+  ITeamTalon rightDriveFalconSub;
+  ITeamTalon leftDriveFalconSub;
+  TalonSRXSimCollection rightDriveFalconMainSim;
+  TalonSRXSimCollection leftDriveFalconMainSim;
+  TalonSRXSimCollection rightDriveFalconSubSim;
+  TalonSRXSimCollection leftDriveFalconSubSim;
   // This is a temp number that's theoretically best
   public double maxPowerChange = 21.5;
   public static double maxOutputSlow = .5;
@@ -60,10 +68,10 @@ public class DriveTrainSubsystem extends SubsystemBase {
   }
 
   public DriveTrainSubsystem(
-      WPI_TalonFX rightDriveFalconMain,
-      WPI_TalonFX leftDriveFalconMain,
-      WPI_TalonFX rightDriveFalconSub,
-      WPI_TalonFX leftDriveFalconSub) {
+      ITeamTalon rightDriveFalconMain,
+      ITeamTalon leftDriveFalconMain,
+      ITeamTalon rightDriveFalconSub,
+      ITeamTalon leftDriveFalconSub) {
     this.rightDriveFalconMain =
         Objects.requireNonNull(rightDriveFalconMain, "rightDriveFalconMain must not be null");
     this.leftDriveFalconMain =
@@ -72,6 +80,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
         Objects.requireNonNull(rightDriveFalconSub, "rightDriveFalconSub must not be null");
     this.leftDriveFalconSub =
         Objects.requireNonNull(leftDriveFalconSub, "leftDriveFalconSub must not be null");
+
     setupDrivetrain();
     drive = new DifferentialDrive(leftDriveFalconMain, rightDriveFalconMain);
     setupDifferentialDrive();
@@ -81,8 +90,8 @@ public class DriveTrainSubsystem extends SubsystemBase {
     // This configures the falcons to use their internal encoders
     TalonFXConfiguration configs = new TalonFXConfiguration();
     configs.primaryPID.selectedFeedbackSensor = FeedbackDevice.IntegratedSensor;
-    rightDriveFalconMain.configAllSettings(configs);
-    leftDriveFalconMain.configAllSettings(configs);
+    rightDriveFalconMain.configBaseAllSettings(configs);
+    leftDriveFalconMain.configBaseAllSettings(configs);
 
     leftDriveFalconSub.follow(leftDriveFalconMain);
     rightDriveFalconSub.follow(rightDriveFalconMain);
@@ -97,10 +106,14 @@ public class DriveTrainSubsystem extends SubsystemBase {
   }
 
   public static DriveTrainSubsystem Create() {
-    WPI_TalonFX rightDriveFalconMainCAN = new WPI_TalonFX(Ports.RightDriveFalconMainCAN);
-    WPI_TalonFX leftDriveFalconMainCAN = new WPI_TalonFX(Ports.LeftDriveFalconMainCAN);
-    WPI_TalonFX rightDriveFalconSubCAN = new WPI_TalonFX(Ports.RightDriveFalconSubCAN);
-    WPI_TalonFX leftDriveFalconSub = new WPI_TalonFX(Ports.LeftDriveFalconSubCAN);
+    ITeamTalon rightDriveFalconMainCAN =
+        new TeamTalonFX("Subsystems.DriveTrain.RightMain", Ports.RightDriveFalconMainCAN);
+    ITeamTalon leftDriveFalconMainCAN =
+        new TeamTalonFX("Subsystems.DriveTrain.LeftMain", Ports.LeftDriveFalconMainCAN);
+    ITeamTalon rightDriveFalconSubCAN =
+        new TeamTalonFX("Subsystems.DriveTrain.RightSub", Ports.RightDriveFalconSubCAN);
+    ITeamTalon leftDriveFalconSub =
+        new TeamTalonFX("Subsystems.DriveTrain.LeftSub", Ports.LeftDriveFalconSubCAN);
     return new DriveTrainSubsystem(
         rightDriveFalconMainCAN,
         leftDriveFalconMainCAN,
@@ -201,11 +214,11 @@ public class DriveTrainSubsystem extends SubsystemBase {
   }
 
   public double getLeftEncoder() {
-    return leftDriveFalconMain.getSelectedSensorPosition();
+    return leftDriveFalconMain.getSelectedSensorPosition(0);
   }
 
   public double getRightEncoder() {
-    return rightDriveFalconMain.getSelectedSensorPosition();
+    return rightDriveFalconMain.getSelectedSensorPosition(0);
   }
 
   public void setDriveTrainMode(DriveTrainMode mode) {
@@ -227,9 +240,9 @@ public class DriveTrainSubsystem extends SubsystemBase {
   }
 
   public boolean isStopped() {
-    return leftDriveFalconMain.getSelectedSensorVelocity()
+    return leftDriveFalconMain.getSelectedSensorVelocity(0)
             < speedInMetersToTicksPer100ms(velocityForStopMetersPerSecond)
-        && rightDriveFalconMain.getSelectedSensorVelocity()
+        && rightDriveFalconMain.getSelectedSensorVelocity(0)
             < speedInMetersToTicksPer100ms(velocityForStopMetersPerSecond);
   }
 
