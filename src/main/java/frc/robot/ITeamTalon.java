@@ -127,30 +127,30 @@ public interface ITeamTalon extends SpeedController, IMotorControllerEnhanced {
     configAllowableClosedloopError(pidSlotIndex, pidParameters.errorTolerance, 30);
   }
 
-  public ErrorCode config_kP (int slotIdx, double value, int timeoutMs);
- 
-  public ErrorCode 	config_kP (int slotIdx, double value);
- 
-  public ErrorCode 	config_kI (int slotIdx, double value, int timeoutMs);
- 
-  public ErrorCode 	config_kI (int slotIdx, double value);
- 
-  public ErrorCode 	config_kD (int slotIdx, double value, int timeoutMs);
- 
-  public ErrorCode 	config_kD (int slotIdx, double value);
- 
-  public ErrorCode 	config_kF (int slotIdx, double value, int timeoutMs);
- 
-  public ErrorCode 	config_kF (int slotIdx, double value);
+  public ErrorCode config_kP(int slotIdx, double value, int timeoutMs);
 
-  public ErrorCode 	configPeakOutputForward (double percentOut, int timeoutMs);
+  public ErrorCode config_kP(int slotIdx, double value);
 
-  public ErrorCode 	configPeakOutputForward (double percentOut);
+  public ErrorCode config_kI(int slotIdx, double value, int timeoutMs);
 
-  public ErrorCode 	configPeakOutputReverse (double percentOut, int timeoutMs);
+  public ErrorCode config_kI(int slotIdx, double value);
 
-  public ErrorCode 	configPeakOutputReverse (double percentOut);
+  public ErrorCode config_kD(int slotIdx, double value, int timeoutMs);
+
+  public ErrorCode config_kD(int slotIdx, double value);
+
+  public ErrorCode config_kF(int slotIdx, double value, int timeoutMs);
+
+  public ErrorCode config_kF(int slotIdx, double value);
+
+  public ErrorCode configPeakOutputForward(double percentOut, int timeoutMs);
+
+  public ErrorCode configPeakOutputForward(double percentOut);
+
+  public ErrorCode configPeakOutputReverse(double percentOut, int timeoutMs);
+
+  public ErrorCode configPeakOutputReverse(double percentOut);
 
   // Public wrapper for protected method (which aren't allowed in interfaces)
-  public ErrorCode  configBaseAllSettings(BaseTalonConfiguration allConfigs);
+  public ErrorCode configBaseAllSettings(BaseTalonConfiguration allConfigs);
 }
