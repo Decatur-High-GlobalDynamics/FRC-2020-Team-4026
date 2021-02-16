@@ -98,7 +98,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
     rightDriveFalconMain.setInverted(true);
     rightDriveFalconSub.setInverted(true);
-    
+
     setDriveTrainMode(DriveTrainMode.SLOW);
     setBrakeMode(NeutralMode.Coast);
   }
