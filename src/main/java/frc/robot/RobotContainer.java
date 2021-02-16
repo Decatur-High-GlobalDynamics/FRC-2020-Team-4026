@@ -64,7 +64,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DriveTrainSubsystem driveTrain = DriveTrainSubsystem.Create();
   private final IntakeSubsystem intake = IntakeSubsystem.Create();
-  private final ShooterSubsystem shooter = ShooterSubsystem.Create();
+  //private final ShooterSubsystem shooter = ShooterSubsystem.Create();
   private final VerticalIndexerSubsystem verticalIndexer = VerticalIndexerSubsystem.Create();
   private final TurretSubsystem turret = TurretSubsystem.Create();
   private final HorizontalIndexerSubsystem horizontalIndexer = HorizontalIndexerSubsystem.Create();
@@ -195,7 +195,7 @@ public class RobotContainer {
     // When Left Trigger is held, Vertical Indexer down
     leftTrigger.whileHeld(new VerticalIndexerDownCommand(this.verticalIndexer));
     // When button 5 is pressed (Right Bumper), shoot at constant speed
-    rightBumper.whileHeld(new PidShootCommand(this.shooter, 1, 1));
+    //rightBumper.whileHeld(new PidShootCommand(this.shooter, 1, 1));
     // --------Turret Button Bindings--------
     // When right bumper pressed, aim at vision target if possible
     leftBumper.whileHeld(new PointTurretAtTargetWithAngleCommand(this.turret));
@@ -208,7 +208,7 @@ public class RobotContainer {
     // When button 10 is pressed, get the turret out of the way for climbing
     start.whenPressed(new PrepareTurretCommand(this.turret));
 
-    dPadUp.whileHeld(new MaxPowerShootCommand(shooter));
+    //dPadUp.whileHeld(new MaxPowerShootCommand(shooter));
 
     // --------Shooting Button Bindings--------
     // When button 8 (Right Trigger) is pressed, start constant shooting
@@ -231,7 +231,7 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
+  /*public Command getAutonomousCommand() {
     PossibleAutos choice = autoChoice.getSelected();
     switch (choice) {
       case IN_FRONT_OF_TARGET_MAX_POWER:
@@ -247,7 +247,7 @@ public class RobotContainer {
     // This command drives forward 4 feet when run
     Command driveForward = new DriveEncoders(1.2192, .5, driveTrain);
     // This shoots when shooter speed is over 80%
-    Command shoot =
+    //Command shoot =
         new AutoShootWithHorizontal(
             shooter, verticalIndexer, horizontalIndexer, (int) (shooter.getMaxVelBot() * 0.80));
     // This spins up the shooter when run
@@ -272,7 +272,7 @@ public class RobotContainer {
     // This drives and spins up, and when driving finishes, shoots for 10 seconds
     return (driveForward.raceWith(spinUpShooter))
         .andThen((shoot.withTimeout(5)).andThen(driveBack));
-  }
+  }*/
 
   public Command getStopDriveTrainCommand() {
     return new StopDrivetrainCommand(driveTrain);
