@@ -55,11 +55,11 @@ public class PidParameters {
   }
 
   /** Use these parameters on a motor */
-  public void configureMotorWithPidParameters(TeamTalonSRX motor, int pidSlotIndex) {
+  public void configureMotorWithPidParameters(ITeamTalon motor, int pidSlotIndex) {
     motor.configureWithPidParameters(this, pidSlotIndex);
   }
 
-  public void periodic(String prefix, TeamTalonSRX motor, int pidSlotIndex) {
+  public void periodic(String prefix, ITeamTalon motor, int pidSlotIndex) {
     double now = TeamUtils.getCurrentTime();
 
     if ((now - lastTelemetryUpdate) < telemetryUpdateInterval_secs) {

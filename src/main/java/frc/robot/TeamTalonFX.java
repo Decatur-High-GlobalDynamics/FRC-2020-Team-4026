@@ -1,6 +1,8 @@
 package frc.robot;
 
+import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.can.BaseTalonConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 /**
@@ -67,4 +69,13 @@ public class TeamTalonFX extends WPI_TalonFX implements ITeamTalon {
   public PidParameters[] getPidProfiles() {
     return pidProfiles;
   }
+
+  // Public wrapper for protected method (which aren't allowed in interfaces)
+  // Use this for configurations which can be shared between SRX and FX
+  // Otherwise use configAllSettings(TalonFXConfiguration allConfigs) if
+  // using config settings only available for TalonFX
+  public ErrorCode configBaseAllSettings(BaseTalonConfiguration allConfigs) {
+    return configAllSettings(allConfigs);
+  }
+
 }

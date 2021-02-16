@@ -1,11 +1,14 @@
 package frc.robot;
 
+import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.IMotorControllerEnhanced;
+import com.ctre.phoenix.motorcontrol.can.BaseTalonConfiguration;
 
+import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public interface ITeamTalon extends IMotorControllerEnhanced {
+public interface ITeamTalon extends SpeedController, IMotorControllerEnhanced {
   public static boolean isPidControlMode(ControlMode mode) {
     switch (mode) {
       case Current:
@@ -123,4 +126,31 @@ public interface ITeamTalon extends IMotorControllerEnhanced {
     configPeakOutputReverse(-pidParameters.kPeakOutput, 30);
     configAllowableClosedloopError(pidSlotIndex, pidParameters.errorTolerance, 30);
   }
+
+  public ErrorCode config_kP (int slotIdx, double value, int timeoutMs);
+ 
+  public ErrorCode 	config_kP (int slotIdx, double value);
+ 
+  public ErrorCode 	config_kI (int slotIdx, double value, int timeoutMs);
+ 
+  public ErrorCode 	config_kI (int slotIdx, double value);
+ 
+  public ErrorCode 	config_kD (int slotIdx, double value, int timeoutMs);
+ 
+  public ErrorCode 	config_kD (int slotIdx, double value);
+ 
+  public ErrorCode 	config_kF (int slotIdx, double value, int timeoutMs);
+ 
+  public ErrorCode 	config_kF (int slotIdx, double value);
+
+  public ErrorCode 	configPeakOutputForward (double percentOut, int timeoutMs);
+
+  public ErrorCode 	configPeakOutputForward (double percentOut);
+
+  public ErrorCode 	configPeakOutputReverse (double percentOut, int timeoutMs);
+
+  public ErrorCode 	configPeakOutputReverse (double percentOut);
+
+  // Public wrapper for protected method (which aren't allowed in interfaces)
+  public ErrorCode  configBaseAllSettings(BaseTalonConfiguration allConfigs);
 }
