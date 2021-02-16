@@ -72,8 +72,8 @@ public class TeamTalonFX extends WPI_TalonFX implements ITeamTalon {
 
   // Public wrapper for protected method (which aren't allowed in interfaces)
   // Use this for configurations which can be shared between SRX and FX
-  // Otherwise use configAllSettings(TalonFXConfiguration allConfigs) if
-  // using config settings only available for TalonFX
+  // Otherwise down cast and use configAllSettings(TalonFXConfiguration allConfigs)
+  // if using config settings only available for TalonFX
   public ErrorCode configBaseAllSettings(BaseTalonConfiguration allConfigs) {
     return configAllSettings(allConfigs);
   }
