@@ -30,6 +30,8 @@ import frc.robot.commands.indexerCommands.VerticalIndexerDownCommand;
 import frc.robot.commands.indexerCommands.VerticalIndexerUpCommand;
 import frc.robot.commands.navigationCommands.UpdateNavigationCommand;
 import frc.robot.commands.shooterCommands.ConstantShootCommand;
+import frc.robot.commands.shooterCommands.MaxPowerShootCommand;
+import frc.robot.commands.shooterCommands.PidShootCommand;
 import frc.robot.commands.drivingCommands.DisableRampingCommand;
 import frc.robot.commands.drivingCommands.DriveEncoders;
 import frc.robot.commands.drivingCommands.EnableBrakeModeCommand;
@@ -193,7 +195,7 @@ public class RobotContainer {
     // When Left Trigger is held, Vertical Indexer down
     leftTrigger.whileHeld(new VerticalIndexerDownCommand(this.verticalIndexer));
     // When button 5 is pressed (Right Bumper), shoot at constant speed
-    // rightBumper.whileHeld(new PidShootCommand(this.shooter, 1, 1));
+    rightBumper.whileHeld(new PidShootCommand(this.shooter, 1, 1));
     // --------Turret Button Bindings--------
     // When right bumper pressed, aim at vision target if possible
     leftBumper.whileHeld(new PointTurretAtTargetWithAngleCommand(this.turret));
@@ -206,7 +208,7 @@ public class RobotContainer {
     // When button 10 is pressed, get the turret out of the way for climbing
     start.whenPressed(new PrepareTurretCommand(this.turret));
 
-    // dPadUp.whileHeld(new MaxPowerShootCommand(shooter));
+    dPadUp.whileHeld(new MaxPowerShootCommand(shooter));
 
     // --------Shooting Button Bindings--------
     // When button 8 (Right Trigger) is pressed, start constant shooting
