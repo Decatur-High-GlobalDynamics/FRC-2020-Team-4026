@@ -10,7 +10,6 @@ package frc.robot.subsystems;
 import java.util.Objects;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -183,6 +182,11 @@ public class TurretSubsystem extends SubsystemBase {
     } else {
       SmartDashboard.putNumber("Subsystems.Turret.targetPosition", 0);
       SmartDashboard.putNumber("Subsystems.Turret.error", 0);
+    }
+    if (turretMotor.getControlMode() == ControlMode.PercentOutput) {
+      SmartDashboard.putNumber("Subsystems.Turret.PercentOut", turretMotor.getMotorOutputPercent());
+    } else {
+      SmartDashboard.putNumber("Subsystems.Turret.PercentOut", 0);
     }
     if (!hasBeenCalibrated && !(isTurretCalibrating)) {
       // new TurretToLimitCommand(this).schedule();
