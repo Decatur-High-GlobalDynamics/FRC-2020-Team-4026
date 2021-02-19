@@ -151,6 +151,10 @@ public interface ITeamTalon extends SpeedController, IMotorControllerEnhanced {
 
   public ErrorCode configPeakOutputReverse(double percentOut);
 
+  public ErrorCode configFactoryDefault (int timeoutMs);
+ 
+  public ErrorCode configFactoryDefault ();
+
   // Public wrapper for protected method (which aren't allowed in interfaces)
   public ErrorCode configBaseAllSettings(BaseTalonConfiguration allConfigs);
 }

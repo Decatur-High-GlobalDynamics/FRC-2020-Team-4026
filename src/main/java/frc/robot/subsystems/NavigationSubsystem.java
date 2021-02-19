@@ -83,8 +83,16 @@ public class NavigationSubsystem extends SubsystemBase {
     accumulatedHeading += difference;
   }
 
+  // Inverts NavX yaw as Odometry takes CCW as positive
+  // returns -180..180
   public double getHeading() {
-    return navx.getYaw();
+    double heading = -navx.getYaw();
+    if (heading > 180) {
+      heading -=180;
+    } else if (heading < -180) {
+      heading += 180;
+    }
+    return heading;
   }
 
   public double getAccumulatedHeading() {
