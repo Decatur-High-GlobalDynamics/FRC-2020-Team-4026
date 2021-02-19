@@ -36,11 +36,8 @@ public class DriveTrainSubsystem extends SubsystemBase {
   TalonSRXSimCollection leftDriveFalconMainSim;
   TalonSRXSimCollection rightDriveFalconSubSim;
   TalonSRXSimCollection leftDriveFalconSubSim;
-
-  // This was tested to be the lowest value where problems weren't had with the squaring thing that
-  // differential drive does
-  public double maxPowerChangeDefault = 0.43;
-  public double maxPowerChange = maxPowerChangeDefault;
+  // This is a temp number that's theoretically best
+  public double maxPowerChange = 21.5;
   public static double maxOutputSlow = .5;
   public static double maxOutputFast = 1;
   public double currentMaxPower = maxOutputSlow;
@@ -98,6 +95,9 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
     leftDriveFalconSub.follow(leftDriveFalconMain);
     rightDriveFalconSub.follow(rightDriveFalconMain);
+
+    rightDriveFalconMain.setInverted(true);
+    rightDriveFalconSub.setInverted(true);
 
     setDriveTrainMode(DriveTrainMode.SLOW);
     setBrakeMode(NeutralMode.Coast);
