@@ -50,10 +50,18 @@ public class DriveTrainSubsystem extends SubsystemBase {
   private final Field2d field = new Field2d();
   private double leftEncoderSimVelocity = 0, rightEncoderSimVelocity = 0;
   private double leftEncoderSimPosition = 0, rightEncoderSimPosition = 0;
-  @SuppressWarnings("unused") private static TalonSRXSimCollection rightDriveFalconMainSim;
-  @SuppressWarnings("unused") private static TalonSRXSimCollection leftDriveFalconMainSim;
-  @SuppressWarnings("unused") private static TalonSRXSimCollection rightDriveFalconSubSim;
-  @SuppressWarnings("unused") private static TalonSRXSimCollection leftDriveFalconSubSim;
+
+  @SuppressWarnings("unused")
+  private static TalonSRXSimCollection rightDriveFalconMainSim;
+
+  @SuppressWarnings("unused")
+  private static TalonSRXSimCollection leftDriveFalconMainSim;
+
+  @SuppressWarnings("unused")
+  private static TalonSRXSimCollection rightDriveFalconSubSim;
+
+  @SuppressWarnings("unused")
+  private static TalonSRXSimCollection leftDriveFalconSubSim;
 
   // This is a temp number that's theoretically best
   public double maxPowerChange = 0.215;
@@ -103,10 +111,10 @@ public class DriveTrainSubsystem extends SubsystemBase {
     this.nav = nav;
 
     if (RobotBase.isSimulation()) {
-      rightDriveFalconMainSim = ((WPI_TalonSRX)rightDriveFalconMain).getSimCollection();
-      leftDriveFalconMainSim = ((WPI_TalonSRX)rightDriveFalconMain).getSimCollection();
-      rightDriveFalconSubSim = ((WPI_TalonSRX)rightDriveFalconMain).getSimCollection();
-      leftDriveFalconSubSim = ((WPI_TalonSRX)rightDriveFalconMain).getSimCollection();
+      rightDriveFalconMainSim = ((WPI_TalonSRX) rightDriveFalconMain).getSimCollection();
+      leftDriveFalconMainSim = ((WPI_TalonSRX) rightDriveFalconMain).getSimCollection();
+      rightDriveFalconSubSim = ((WPI_TalonSRX) rightDriveFalconMain).getSimCollection();
+      leftDriveFalconSubSim = ((WPI_TalonSRX) rightDriveFalconMain).getSimCollection();
     }
 
     setupDrivetrain();
@@ -114,22 +122,25 @@ public class DriveTrainSubsystem extends SubsystemBase {
     setupDifferentialDrive();
 
     if (RobotBase.isSimulation()) {
-      drivetrainSim = new DifferentialDrivetrainSim(
-        DriveTrainConstants.kPlant,
-        DCMotor.getFalcon500(2),
-        DriveTrainConstants.kDriveGearRatio,
-        DriveTrainConstants.kTrackWidthMeters,
-        DriveTrainConstants.kWheelRadiusMeters,
-        VecBuilder.fill(0, 0, 0.0001, 0.1, 0.1, 0.005, 0.005) // Tune default STDEV?
-      );      
+      drivetrainSim =
+          new DifferentialDrivetrainSim(
+              DriveTrainConstants.kPlant,
+              DCMotor.getFalcon500(2),
+              DriveTrainConstants.kDriveGearRatio,
+              DriveTrainConstants.kTrackWidthMeters,
+              DriveTrainConstants.kWheelRadiusMeters,
+              VecBuilder.fill(0, 0, 0.0001, 0.1, 0.1, 0.005, 0.005) // Tune default STDEV?
+              );
     }
   }
 
   private void configureTalon(ITeamTalon talon) {
     talon.configFactoryDefault();
-    talon.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 50); // use internal encoder
+    talon.configSelectedFeedbackSensor(
+        FeedbackDevice.IntegratedSensor, 0, 50); // use internal encoder
     talon.setSelectedSensorPosition(0, 0, 50); // zero encoders
-    talon.config_kP(0, 0); // slotIdx, value  need to know the frc_characterization values to plug in here...
+    talon.config_kP(
+        0, 0); // slotIdx, value  need to know the frc_characterization values to plug in here...
     talon.config_kI(0, 0);
     talon.config_kD(0, 0);
     talon.setNeutralMode(NeutralMode.Coast);
@@ -174,23 +185,27 @@ public class DriveTrainSubsystem extends SubsystemBase {
     ITeamTalon leftDriveFalconSub;
 
     if (RobotBase.isSimulation()) {
-      rightDriveFalconMain = new TeamTalonSRX("Subsystems.DriveTrain.RightMain", Ports.RightDriveFalconMainCAN);
-      leftDriveFalconMain = new TeamTalonSRX("Subsystems.DriveTrain.LeftMain", Ports.RightDriveFalconMainCAN);
-      rightDriveFalconSub = new TeamTalonSRX("Subsystems.DriveTrain.RightSub", Ports.RightDriveFalconMainCAN);
-      leftDriveFalconSub = new TeamTalonSRX("Subsystems.DriveTrain.LeftSub", Ports.RightDriveFalconMainCAN);
+      rightDriveFalconMain =
+          new TeamTalonSRX("Subsystems.DriveTrain.RightMain", Ports.RightDriveFalconMainCAN);
+      leftDriveFalconMain =
+          new TeamTalonSRX("Subsystems.DriveTrain.LeftMain", Ports.RightDriveFalconMainCAN);
+      rightDriveFalconSub =
+          new TeamTalonSRX("Subsystems.DriveTrain.RightSub", Ports.RightDriveFalconMainCAN);
+      leftDriveFalconSub =
+          new TeamTalonSRX("Subsystems.DriveTrain.LeftSub", Ports.RightDriveFalconMainCAN);
     } else {
-      rightDriveFalconMain = new TeamTalonFX("Subsystems.DriveTrain.RightMain", Ports.RightDriveFalconMainCAN);
-      leftDriveFalconMain = new TeamTalonFX("Subsystems.DriveTrain.LeftMain", Ports.RightDriveFalconMainCAN);
-      rightDriveFalconSub = new TeamTalonFX("Subsystems.DriveTrain.RightSub", Ports.RightDriveFalconMainCAN);
-      leftDriveFalconSub = new TeamTalonFX("Subsystems.DriveTrain.LeftSub", Ports.RightDriveFalconMainCAN);
+      rightDriveFalconMain =
+          new TeamTalonFX("Subsystems.DriveTrain.RightMain", Ports.RightDriveFalconMainCAN);
+      leftDriveFalconMain =
+          new TeamTalonFX("Subsystems.DriveTrain.LeftMain", Ports.RightDriveFalconMainCAN);
+      rightDriveFalconSub =
+          new TeamTalonFX("Subsystems.DriveTrain.RightSub", Ports.RightDriveFalconMainCAN);
+      leftDriveFalconSub =
+          new TeamTalonFX("Subsystems.DriveTrain.LeftSub", Ports.RightDriveFalconMainCAN);
     }
 
     return new DriveTrainSubsystem(
-        rightDriveFalconMain,
-        leftDriveFalconMain,
-        rightDriveFalconSub,
-        leftDriveFalconSub,
-        nav);
+        rightDriveFalconMain, leftDriveFalconMain, rightDriveFalconSub, leftDriveFalconSub, nav);
   }
 
   @Override
@@ -202,7 +217,10 @@ public class DriveTrainSubsystem extends SubsystemBase {
     printDrivetrainData();
     updateMotorOutputs();
     field.setRobotPose(getPose());
-    nav.odometry.update(Rotation2d.fromDegrees(nav.getHeading()), getLeftDistanceMeters(), getRightDistanceMeters());
+    nav.odometry.update(
+        Rotation2d.fromDegrees(nav.getHeading()),
+        getLeftDistanceMeters(),
+        getRightDistanceMeters());
     SmartDashboard.putNumber("Left position", getLeftPosition());
     SmartDashboard.putNumber("Right position", getRightPosition());
   }
@@ -210,8 +228,8 @@ public class DriveTrainSubsystem extends SubsystemBase {
   @Override
   public void simulationPeriodic() {
     drivetrainSim.setInputs(
-      leftDriveFalconMain.get() * RobotController.getBatteryVoltage(),
-      rightDriveFalconMain.get() * RobotController.getBatteryVoltage());
+        leftDriveFalconMain.get() * RobotController.getBatteryVoltage(),
+        rightDriveFalconMain.get() * RobotController.getBatteryVoltage());
     drivetrainSim.update(0.020);
     System.out.println("Gyro Set to: " + -drivetrainSim.getHeading().getDegrees());
 
@@ -220,7 +238,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
     SimDouble angle = new SimDouble(SimDeviceDataJNI.getSimValueHandle(dev, "Yaw"));
     // NavX expects clockwise positive, but sim outputs clockwise negative
     angle.set(-drivetrainSim.getHeading().getDegrees());
-    
+
     // Encoders
     leftEncoderSimVelocity = metersToTicks(drivetrainSim.getLeftVelocityMetersPerSecond()) / 10d;
     leftEncoderSimPosition = metersToTicks(drivetrainSim.getLeftPositionMeters());
@@ -249,28 +267,36 @@ public class DriveTrainSubsystem extends SubsystemBase {
     if (RobotBase.isSimulation()) {
       return leftEncoderSimVelocity;
     }
-    return (leftDriveFalconMain.getSelectedSensorVelocity(0) + leftDriveFalconSub.getSelectedSensorVelocity(0)) / 2.0d;
+    return (leftDriveFalconMain.getSelectedSensorVelocity(0)
+            + leftDriveFalconSub.getSelectedSensorVelocity(0))
+        / 2.0d;
   }
 
   public double getRightVelocityTicksPerDs() {
     if (RobotBase.isSimulation()) {
       return rightEncoderSimVelocity;
     }
-    return (rightDriveFalconMain.getSelectedSensorVelocity(0) + rightDriveFalconSub.getSelectedSensorVelocity(0)) / 2.0d;
+    return (rightDriveFalconMain.getSelectedSensorVelocity(0)
+            + rightDriveFalconSub.getSelectedSensorVelocity(0))
+        / 2.0d;
   }
 
   private double getLeftPosition() {
     if (RobotBase.isSimulation()) {
       return leftEncoderSimPosition;
     }
-    return (leftDriveFalconMain.getSelectedSensorPosition(0) + leftDriveFalconSub.getSelectedSensorPosition(0)) / 2.0d;
+    return (leftDriveFalconMain.getSelectedSensorPosition(0)
+            + leftDriveFalconSub.getSelectedSensorPosition(0))
+        / 2.0d;
   }
 
   private double getRightPosition() {
     if (RobotBase.isSimulation()) {
       return rightEncoderSimPosition;
     }
-    return (rightDriveFalconMain.getSelectedSensorPosition(0) + rightDriveFalconSub.getSelectedSensorPosition(0)) / 2.0d;
+    return (rightDriveFalconMain.getSelectedSensorPosition(0)
+            + rightDriveFalconSub.getSelectedSensorPosition(0))
+        / 2.0d;
   }
 
   public double getLeftDistanceMeters() {

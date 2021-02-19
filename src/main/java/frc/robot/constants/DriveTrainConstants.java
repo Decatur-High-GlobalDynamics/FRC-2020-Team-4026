@@ -26,20 +26,18 @@ public class DriveTrainConstants {
 
   public static final double kS = 0.22; // Static Volts
   public static final double kVLinear = 1.98; // Linear Velocity Volt Seconds per Meter
-  public static final double KALinear = 0.2;  // Linear Acceleration Volt Seconds Squared per Meter
-  public static final double kVAngular = 1.5; // Angular Velocity Volt Seconds per Meter 
+  public static final double KALinear = 0.2; // Linear Acceleration Volt Seconds Squared per Meter
+  public static final double kVAngular = 1.5; // Angular Velocity Volt Seconds per Meter
   public static final double kAAngular = 0.3; // Angular Acceleration Volt Seconds Squared per Meter
-  public static final DifferentialDriveKinematics kKinematics = new DifferentialDriveKinematics(kTrackWidthMeters);
+  public static final DifferentialDriveKinematics kKinematics =
+      new DifferentialDriveKinematics(kTrackWidthMeters);
   public static final DifferentialDriveVoltageConstraint kVoltageConstraint =
-          new DifferentialDriveVoltageConstraint(
-                  new SimpleMotorFeedforward(kS, kVLinear, KALinear),
-                  kKinematics, 10); //10V max to account for battery sag
+      new DifferentialDriveVoltageConstraint(
+          new SimpleMotorFeedforward(kS, kVLinear, KALinear),
+          kKinematics,
+          10); // 10V max to account for battery sag
   public static final LinearSystem<N2, N2, N2> kPlant =
-          LinearSystemId.identifyDrivetrainSystem(
-                  kVLinear,
-                  KALinear,
-                  kVAngular,
-                  kAAngular);
+      LinearSystemId.identifyDrivetrainSystem(kVLinear, KALinear, kVAngular, kAAngular);
   public static final double kMaxSpeedMetersPerSecond = 3; // Tune
   public static final double kMaxAccelerationMetersPerSecondSquared = 3;
 }

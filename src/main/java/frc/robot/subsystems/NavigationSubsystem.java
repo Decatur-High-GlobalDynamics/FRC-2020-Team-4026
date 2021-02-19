@@ -88,7 +88,7 @@ public class NavigationSubsystem extends SubsystemBase {
   public double getHeading() {
     double heading = -navx.getYaw();
     if (heading > 180) {
-      heading -=180;
+      heading -= 180;
     } else if (heading < -180) {
       heading += 180;
     }
