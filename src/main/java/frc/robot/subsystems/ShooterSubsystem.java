@@ -66,8 +66,6 @@ public class ShooterSubsystem extends SubsystemBase {
     this.botPidParameters =
         Objects.requireNonNull(botPidParameters, "botPidParameters must not be null");
 
-    shooter_top.setSensorPhase(true);
-    shooter_bottom.setSensorPhase(true);
     shooter_bottom.setInverted(true);
     shooter_top.setInverted(false);
     stop();
