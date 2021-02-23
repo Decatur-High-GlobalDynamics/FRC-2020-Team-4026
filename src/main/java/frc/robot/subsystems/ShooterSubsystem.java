@@ -58,7 +58,7 @@ public class ShooterSubsystem extends SubsystemBase {
   public static ShooterSubsystem Create() {
     TeamSparkMAX shooter_bottom =
         new TeamSparkMAX("Subsystems.Shooter.Bottom", Ports.BotShooterMotorCAN);
-        TeamSparkMAX shooter_top = new TeamSparkMAX("Subsystems.Shooter.Top", Ports.TopShooterMotorCAN);
+    TeamSparkMAX shooter_top = new TeamSparkMAX("Subsystems.Shooter.Top", Ports.TopShooterMotorCAN);
     PidParameters topPidParameters = new PidParameters(0.3, 0.00015, 0.1, 0.031, 0, 1, 10);
     PidParameters botPidParameters = new PidParameters(0.1, 0.00005, 0.1, 0.026, 250, 1, 10);
     return new ShooterSubsystem(shooter_bottom, shooter_top, topPidParameters, botPidParameters);
