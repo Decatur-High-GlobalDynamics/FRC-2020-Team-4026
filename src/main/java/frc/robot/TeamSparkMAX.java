@@ -63,7 +63,7 @@ public class TeamSparkMAX extends CANSparkMax {
 
   public boolean
       isRunningPidControlMode() { // Dunno if this is safe, but its the easiest way to get around
-                                  // problems with the PidParameters.
+    // problems with the PidParameters.
     return true;
   }
 
