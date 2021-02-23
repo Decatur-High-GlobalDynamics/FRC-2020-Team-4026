@@ -39,8 +39,8 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public ShooterSubsystem(
-      TeamTalonSRX shooter_bottom,
-      TeamTalonSRX shooter_top,
+      TeamSparkMAX shooter_bottom,
+      TeamSparkMAX shooter_top,
       PidParameters topPidParameters,
       PidParameters botPidParameters) {
     this.shooter_bottom = Objects.requireNonNull(shooter_bottom, "shooter_bottom must not be null");
@@ -57,9 +57,9 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public static ShooterSubsystem Create() {
-    TeamTalonSRX shooter_bottom =
+    TeamSparkMAX shooter_bottom =
         new TeamSparkMAX("Subsystems.Shooter.Bottom", Ports.BotShooterMotorCAN);
-    TeamTalonSRX shooter_top = new TeamSparkMAX("Subsystems.Shooter.Top", Ports.TopShooterMotorCAN);
+        TeamSparkMAX shooter_top = new TeamSparkMAX("Subsystems.Shooter.Top", Ports.TopShooterMotorCAN);
     PidParameters topPidParameters = new PidParameters(0.3, 0.00015, 0.1, 0.031, 0, 1, 10);
     PidParameters botPidParameters = new PidParameters(0.1, 0.00005, 0.1, 0.026, 250, 1, 10);
     return new ShooterSubsystem(shooter_bottom, shooter_top, topPidParameters, botPidParameters);
