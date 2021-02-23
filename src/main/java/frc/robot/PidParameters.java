@@ -1,5 +1,6 @@
 package frc.robot;
 
+import java.util.Objects;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class PidParameters {
@@ -69,8 +70,13 @@ public class PidParameters {
         && otherPP.errorTolerance == errorTolerance;
   }
 
+  @Override
+  public int hashCode() {
+    return Objects.hash(kP, kI, kD, kF, kIZone, kPeakOutput, errorTolerance);
+  }
+
   /** Use these parameters on a motor */
-  public void configureMotorWithPidParameters(TeamTalonSRX motor, int pidSlotIndex) {
+  public void configureMotorWithPidParameters(ITeamTalon motor, int pidSlotIndex) {
     motor.configureWithPidParameters(this, pidSlotIndex);
   }
 
@@ -78,7 +84,7 @@ public class PidParameters {
     motor.configureWithPidParameters(this, pidSlotIndex);
   }
 
-  public void periodic(String prefix, TeamTalonSRX motor, int pidSlotIndex) {
+  public void periodic(String prefix, ITeamTalon motor, int pidSlotIndex) {
     double now = TeamUtils.getCurrentTime();
 
     if ((now - lastTelemetryUpdate) < telemetryUpdateInterval_secs) {

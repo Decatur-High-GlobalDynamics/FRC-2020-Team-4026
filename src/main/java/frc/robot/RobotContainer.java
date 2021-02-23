@@ -9,15 +9,14 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.commands.AutoIntakeIndex;
 import frc.robot.commands.AutoShootWithHorizontal;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.commands.shooterCommands.ConstantShootCommand;
 import frc.robot.commands.indexerCommands.HorizontalIndexerIntakeCommand;
 import frc.robot.commands.indexerCommands.HorizontalIndexerOuttakeCommand;
-import frc.robot.commands.shooterCommands.PidShootCommand;
 import frc.robot.commands.climberCommands.SimpleClimberControlCommand;
 import frc.robot.commands.intakeCommands.SimpleIntakeCommand;
 import frc.robot.commands.intakeCommands.SimpleOuttakeCommand;
@@ -25,17 +24,21 @@ import frc.robot.commands.turretCommands.SimpleTurretCCWCommand;
 import frc.robot.commands.turretCommands.SimpleTurretCWCommand;
 import frc.robot.commands.turretCommands.PointTurretAtTargetWithAngleCommand;
 import frc.robot.commands.turretCommands.PrepareTurretCommand;
-import frc.robot.commands.drivingCommands.DriveEncoders;
+import frc.robot.commands.drivingCommands.DriveStraightCommand;
 import frc.robot.commands.turretCommands.TurretToLimitCommand;
 import frc.robot.commands.indexerCommands.VerticalIndexerDownCommand;
 import frc.robot.commands.indexerCommands.VerticalIndexerUpCommand;
 import frc.robot.commands.navigationCommands.UpdateNavigationCommand;
-import frc.robot.commands.drivingCommands.DisableRampingCommand;
-import frc.robot.commands.drivingCommands.DriveStraightCommand;
-import frc.robot.commands.drivingCommands.SetSpeedMode;
+import frc.robot.commands.shooterCommands.ConstantShootCommand;
 import frc.robot.commands.shooterCommands.MaxPowerShootCommand;
+import frc.robot.commands.shooterCommands.PidShootCommand;
+import frc.robot.commands.drivingCommands.DisableRampingCommand;
+import frc.robot.commands.drivingCommands.DriveEncoders;
+import frc.robot.commands.drivingCommands.EnableBrakeModeCommand;
+import frc.robot.commands.drivingCommands.SetSpeedMode;
+import frc.robot.commands.drivingCommands.StopDrivetrainCommand;
 import frc.robot.commands.drivingCommands.TankDriveCommand;
-import frc.robot.commands.drivingCommands.ToggleBrakeCommand;
+import frc.robot.commands.drivingCommands.GTADriveCommand;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -44,6 +47,7 @@ import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
 import frc.robot.subsystems.VerticalIndexerSubsystem;
 import frc.robot.subsystems.HorizontalIndexerSubsystem;
+import frc.robot.constants.LogitechControllerButtons;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -56,15 +60,16 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+
   // The robot's subsystems and commands are defined here...
-  private final DriveTrainSubsystem driveTrain = new DriveTrainSubsystem();
-  private final IntakeSubsystem intake = new IntakeSubsystem();
-  private final ShooterSubsystem shooter = new ShooterSubsystem();
-  private final VerticalIndexerSubsystem verticalIndexer = new VerticalIndexerSubsystem();
-  private final TurretSubsystem turret = new TurretSubsystem();
-  private final HorizontalIndexerSubsystem horizontalIndexer = new HorizontalIndexerSubsystem();
-  private final NavigationSubsystem navigation = new NavigationSubsystem();
-  private final ClimberSubsystem climber = new ClimberSubsystem();
+  private final DriveTrainSubsystem driveTrain = DriveTrainSubsystem.Create();
+  private final IntakeSubsystem intake = IntakeSubsystem.Create();
+  private final ShooterSubsystem shooter = ShooterSubsystem.Create();
+  private final VerticalIndexerSubsystem verticalIndexer = VerticalIndexerSubsystem.Create();
+  private final TurretSubsystem turret = TurretSubsystem.Create();
+  private final HorizontalIndexerSubsystem horizontalIndexer = HorizontalIndexerSubsystem.Create();
+  private final NavigationSubsystem navigation = NavigationSubsystem.Create();
+  private final ClimberSubsystem climber = ClimberSubsystem.Create();
 
   public static final Joystick driveController = new Joystick(0);
   public static final Joystick secondaryJoystick = new Joystick(1);
@@ -98,28 +103,54 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureDriveController() {
+    boolean GTADrive;
+    Preferences prefs = Preferences.getInstance();
+    GTADrive = prefs.getBoolean("GTADrive", true);
+
     Button rightTrigger =
         new JoystickButton(driveController, LogitechControllerButtons.triggerRight);
     Button leftTrigger = new JoystickButton(driveController, LogitechControllerButtons.triggerLeft);
     Button leftBumper = new JoystickButton(driveController, LogitechControllerButtons.bumperLeft);
     Button rightBumper = new JoystickButton(driveController, LogitechControllerButtons.bumperRight);
+    Button x = new JoystickButton(driveController, LogitechControllerButtons.x);
+    if (GTADrive) {
+      // Configure driveTrain default command, which is GTA drive. It works by having turning run by
+      // the left joystick, direction controlled by triggers, and speed controlled by
+      // right joystick. So if right joystick isn't touched, it goes at half of the current capped
+      // speed. If right joystick is fully forward, it goes at max capped speed.
+      driveTrain.setDefaultCommand(
+          new GTADriveCommand(
+              driveTrain,
+              () -> driveController.getX(),
+              () -> driveController.getThrottle(),
+              () -> rightTrigger.get(),
+              () -> leftTrigger.get()));
 
-    // Configure driveTrain default command, which is tank drive with Primary Controller Joysticks
-    // (NUMBERED CONTROLLER). It also uses left trigger for speed mode
-    driveTrain.setDefaultCommand(
-        new TankDriveCommand(
-            driveTrain, () -> driveController.getY(), () -> driveController.getThrottle()));
+      // --------Drivetrain Button Bindings--------
+      // When left bumper held, enable brake mode
+      leftBumper.whileHeld(new DisableRampingCommand(driveTrain));
+      // When right bumper held, disable ramping
+      rightBumper.whileHeld(new EnableBrakeModeCommand(driveTrain));
+      // When x is held, set speed mode
+      x.whileHeld(new SetSpeedMode(driveTrain));
+    } else {
+      // Configure driveTrain default command, which is tank drive with Primary Controller Joysticks
+      // (NUMBERED CONTROLLER). It also uses left trigger for speed mode
+      driveTrain.setDefaultCommand(
+          new TankDriveCommand(
+              driveTrain, () -> driveController.getY(), () -> driveController.getThrottle()));
 
-    // --------Drivetrain Button Bindings--------
-    // When right trigger on main controller is held, drive straight
-    rightTrigger.whileHeld(
-        new DriveStraightCommand(driveTrain, navigation, () -> driveController.getY()));
-    // When left trigger is held, set speed mode
-    leftTrigger.whileHeld(new SetSpeedMode(driveTrain));
-    // When left bumper held, enable brake mode
-    leftBumper.whileHeld(new ToggleBrakeCommand(driveTrain));
-    // When right bumper held, disable ramping
-    rightBumper.whileHeld(new DisableRampingCommand(driveTrain));
+      // --------Drivetrain Button Bindings--------
+      // When right trigger on main controller is held, drive straight
+      rightTrigger.whileHeld(
+          new DriveStraightCommand(driveTrain, navigation, () -> driveController.getY()));
+      // When left trigger is held, set speed mode
+      leftTrigger.whileHeld(new SetSpeedMode(driveTrain));
+      // When left bumper held, enable brake mode
+      leftBumper.whileHeld(new EnableBrakeModeCommand(driveTrain));
+      // When right bumper held, disable ramping
+      rightBumper.whileHeld(new DisableRampingCommand(driveTrain));
+    }
   }
 
   private void configureSecondaryController() {
@@ -241,5 +272,9 @@ public class RobotContainer {
     // This drives and spins up, and when driving finishes, shoots for 10 seconds
     return (driveForward.raceWith(spinUpShooter))
         .andThen((shoot.withTimeout(5)).andThen(driveBack));
+  }
+
+  public Command getStopDriveTrainCommand() {
+    return new StopDrivetrainCommand(driveTrain);
   }
 }

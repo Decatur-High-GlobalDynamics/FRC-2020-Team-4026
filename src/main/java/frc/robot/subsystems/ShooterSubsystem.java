@@ -7,10 +7,12 @@
 
 package frc.robot.subsystems;
 
+import java.util.Objects;
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
-import frc.robot.Constants;
+import frc.robot.constants.Ports;
 import frc.robot.PidParameters;
 import frc.robot.TeamSparkMAX;
 import frc.robot.TeamUtils;
@@ -24,19 +26,43 @@ public class ShooterSubsystem extends SubsystemBase {
   // Values for 95% (max power for shooting)
   private final TeamSparkMAX shooter_bottom;
   private final TeamSparkMAX shooter_top;
-  /** Creates a new ShooterSubsystem. */
-  private double shooterPowerTop = 0.95;
 
+  private double shooterPowerTop = 0.95;
   private double shooterPowerBot = 0.95;
 
-  private PidParameters topPidParameters = new PidParameters(0.3, 0.00015, 0.1, 0.031, 0, 1, 10);
-  private PidParameters botPidParameters = new PidParameters(0.1, 0.00005, 0.1, 0.026, 250, 1, 10);
+  private PidParameters topPidParameters;
+  private PidParameters botPidParameters;
 
   public ShooterSubsystem() {
-    shooter_bottom = new TeamSparkMAX("Subsystems.Shooter.Bottom", Constants.BotShooterMotorCAN);
-    shooter_top = new TeamSparkMAX("Subsystems.Shooter.Top", Constants.TopShooterMotorCAN);
+    throw new IllegalArgumentException(
+        "not allowed! ctor must provide parameters for all dependencies");
+  }
+
+  public ShooterSubsystem(
+      TeamTalonSRX shooter_bottom,
+      TeamTalonSRX shooter_top,
+      PidParameters topPidParameters,
+      PidParameters botPidParameters) {
+    this.shooter_bottom = Objects.requireNonNull(shooter_bottom, "shooter_bottom must not be null");
+    this.shooter_top = Objects.requireNonNull(shooter_top, "shooter_top must not be null");
+    this.topPidParameters =
+        Objects.requireNonNull(topPidParameters, "topPidParameters must not be null");
+    this.botPidParameters =
+        Objects.requireNonNull(botPidParameters, "botPidParameters must not be null");
+
+    shooter_top.setSensorPhase(true);
+    shooter_bottom.setSensorPhase(true);
     shooter_bottom.setInverted(true);
     shooter_top.setInverted(false);
+  }
+
+  public static ShooterSubsystem Create() {
+    TeamTalonSRX shooter_bottom =
+        new TeamSparkMAX("Subsystems.Shooter.Bottom", Ports.BotShooterMotorCAN);
+    TeamTalonSRX shooter_top = new TeamSparkMAX("Subsystems.Shooter.Top", Ports.TopShooterMotorCAN);
+    PidParameters topPidParameters = new PidParameters(0.3, 0.00015, 0.1, 0.031, 0, 1, 10);
+    PidParameters botPidParameters = new PidParameters(0.1, 0.00005, 0.1, 0.026, 250, 1, 10);
+    return new ShooterSubsystem(shooter_bottom, shooter_top, topPidParameters, botPidParameters);
   }
 
   @Override
@@ -110,25 +136,25 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void setShooterVelTop(int speed) {
-    speed = (int) MathUtil.clamp(speed, 0, maxRotationSpeedTop);
+    speed = MathUtil.clamp(speed, 0, maxRotationSpeedTop);
     shooter_top.configureWithPidParameters(topPidParameters, 0);
     shooter_top.setSmartMotionVelocity(speed);
     // this.shooter_top.set(speed);
   }
 
   public void setShooterVelBot(int speed) {
-    speed = (int) MathUtil.clamp(speed, 0, maxRotationSpeedBot);
+    speed = MathUtil.clamp(speed, 0, maxRotationSpeedBot);
     shooter_bottom.configureWithPidParameters(botPidParameters, 0);
     shooter_bottom.setSmartMotionVelocity(speed);
     // this.shooter_bottom.set(speed);
   }
 
   public int getMaxVelTop() {
-    return (int) maxRotationSpeedTop;
+    return maxRotationSpeedTop;
   }
 
   public int getMaxVelBot() {
-    return (int) maxRotationSpeedBot;
+    return maxRotationSpeedBot;
   }
 
   public void setMotorVelocities(double topSpeedFraction, double botSpeedFraction) {
