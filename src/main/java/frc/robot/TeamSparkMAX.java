@@ -27,7 +27,7 @@ public class TeamSparkMAX extends CANSparkMax {
 
   protected PidParameters pidProfiles[] = new PidParameters[4];
 
-  private ControlType ctrlType = ControlType.kCurrent;
+  private ControlType ctrlType = null;
 
   public TeamSparkMAX(String smartDashboardPrefix, int deviceID) {
     super(deviceID, MotorType.kBrushless); // Neos are brushless
@@ -43,7 +43,7 @@ public class TeamSparkMAX extends CANSparkMax {
     // Are all possible values. If one of these are not part of PID, add case for them and return
     // false.
     if (mode == null) {
-      return false;
+      return true;
     }
     switch (mode) {
       case kCurrent:
