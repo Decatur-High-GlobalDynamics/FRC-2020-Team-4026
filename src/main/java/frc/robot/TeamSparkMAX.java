@@ -2,10 +2,11 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANPIDController;
+
 import com.revrobotics.CANEncoder;
+import com.revrobotics.CANError;
 import com.revrobotics.ControlType;
 
 public class TeamSparkMAX extends CANSparkMax {
@@ -26,6 +27,8 @@ public class TeamSparkMAX extends CANSparkMax {
 
   protected PidParameters pidProfiles[] = new PidParameters[4];
 
+  private ControlType ctrlType = null;
+
   public TeamSparkMAX(String smartDashboardPrefix, int deviceID) {
     super(deviceID, MotorType.kBrushless); // Neos are brushless
     this.smartDashboardPrefix = smartDashboardPrefix;
@@ -39,7 +42,9 @@ public class TeamSparkMAX extends CANSparkMax {
 
     // Are all possible values. If one of these are not part of PID, add case for them and return
     // false.
-
+    if (mode == null) {
+      return true;
+    }
     switch (mode) {
       case kCurrent:
         return false;
@@ -64,7 +69,7 @@ public class TeamSparkMAX extends CANSparkMax {
   public boolean
       isRunningPidControlMode() { // Dunno if this is safe, but its the easiest way to get around
     // problems with the PidParameters.
-    return true;
+    return isPidControlMode(ctrlType);
   }
 
   public void periodic() {
@@ -118,9 +123,10 @@ public class TeamSparkMAX extends CANSparkMax {
     return this.smartMotionLoopTarget;
   }
 
-  public void setSmartMotionVelocity(double speed) {
+  public CANError setSmartMotionVelocity(double speed) {
     setClosedLoopTarget(speed);
-    this.canPidController.setReference(Math.abs(speed), ControlType.kSmartVelocity);
+    ctrlType = ControlType.kSmartVelocity;
+    return this.canPidController.setReference(Math.abs(speed), ControlType.kSmartVelocity);
   }
 
   public double getVelocityError() {
