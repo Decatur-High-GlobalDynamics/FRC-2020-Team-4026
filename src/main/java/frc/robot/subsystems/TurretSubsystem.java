@@ -24,7 +24,7 @@ public class TurretSubsystem extends SubsystemBase {
   private final TeamTalonSRX turretMotor;
   private final DigitalInput turretLimit;
   private final VisionSubsystem visionSubsystem;
-  private final double baseTurnSpeed = .1;
+  private final double baseTurnSpeed = .25;
   private double maxTurnSpeed = baseTurnSpeed;
   private static final boolean sensorPhase = true;
   private static final boolean motorInvert = true;
