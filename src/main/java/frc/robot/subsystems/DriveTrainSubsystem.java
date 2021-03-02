@@ -64,7 +64,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
   private static TalonSRXSimCollection leftDriveFalconSubSim;
 
   // This is a temp number that's theoretically best
-  public double maxPowerChange = 0.215;
+  public double maxPowerChange = 21.5;
   public static double maxOutputSlow = .5;
   public static double maxOutputFast = 1;
   public double currentMaxPower = maxOutputSlow;
