@@ -30,8 +30,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   private double shooterPowerBot = 0.95;
 
-  private static double 
-      kPTop = 0.00005,
+  private static double kPTop = 0.00005,
       kPBot = 0.00005,
       kITop = 0.000001,
       kIBot = 0.000001,
@@ -77,9 +76,27 @@ public class ShooterSubsystem extends SubsystemBase {
         new TeamSparkMAX("Subsystems.Shooter.Bottom", Ports.BotShooterMotorCAN);
     TeamSparkMAX shooter_top = new TeamSparkMAX("Subsystems.Shooter.Top", Ports.TopShooterMotorCAN);
     PidParameters topPidParameters =
-        new PidParameters(kPTop, kITop, kDTop, kFTop, kIZoneTop, kPeakOutputTop, maxVelTop, maxAccTop, errorToleranceTop);
+        new PidParameters(
+            kPTop,
+            kITop,
+            kDTop,
+            kFTop,
+            kIZoneTop,
+            kPeakOutputTop,
+            maxVelTop,
+            maxAccTop,
+            errorToleranceTop);
     PidParameters botPidParameters =
-        new PidParameters(kPBot, kIBot, kDBot, kFBot, kIZoneBot, kPeakOutputBot, maxVelBot, maxAccBot, errorToleranceBot);
+        new PidParameters(
+            kPBot,
+            kIBot,
+            kDBot,
+            kFBot,
+            kIZoneBot,
+            kPeakOutputBot,
+            maxVelBot,
+            maxAccBot,
+            errorToleranceBot);
     return new ShooterSubsystem(shooter_bottom, shooter_top, topPidParameters, botPidParameters);
   }
 
