@@ -31,20 +31,20 @@ public class ShooterSubsystem extends SubsystemBase {
   private double shooterPowerBot = 0.95;
 
   private static double 
-      kPTop = 0.00005,
+      kPTop = 0.00003,
       kPBot = 0.00005,
       kITop = 0.000001,
       kIBot = 0.000001,
-      kDTop = 0,
+      kDTop = 0.00001,
       kDBot = 0,
-      kFTop = 0.0004,
+      kFTop = 0.0005,
       kFBot = 0.000156,
       kIZoneTop = 0,
       kIZoneBot = 0,
       kPeakOutputTop = 1,
       kPeakOutputBot = 1,
-      maxVelTop = 2000,
-      maxVelBot = 2000,
+      maxVelTop = 20000,
+      maxVelBot = 20000,
       maxAccTop = 1500,
       maxAccBot = 1500;
   private static int errorToleranceTop = 10, errorToleranceBot = 10;
