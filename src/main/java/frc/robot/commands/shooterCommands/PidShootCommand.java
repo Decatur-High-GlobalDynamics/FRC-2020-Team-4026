@@ -13,10 +13,14 @@ import frc.robot.subsystems.ShooterSubsystem;
 
 public class PidShootCommand extends CommandBase {
   ShooterSubsystem shooter;
+  double topVelocityFraction;
+  double bottomVelocityFraction;
   /** Creates a new SimpleShootCommand. */
   public PidShootCommand(
       ShooterSubsystem shooter, double topVelocityFraction, double bottomVelocityFraction) {
     this.shooter = shooter;
+    this.topVelocityFraction = topVelocityFraction;
+    this.bottomVelocityFraction = bottomVelocityFraction;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(shooter);
   }
@@ -25,10 +29,10 @@ public class PidShootCommand extends CommandBase {
   @Override
   public void initialize() {
     double topShootingVelocityFraction =
-        SmartDashboard.getNumber("Commands.PidShooter.topSpeedFraction", 1);
+        SmartDashboard.getNumber("Commands.PidShooter.topSpeedFraction", this.topVelocityFraction);
     SmartDashboard.putNumber("Commands.PidShooter.topSpeedFraction", topShootingVelocityFraction);
     double bottomShootingVelocityFraction =
-        SmartDashboard.getNumber("Commands.PidShooter.BottomSpeedFraction", 1);
+        SmartDashboard.getNumber("Commands.PidShooter.BottomSpeedFraction", this.bottomVelocityFraction);
     SmartDashboard.putNumber(
         "Commands.PidShooter.BottomSpeedFraction", bottomShootingVelocityFraction);
 
