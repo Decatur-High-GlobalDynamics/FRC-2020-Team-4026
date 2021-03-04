@@ -170,8 +170,7 @@ public class RobotContainer {
 
     Button dPadUp = new POVButton(secondaryJoystick, LogitechControllerButtons.up);
     Button dPadRight = new POVButton(secondaryJoystick, LogitechControllerButtons.right);
-    // Not Used    Button dPadDown = new POVButton(secondaryJoystick,
-    // LogitechControllerButtons.down);
+    Button dPadDown = new POVButton(secondaryJoystick, LogitechControllerButtons.down);
     Button dPadLeft = new POVButton(secondaryJoystick, LogitechControllerButtons.left);
 
     // Configure climber to respond to both joysticks by default
@@ -186,7 +185,7 @@ public class RobotContainer {
     x.whileHeld(
         new SimpleIntakeCommand(this.intake)
             .alongWith(new HorizontalIndexerIntakeCommand(this.horizontalIndexer)));
-    // When A is held, Intake Out
+    // When A is held, Intake Out 
     a.whileHeld(new SimpleOuttakeCommand(this.intake));
     // When B is held, Horizontal Indexer out
     b.whileHeld(new HorizontalIndexerOuttakeCommand(this.horizontalIndexer));
@@ -208,7 +207,14 @@ public class RobotContainer {
     // When button 10 is pressed, get the turret out of the way for climbing
     start.whenPressed(new PrepareTurretCommand(this.turret));
 
-    dPadUp.whileHeld(new MaxPowerShootCommand(shooter));
+    //Shooting from the green zone - closest
+    dPadUp.whileHeld(new PidShootCommand(shooter, 1.25, 1.25));
+    //Shooting from the yellow zone - one further
+    dPadRight.whileHeld(new PidShootCommand(shooter, 1, 1));
+    //Shooting from the blue zone - one further
+    dPadDown.whileHeld(new PidShootCommand(shooter, 1, 1));
+    //Shooting from the red zone - furthest
+    dPadLeft.whileHeld(new PidShootCommand(shooter, 1, 1));
 
     // --------Shooting Button Bindings--------
     // When button 8 (Right Trigger) is pressed, start constant shooting
