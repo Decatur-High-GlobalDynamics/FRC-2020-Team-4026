@@ -30,22 +30,23 @@ public class ShooterSubsystem extends SubsystemBase {
 
   private double shooterPowerBot = 0.95;
 
-  private static double kPTop = 0,
-      kPBot = 0,
-      kITop = 0,
-      kIBot = 0,
+  private static double 
+      kPTop = 0.00005,
+      kPBot = 0.00005,
+      kITop = 0.000001,
+      kIBot = 0.000001,
       kDTop = 0,
       kDBot = 0,
-      kFTop = 0,
-      kFBot = 0,
+      kFTop = 0.0004,
+      kFBot = 0.000156,
       kIZoneTop = 0,
       kIZoneBot = 0,
       kPeakOutputTop = 1,
       kPeakOutputBot = 1,
-      maxVelTop = 0,
-      maxVelBot = 0,
-      maxAccTop = 0,
-      maxAccBot = 0;
+      maxVelTop = 2000,
+      maxVelBot = 2000,
+      maxAccTop = 1500,
+      maxAccBot = 1500;
   private static int errorToleranceTop = 10, errorToleranceBot = 10;
   private PidParameters topPidParameters, botPidParameters;
 
@@ -76,9 +77,9 @@ public class ShooterSubsystem extends SubsystemBase {
         new TeamSparkMAX("Subsystems.Shooter.Bottom", Ports.BotShooterMotorCAN);
     TeamSparkMAX shooter_top = new TeamSparkMAX("Subsystems.Shooter.Top", Ports.TopShooterMotorCAN);
     PidParameters topPidParameters =
-        new PidParameters(kPTop, kITop, kDTop, kFTop, kIZoneTop, kPeakOutputTop, errorToleranceTop);
+        new PidParameters(kPTop, kITop, kDTop, kFTop, kIZoneTop, kPeakOutputTop, maxVelTop, maxAccTop, errorToleranceTop);
     PidParameters botPidParameters =
-        new PidParameters(kPBot, kIBot, kDBot, kFBot, kIZoneBot, kPeakOutputBot, errorToleranceBot);
+        new PidParameters(kPBot, kIBot, kDBot, kFBot, kIZoneBot, kPeakOutputBot, maxVelBot, maxAccBot, errorToleranceBot);
     return new ShooterSubsystem(shooter_bottom, shooter_top, topPidParameters, botPidParameters);
   }
 
@@ -196,8 +197,8 @@ public class ShooterSubsystem extends SubsystemBase {
   public void stop() {
     this.shooter_bottom.setSmartMotionVelocity(0);
     this.shooter_top.setSmartMotionVelocity(0);
-    // shooter_bottom.set(0);
-    // shooter_top.set(0);
+    this.shooter_bottom.set(0);
+    this.shooter_top.set(0);
   }
 
   public double getShooterSpeedTop() {
