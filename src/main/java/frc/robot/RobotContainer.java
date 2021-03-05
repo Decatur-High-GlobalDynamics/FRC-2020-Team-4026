@@ -199,9 +199,9 @@ public class RobotContainer {
     // When right bumper pressed, aim at vision target if possible
     leftBumper.whileHeld(new PointTurretAtTargetWithAngleCommand(this.turret));
     // When right dpad is held, Turret Clockwise
-    dPadRight.whileHeld(new SimpleTurretCWCommand(this.turret));
+    //dPadRight.whileHeld(new SimpleTurretCWCommand(this.turret));
     // When left dpad is held, Turret Counterclockwise
-    dPadLeft.whileHeld(new SimpleTurretCCWCommand(this.turret));
+    //dPadLeft.whileHeld(new SimpleTurretCCWCommand(this.turret));
     // When button 9 is pressed, zero the turret
     home.whenPressed(new TurretToLimitCommand(this.turret));
     // When button 10 is pressed, get the turret out of the way for climbing
@@ -210,7 +210,7 @@ public class RobotContainer {
     //Shooting from the green zone - closest
     dPadUp.whileHeld(new PidShootCommand(shooter, 1.25, 1.25));
     //Shooting from the yellow zone - one further
-    dPadRight.whileHeld(new PidShootCommand(shooter, 1, 1));
+    dPadRight.whileHeld(new PidShootCommand(shooter, 1.75, 1.75));
     //Shooting from the blue zone - one further
     dPadDown.whileHeld(new PidShootCommand(shooter, 1, 1));
     //Shooting from the red zone - furthest
