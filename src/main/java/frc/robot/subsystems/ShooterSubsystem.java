@@ -11,7 +11,6 @@ import java.util.Objects;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.constants.Ports;
 import frc.robot.PidParameters;
 import frc.robot.TeamTalonSRX;
@@ -132,13 +131,13 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void setShooterVelTop(int speed) {
-    //speed = MathUtil.clamp(speed, 0, maxRotationSpeedTop);
+    // speed = MathUtil.clamp(speed, 0, maxRotationSpeedTop);
     shooter_top.configureWithPidParameters(topPidParameters, 0);
     this.shooter_top.set(ControlMode.Velocity, speed);
   }
 
   public void setShooterVelBot(int speed) {
-    //speed = MathUtil.clamp(speed, 0, maxRotationSpeedBot);
+    // speed = MathUtil.clamp(speed, 0, maxRotationSpeedBot);
     shooter_bottom.configureWithPidParameters(botPidParameters, 0);
     this.shooter_bottom.set(ControlMode.Velocity, speed);
   }
