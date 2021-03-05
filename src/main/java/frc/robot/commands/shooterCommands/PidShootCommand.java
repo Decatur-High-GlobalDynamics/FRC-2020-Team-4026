@@ -30,18 +30,23 @@ public class PidShootCommand extends CommandBase {
   public void initialize() {
     double topShootingVelocityFraction =
         SmartDashboard.getNumber("Commands.PidShooter.topSpeedFraction", this.topVelocityFraction);
-    SmartDashboard.putNumber("Commands.PidShooter.topSpeedFraction", topShootingVelocityFraction);
+    SmartDashboard.putNumber("Commands.PidShooter.topSpeedFraction", topVelocityFraction);
     double bottomShootingVelocityFraction =
         SmartDashboard.getNumber("Commands.PidShooter.BottomSpeedFraction", this.bottomVelocityFraction);
     SmartDashboard.putNumber(
-        "Commands.PidShooter.BottomSpeedFraction", bottomShootingVelocityFraction);
+        "Commands.PidShooter.BottomSpeedFraction", bottomVelocityFraction);
 
-    shooter.setMotorVelocities(topShootingVelocityFraction, bottomShootingVelocityFraction);
+    shooter.setMotorVelocities(topVelocityFraction, bottomVelocityFraction);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    SmartDashboard.putNumber("Commands.PidShooter.topSpeedFraction", topVelocityFraction);
+    SmartDashboard.putNumber(
+        "Commands.PidShooter.BottomSpeedFraction", bottomVelocityFraction);
+    shooter.setMotorVelocities(topVelocityFraction, bottomVelocityFraction);
+  }
 
   // Called once the command ends or is interrupted.
   @Override
