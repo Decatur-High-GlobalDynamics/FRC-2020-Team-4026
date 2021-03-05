@@ -10,7 +10,6 @@ package frc.robot.subsystems;
 import java.util.Objects;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.constants.Ports;
 import frc.robot.PidParameters;
 import frc.robot.TeamSparkMAX;
@@ -227,14 +226,14 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void setShooterVelTop(double speed) {
-    speed = MathUtil.clamp(speed, 0, maxRotationSpeedTop);
+    // speed = MathUtil.clamp(speed, 0, maxRotationSpeedTop);
     shooter_top.configureWithPidParameters(topPidParameters, 0);
     shooter_top.setSmartMotionVelocity(speed);
     // this.shooter_top.set(speed);
   }
 
   public void setShooterVelBot(double speed) {
-    speed = MathUtil.clamp(speed, 0, maxRotationSpeedBot);
+    // speed = MathUtil.clamp(speed, 0, maxRotationSpeedBot);
     shooter_bottom.configureWithPidParameters(botPidParameters, 0);
     shooter_bottom.setSmartMotionVelocity(speed);
     // this.shooter_bottom.set(speed);
