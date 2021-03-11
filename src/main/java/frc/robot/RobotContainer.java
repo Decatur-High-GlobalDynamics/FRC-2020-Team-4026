@@ -20,7 +20,6 @@ import frc.robot.commands.indexerCommands.HorizontalIndexerOuttakeCommand;
 import frc.robot.commands.climberCommands.SimpleClimberControlCommand;
 import frc.robot.commands.intakeCommands.SimpleIntakeCommand;
 import frc.robot.commands.intakeCommands.SimpleOuttakeCommand;
-import frc.robot.commands.turretCommands.PointTurretAtTargetWithAngleCommand;
 import frc.robot.commands.turretCommands.PrepareTurretCommand;
 import frc.robot.commands.turretCommands.SimpleTurretCCWCommand;
 import frc.robot.commands.turretCommands.SimpleTurretCWCommand;
@@ -209,7 +208,8 @@ public class RobotContainer {
     // Shooting from the green zone - closest
     dPadUp.whileHeld(new PidShootCommand(shooter, 1.25, 1.25));
     // Shooting from the yellow zone - one further
-    dPadRight.whileHeld(new PidShootCommand(shooter, 1.95, 1.75)); //1.9, 1.8 works but long wait time for spinup
+    dPadRight.whileHeld(
+        new PidShootCommand(shooter, 1.95, 1.75)); // 1.9, 1.8 works but long wait time for spinup
     // Shooting from the blue zone - one further
     dPadDown.whileHeld(new PidShootCommand(shooter, 2.70, 2.55));
     // Shooting from the red zone - furthest
