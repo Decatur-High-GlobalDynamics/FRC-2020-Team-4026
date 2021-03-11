@@ -10,7 +10,6 @@ package frc.robot.subsystems;
 import java.util.Objects;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.constants.Ports;
 import frc.robot.PidParameters;
 import frc.robot.TeamSparkMAX;
@@ -30,7 +29,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   private double shooterPowerBot = 0.95;
 
-  private static double kPTop = 0.00003,
+  private static double kPTop = 0.00005,
       kPBot = 0.00005,
       kITop = 0.000001,
       kIBot = 0.000001,
@@ -227,18 +226,14 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void setShooterVelTop(double speed) {
-    speed = MathUtil.clamp(speed, 0, maxVelTop);
+    // speed = MathUtil.clamp(speed, 0, maxRotationSpeedTop);
     shooter_top.configureWithPidParameters(topPidParameters, 0);
     shooter_top.setSmartMotionVelocity(speed);
     // this.shooter_top.set(speed);
   }
 
   public void setShooterVelBot(double speed) {
-    speed = MathUtil.clamp(speed, 0, maxVelBot);
-    shooter_bottom.configureWithPidParameters(botPidParameters, 0);
-    shooter_bottom.setSmartMotionVelocity(speed);
     // this.shooter_bottom.set(speed);
-  }
 
   public double getMaxVelTop() {
     return maxRotationSpeedTop;
