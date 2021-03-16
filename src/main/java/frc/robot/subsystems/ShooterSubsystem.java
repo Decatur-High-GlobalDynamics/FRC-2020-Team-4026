@@ -237,6 +237,7 @@ public class ShooterSubsystem extends SubsystemBase {
     shooter_bottom.configureWithPidParameters(botPidParameters, 0);
     shooter_bottom.setSmartMotionVelocity(speed);
     // this.shooter_bottom.set(speed);
+  }
 
   public double getMaxVelTop() {
     return maxRotationSpeedTop;
