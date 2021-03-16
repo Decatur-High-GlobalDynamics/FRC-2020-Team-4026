@@ -210,14 +210,14 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void setShooterVelTop(double speed) {
-    speed = MathUtil.clamp(speed, 0, maxVelTop);
+    //speed = MathUtil.clamp(speed, 0, maxVelTop);
     shooter_top.configureWithPidParameters(topPidParameters, 0);
     shooter_top.setSmartMotionVelocity(speed);
     // this.shooter_top.set(speed);
   }
 
   public void setShooterVelBot(double speed) {
-    speed = MathUtil.clamp(speed, 0, maxVelBot);
+    //speed = MathUtil.clamp(speed, 0, maxVelBot);
     shooter_bottom.configureWithPidParameters(botPidParameters, 0);
     shooter_bottom.setSmartMotionVelocity(speed);
     // this.shooter_bottom.set(speed);
