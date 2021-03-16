@@ -20,17 +20,15 @@ import frc.robot.commands.indexerCommands.HorizontalIndexerOuttakeCommand;
 import frc.robot.commands.climberCommands.SimpleClimberControlCommand;
 import frc.robot.commands.intakeCommands.SimpleIntakeCommand;
 import frc.robot.commands.intakeCommands.SimpleOuttakeCommand;
+import frc.robot.commands.turretCommands.PrepareTurretCommand;
 import frc.robot.commands.turretCommands.SimpleTurretCCWCommand;
 import frc.robot.commands.turretCommands.SimpleTurretCWCommand;
-import frc.robot.commands.turretCommands.PointTurretAtTargetWithAngleCommand;
-import frc.robot.commands.turretCommands.PrepareTurretCommand;
 import frc.robot.commands.drivingCommands.DriveStraightCommand;
 import frc.robot.commands.turretCommands.TurretToLimitCommand;
 import frc.robot.commands.indexerCommands.VerticalIndexerDownCommand;
 import frc.robot.commands.indexerCommands.VerticalIndexerUpCommand;
 import frc.robot.commands.navigationCommands.UpdateNavigationCommand;
 import frc.robot.commands.shooterCommands.ConstantShootCommand;
-import frc.robot.commands.shooterCommands.MaxPowerShootCommand;
 import frc.robot.commands.shooterCommands.PidShootCommand;
 import frc.robot.commands.drivingCommands.DisableRampingCommand;
 import frc.robot.commands.drivingCommands.DriveEncoders;
@@ -185,7 +183,7 @@ public class RobotContainer {
     x.whileHeld(
         new SimpleIntakeCommand(this.intake)
             .alongWith(new HorizontalIndexerIntakeCommand(this.horizontalIndexer)));
-    // When A is held, Intake Out 
+    // When A is held, Intake Out
     a.whileHeld(new SimpleOuttakeCommand(this.intake));
     // When B is held, Horizontal Indexer out
     b.whileHeld(new HorizontalIndexerOuttakeCommand(this.horizontalIndexer));
@@ -194,27 +192,28 @@ public class RobotContainer {
     // When Left Trigger is held, Vertical Indexer down
     leftTrigger.whileHeld(new VerticalIndexerDownCommand(this.verticalIndexer));
     // When button 5 is pressed (Right Bumper), shoot at constant speed
-    rightBumper.whileHeld(new PidShootCommand(this.shooter, 1, 1));
+    rightBumper.whileHeld(new SimpleTurretCCWCommand(this.turret));
     // --------Turret Button Bindings--------
     // When right bumper pressed, aim at vision target if possible
-    leftBumper.whileHeld(new PointTurretAtTargetWithAngleCommand(this.turret));
+    leftBumper.whileHeld(new SimpleTurretCWCommand(this.turret));
     // When right dpad is held, Turret Clockwise
-    //dPadRight.whileHeld(new SimpleTurretCWCommand(this.turret));
+    // dPadRight.whileHeld(new SimpleTurretCWCommand(this.turret));
     // When left dpad is held, Turret Counterclockwise
-    //dPadLeft.whileHeld(new SimpleTurretCCWCommand(this.turret));
+    // dPadLeft.whileHeld(new SimpleTurretCCWCommand(this.turret));
     // When button 9 is pressed, zero the turret
     home.whenPressed(new TurretToLimitCommand(this.turret));
     // When button 10 is pressed, get the turret out of the way for climbing
     start.whenPressed(new PrepareTurretCommand(this.turret));
 
-    //Shooting from the green zone - closest
+    // Shooting from the green zone - closest
     dPadUp.whileHeld(new PidShootCommand(shooter, 1.25, 1.25));
-    //Shooting from the yellow zone - one further
-    dPadRight.whileHeld(new PidShootCommand(shooter, 1.75, 1.75));
-    //Shooting from the blue zone - one further
-    dPadDown.whileHeld(new PidShootCommand(shooter, 1, 1));
-    //Shooting from the red zone - furthest
-    dPadLeft.whileHeld(new PidShootCommand(shooter, 1, 1));
+    // Shooting from the yellow zone - one further
+    dPadRight.whileHeld(
+        new PidShootCommand(shooter, 1.95, 1.75)); // 1.9, 1.8 works but long wait time for spinup
+    // Shooting from the blue zone - one further
+    dPadDown.whileHeld(new PidShootCommand(shooter, 2.70, 2.55));
+    // Shooting from the red zone - furthest
+    dPadLeft.whileHeld(new PidShootCommand(shooter, 3.95, 3.70));
 
     // --------Shooting Button Bindings--------
     // When button 8 (Right Trigger) is pressed, start constant shooting
