@@ -211,9 +211,9 @@ public class RobotContainer {
     dPadRight.whileHeld(
         new PidShootCommand(shooter, 1.95, 1.75)); // 1.9, 1.8 works but long wait time for spinup
     // Shooting from the blue zone - one further
-    dPadDown.whileHeld(new PidShootCommand(shooter, 2.70, 2.55));
+    dPadDown.whileHeld(new PidShootCommand(shooter, 2.75, 2.6));
     // Shooting from the red zone - furthest
-    dPadLeft.whileHeld(new PidShootCommand(shooter, 3.95, 3.70));
+    dPadLeft.whileHeld(new PidShootCommand(shooter, 3.0, 3.52));
 
     // --------Shooting Button Bindings--------
     // When button 8 (Right Trigger) is pressed, start constant shooting
