@@ -195,7 +195,7 @@ public class RobotContainer {
     // When Left Trigger is held, Vertical Indexer down
     leftTrigger.whileHeld(new VerticalIndexerDownCommand(this.verticalIndexer));
     // When button 5 is pressed (Right Bumper), shoot at constant speed
-    rightBumper.whileHeld(new PidShootCommand(this.shooter, 2, 2));
+    rightBumper.whileHeld(new PidShootCommand(this.shooter, 2.75, 2.6));
     // --------Turret Button Bindings--------
     // When right bumper pressed, aim at vision target if possible
     leftBumper.whileHeld(new PointTurretAtTargetWithAngleCommand(this.turret));
