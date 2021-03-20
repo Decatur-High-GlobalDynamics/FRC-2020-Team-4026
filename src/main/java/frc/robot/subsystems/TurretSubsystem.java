@@ -288,6 +288,7 @@ public class TurretSubsystem extends SubsystemBase {
     if (!(this.getCurrentCommand() instanceof PrepareTurretCommand)) {
       reqPosition = (long) MathUtil.clamp(reqPosition, minEncoderRange, 0);
     }
+    SmartDashboard.putNumber("Subsystems.Turret.RequestedPosition", reqPosition);
     turretMotor.set(ControlMode.Position, reqPosition);
   }
 
