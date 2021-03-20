@@ -27,8 +27,8 @@ public class VerticalIndexerSubsystem extends SubsystemBase {
 
   public int ticksUntilTransfered = 6500;
   private String currCmd;
-  private final double upSpeed = .35;
-  private final double downSpeed = -.35;
+  private final double upSpeed = .55;
+  private final double downSpeed = -.45;
   private double epsilonIdleTime = 1;
 
   public VerticalIndexerSubsystem() {
