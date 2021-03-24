@@ -20,6 +20,7 @@ import frc.robot.commands.indexerCommands.HorizontalIndexerOuttakeCommand;
 import frc.robot.commands.climberCommands.SimpleClimberControlCommand;
 import frc.robot.commands.intakeCommands.SimpleIntakeCommand;
 import frc.robot.commands.intakeCommands.SimpleOuttakeCommand;
+import frc.robot.commands.turretCommands.PointTurretAtTargetWithAngleCommand;
 import frc.robot.commands.turretCommands.PrepareTurretCommand;
 import frc.robot.commands.turretCommands.SimpleTurretCCWCommand;
 import frc.robot.commands.turretCommands.SimpleTurretCWCommand;
@@ -192,10 +193,10 @@ public class RobotContainer {
     // When Left Trigger is held, Vertical Indexer down
     leftTrigger.whileHeld(new VerticalIndexerDownCommand(this.verticalIndexer));
     // When button 5 is pressed (Right Bumper), shoot at constant speed
-    rightBumper.whileHeld(new SimpleTurretCCWCommand(this.turret));
+    //rightBumper.whileHeld(new SimpleTurretCCWCommand(this.turret));
     // --------Turret Button Bindings--------
     // When right bumper pressed, aim at vision target if possible
-    leftBumper.whileHeld(new SimpleTurretCWCommand(this.turret));
+    leftBumper.whileHeld(new PointTurretAtTargetWithAngleCommand(this.turret));
     // When right dpad is held, Turret Clockwise
     // dPadRight.whileHeld(new SimpleTurretCWCommand(this.turret));
     // When left dpad is held, Turret Counterclockwise
