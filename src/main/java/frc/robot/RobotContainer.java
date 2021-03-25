@@ -205,7 +205,7 @@ public class RobotContainer {
     start.whenPressed(new PrepareTurretCommand(this.turret));
 
     // Shooting from the green zone - closest
-    dPadUp.whileHeld(new PidShootCommand(shooter, 1.25, 1.35));
+    dPadUp.whileHeld(new PidShootCommand(shooter, 1.25, 1.375));
     // Shooting from the yellow zone - one further
     dPadRight.whileHeld(
         new PidShootCommand(shooter, 1.95, 1.75)); // 1.9, 1.8 works but long wait time for spinup
