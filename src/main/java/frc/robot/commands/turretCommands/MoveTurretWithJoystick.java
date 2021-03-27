@@ -33,7 +33,7 @@ public class MoveTurretWithJoystick extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-      SmartDashboard.putNumber("Command.JoystickTurret.Joystick", joystick.getAsDouble());
+    SmartDashboard.putNumber("Command.JoystickTurret.Joystick", joystick.getAsDouble());
     if (Math.abs(joystick.getAsDouble()) > 0.1) {
       if (joystick.getAsDouble() > 0) {
         turret.goClockwise();
