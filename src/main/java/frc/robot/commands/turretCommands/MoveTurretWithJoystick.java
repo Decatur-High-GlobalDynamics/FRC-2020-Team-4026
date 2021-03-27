@@ -9,6 +9,7 @@ package frc.robot.commands.turretCommands;
 
 import java.util.function.DoubleSupplier;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.TurretSubsystem;
 
@@ -31,6 +32,7 @@ public class MoveTurretWithJoystick extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+      SmartDashboard.putNumber("Command.JoystickTurret.Joystick", joystick.getAsDouble());
     if (Math.abs(joystick.getAsDouble()) > 0.1) {
         if (joystick.getAsDouble() > 0) {
             turret.goClockwise();
