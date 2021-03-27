@@ -51,9 +51,15 @@ public class PointTurretAtTargetSimple extends CommandBase {
 
   public double getDistance() {
     if (vision.getLastSeenTx() == 0) {
-      return TurretAimConstants.heightDifferenceForVision / Math.tan(Math.toRadians(vision.getLastSeenTy() + TurretAimConstants.limelightAngle));
+      return TurretAimConstants.heightDifferenceForVision
+          / Math.tan(Math.toRadians(vision.getLastSeenTy() + TurretAimConstants.limelightAngle));
     }
-    return (TurretAimConstants.heightDifferenceForVision)/(Math.cos(Math.toRadians(Math.abs(nav.getHeading() + turret.getRadians() - vision.getLastSeenTx())) * Math.tan(Math.toRadians(vision.getLastSeenTy() + TurretAimConstants.limelightAngle))));
+    return (TurretAimConstants.heightDifferenceForVision)
+        / (Math.cos(
+            Math.toRadians(
+                    Math.abs(nav.getHeading() + turret.getRadians() - vision.getLastSeenTx()))
+                * Math.tan(
+                    Math.toRadians(vision.getLastSeenTy() + TurretAimConstants.limelightAngle))));
   }
 
   public double getInaccuracy() {
