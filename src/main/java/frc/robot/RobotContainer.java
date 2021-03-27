@@ -20,6 +20,7 @@ import frc.robot.commands.indexerCommands.HorizontalIndexerOuttakeCommand;
 import frc.robot.commands.climberCommands.SimpleClimberControlCommand;
 import frc.robot.commands.intakeCommands.SimpleIntakeCommand;
 import frc.robot.commands.intakeCommands.SimpleOuttakeCommand;
+import frc.robot.commands.turretCommands.MoveTurretWithJoystick;
 import frc.robot.commands.turretCommands.PointTurretAtTargetSimple;
 import frc.robot.commands.turretCommands.PrepareTurretCommand;
 import frc.robot.commands.drivingCommands.DriveStraightCommand;
@@ -213,6 +214,8 @@ public class RobotContainer {
     dPadDown.whileHeld(new PidShootCommand(shooter, 2.75, 2.6));
     // Shooting from the red zone - furthest
     dPadLeft.whileHeld(new PidShootCommand(shooter, 3.0, 3.52));
+
+    turret.setDefaultCommand(new MoveTurretWithJoystick(turret, () -> secondaryJoystick.getX()));
 
     // --------Shooting Button Bindings--------
     // When button 8 (Right Trigger) is pressed, start constant shooting
