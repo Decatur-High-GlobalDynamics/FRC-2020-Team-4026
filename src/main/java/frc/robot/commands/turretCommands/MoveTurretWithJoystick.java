@@ -16,6 +16,7 @@ import frc.robot.subsystems.TurretSubsystem;
 public class MoveTurretWithJoystick extends CommandBase {
   /** Creates a new SimpleCCWCommand. */
   private final TurretSubsystem turret;
+
   private final DoubleSupplier joystick;
 
   public MoveTurretWithJoystick(TurretSubsystem turret, DoubleSupplier joystick) {
@@ -34,11 +35,11 @@ public class MoveTurretWithJoystick extends CommandBase {
   public void execute() {
       SmartDashboard.putNumber("Command.JoystickTurret.Joystick", joystick.getAsDouble());
     if (Math.abs(joystick.getAsDouble()) > 0.1) {
-        if (joystick.getAsDouble() > 0) {
-            turret.goClockwise();
-        } else {
-            turret.goCounterClockwise();
-        }
+      if (joystick.getAsDouble() > 0) {
+        turret.goClockwise();
+      } else {
+        turret.goCounterClockwise();
+      }
     }
   }
 
