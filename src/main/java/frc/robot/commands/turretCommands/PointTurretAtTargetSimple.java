@@ -1,26 +1,17 @@
-/*----------------------------------------------------------------------------*/
-/* Copyright (c) 2019 FIRST. All Rights Reserved.                             */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
-/*----------------------------------------------------------------------------*/
-
 package frc.robot.commands.turretCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.constants.TurretAimConstants;
-import frc.robot.constants.TurretAimConstants;
-import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.NavigationSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.constants.TurretAimConstants;
 
-public class PointTurretAtTargetWithAngleCommand extends CommandBase {
+public class PointTurretAtTargetSimple extends CommandBase {
   TurretSubsystem turret;
   VisionSubsystem vision;
   NavigationSubsystem nav;
   /** Creates a new PointTurretAtTargetWithAngleCommand. */
-  public PointTurretAtTargetWithAngleCommand(TurretSubsystem turret, NavigationSubsystem nav) {
+  public PointTurretAtTargetSimple(TurretSubsystem turret, NavigationSubsystem nav) {
     this.turret = turret;
     this.vision = turret.getVisionSubsystem();
     this.nav = nav;
@@ -35,9 +26,12 @@ public class PointTurretAtTargetWithAngleCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (vision.isValid()) {
-      double angleSetPoint = turret.getRadians() - Math.toRadians(vision.getLastSeenTx());
-      turret.startRotatingToPosition(angleSetPoint);
+    if (vision.isValid() && Math.abs(vision.getLastSeenTx() - getInaccuracy()) > 0.04026) {
+      if (vision.getLastSeenTx() > getInaccuracy()) {
+        turret.goClockwise(0.1);
+      } else {
+        turret.goCounterClockwise(0.1);
+      }
     } else {
       turret.stop();
     }
@@ -53,5 +47,16 @@ public class PointTurretAtTargetWithAngleCommand extends CommandBase {
   @Override
   public boolean isFinished() {
     return false;
+  }
+
+  public double getDistance() {
+    if (vision.getLastSeenTx() == 0) {
+      return TurretAimConstants.heightDifferenceForVision / Math.tan(Math.toRadians(vision.getLastSeenTy() + TurretAimConstants.limelightAngle));
+    }
+    return (TurretAimConstants.heightDifferenceForVision)/(Math.cos(Math.toRadians(Math.abs(nav.getHeading() + turret.getRadians() - vision.getLastSeenTx())) * Math.tan(Math.toRadians(vision.getLastSeenTy() + TurretAimConstants.limelightAngle))));
+  }
+
+  public double getInaccuracy() {
+    return Math.atan(TurretAimConstants.limelightRightDist / getDistance());
   }
 }
