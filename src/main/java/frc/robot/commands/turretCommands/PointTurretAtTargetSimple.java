@@ -22,7 +22,7 @@ public class PointTurretAtTargetSimple extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (vision.isValid() && Math.abs(vision.getLastSeenTx()) > 0.04026) {
+    if (vision.isValid() && Math.abs(vision.getLastSeenTx()) > 0.1) {
       if (vision.getLastSeenTx() > 0) {
         turret.goClockwise(0.1);
       } else {
