@@ -188,7 +188,9 @@ public class RobotContainer {
     // When A is held, Intake Out
     a.whileHeld(new PointTurretAtTargetSimple(this.turret));
     // When B is held, Horizontal Indexer out
-    b.whileHeld(new SimpleOuttakeCommand(this.intake).alongWith(new HorizontalIndexerOuttakeCommand(this.horizontalIndexer)));
+    b.whileHeld(
+        new SimpleOuttakeCommand(this.intake)
+            .alongWith(new HorizontalIndexerOuttakeCommand(this.horizontalIndexer)));
     // When Right Trigger is held, Vertical Indexer up
     rightTrigger.whileHeld(new VerticalIndexerUpCommand(this.verticalIndexer));
     // When Left Trigger is held, Vertical Indexer down
