@@ -14,8 +14,6 @@ import frc.robot.subsystems.VisionSubsystem;
 public class PointTurretAtTargetWithAngleCommand extends CommandBase {
   TurretSubsystem turret;
   VisionSubsystem vision;
-  //True is counter clockwise, false is clockwise
-  boolean currentSpinDirection = true;
   /** Creates a new PointTurretAtTargetWithAngleCommand. */
   public PointTurretAtTargetWithAngleCommand(TurretSubsystem turret) {
     this.turret = turret;
