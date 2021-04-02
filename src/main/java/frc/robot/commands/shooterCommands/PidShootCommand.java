@@ -42,6 +42,7 @@ public class PidShootCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    //Update it every time to ensure that it keeps working - there was some weirdness this helped fix
     SmartDashboard.putNumber("Commands.PidShooter.topSpeedFraction", topVelocityFraction);
     SmartDashboard.putNumber("Commands.PidShooter.BottomSpeedFraction", bottomVelocityFraction);
     shooter.setMotorVelocities(topVelocityFraction, bottomVelocityFraction);
