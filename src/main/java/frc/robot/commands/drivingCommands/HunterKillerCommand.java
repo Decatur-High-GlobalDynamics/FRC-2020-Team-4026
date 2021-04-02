@@ -63,24 +63,39 @@ public class HunterKillerCommand extends CommandBase {
     // This is the offset for motors for turning
     double turnOffset = 0;
 
+    int requiredFramesForTargetLock = 3;
+
     // Variable to represent the ball's x coordinate that means the robot is aligned with it
     double angleMid = 0;
 
     // this comment is here to make git happy
     // allowed range around the angleMid for the robot to be aligned with the ball
-    double angleOff = 0.1;
+    double targetAngleOff = 0.05;
+    // Angles are represented from -1 to 1, with zero being the middle of the screen. Thus, 0.05 is
+    // a 5% margin from the center.
 
     if (vision.getBallSeen()) {
 
       double ballX = vision.getBallX();
 
-      if (this.alignCounter <= 2) {
-        if (Math.abs(ballX - angleMid) < angleOff) {
+      double angleOff = Math.abs(ballX - angleMid);
+      // Current angle the ball is off from the middle
+
+      if (this.alignCounter <= requiredFramesForTargetLock) {
+        if (angleOff < targetAngleOff) {
 
           // if aligned, count up alignCounter
           this.alignCounter++;
 
         } else {
+
+          desiredSpeed = angleOff / (this.alignCounter * 2);
+          // Decrease speed as target locks on.
+          // Desired Speed is set to the angle that the rotation is currently off divided by the
+          // number of
+          // alignment frames to prevent infinite loop in case we raise requiredFramesForTargetLock
+          // (which we probably will)
+
           if (ballX > angleMid) {
 
             // turn right if the ball is right of the robot
@@ -96,8 +111,9 @@ public class HunterKillerCommand extends CommandBase {
       }
     }
     // if we have 3 or more frames where the robot was aligned with the ball
-    if (this.alignCounter > 2) {
-
+    if (this.alignCounter > requiredFramesForTargetLock) {
+      desiredSpeed = 0.5;
+      // Reset desired speed for driving straight
       // drive straight if the ball already aligned with the ball
       driveTrain.setMotorPowers(-(desiredSpeed) + turnOffset, desiredSpeed + turnOffset);
     }
