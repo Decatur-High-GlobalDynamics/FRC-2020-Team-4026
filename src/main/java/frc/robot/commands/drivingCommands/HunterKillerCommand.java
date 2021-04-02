@@ -92,10 +92,10 @@ public class HunterKillerCommand extends CommandBase {
             desiredSpeed = angleOff / (this.alignCounter * 2);
             // Decrease speed as target locks on.
             // Desired Speed is set to the angle that the rotation is currently off divided by the
-            // number of alignment frames to prevent infinite loop in case we raise requiredFramesForTargetLock
+            // number of alignment frames to prevent infinite loop in case we raise
+            // requiredFramesForTargetLock
             // (which we probably will)
-          }
-          else {
+          } else {
             desiredSpeed = angleOff;
           }
 
