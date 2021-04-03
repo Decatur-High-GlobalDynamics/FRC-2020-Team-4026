@@ -84,7 +84,7 @@ public class TurretSubsystem extends SubsystemBase {
     TeamTalonSRX turretMotor = new TeamTalonSRX("Subsystems.Turret.motor", Ports.TurretCAN);
     DigitalInput turretLimit = new DigitalInput(Ports.TurretLimitDIO);
     VisionSubsystem visionSubsystem = VisionSubsystem.Create();
-    PidParameters pidParams = new PidParameters(0.25, 0.001, 0.0, 0, 0, 0.15, 10);
+    PidParameters pidParams = new PidParameters(0.25, 0.001, 0.0, 0, 0, 0.15, 1);
     return new TurretSubsystem(turretMotor, turretLimit, visionSubsystem, pidParams);
   }
 
@@ -288,6 +288,7 @@ public class TurretSubsystem extends SubsystemBase {
     if (!(this.getCurrentCommand() instanceof PrepareTurretCommand)) {
       reqPosition = (long) MathUtil.clamp(reqPosition, minEncoderRange, 0);
     }
+    SmartDashboard.putNumber("Subsystems.Turret.RequestedPosition", reqPosition);
     turretMotor.set(ControlMode.Position, reqPosition);
   }
 

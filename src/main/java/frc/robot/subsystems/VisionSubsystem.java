@@ -68,7 +68,7 @@ public class VisionSubsystem extends SubsystemBase {
   }
 
   public boolean isValid() {
-    return (Timer.getFPGATimestamp() - this.lastTimeTargetSeen) > this.tvRecentTime;
+    return !((Timer.getFPGATimestamp() - this.lastTimeTargetSeen) > this.tvRecentTime);
   }
 
   /*
