@@ -277,4 +277,29 @@ public class RobotContainer {
   public Command getStopDriveTrainCommand() {
     return new StopDrivetrainCommand(driveTrain);
   }
+
+  public Command getTrajCommandFromJSON(String trajectoryJSON) {
+    Trajectory traj = new Trajectory();
+    try {
+      Path dir = Filesystem.getDeployDirectory().toPath();
+      Path trajPath = Filesystem.getDeployDirectory().toPath().resolve("paths/output/" + trajectoryJSON);
+      traj = TrajectoryUtil.fromPathweaverJson(trajPath);
+    } catch (IOException ex) {
+      DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
+      return null;
+    }
+
+    return new RamseteCommand(
+      traj, 
+      driveTrainSubsystem::getPose, 
+      new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta), 
+      new SimpleMotorFeedforward(Constants.ksVolts, Constants.kvVoltSecondsPerMeter, Constants.kaVoltSecondsSquaredPerMeter),
+      Constants.kDriveKinematics, 
+      driveTrainSubsystem::getWheelSpeeds, 
+      new PIDController(Constants.kPDriveVel, 0, 0), 
+      new PIDController(Constants.kPDriveVel, 0, 0),
+      driveTrainSubsystem::tankDriveVolts,
+      driveTrainSubsystem
+    );
+  }
 }
