@@ -282,7 +282,8 @@ public class RobotContainer {
     Trajectory traj = new Trajectory();
     try {
       Path dir = Filesystem.getDeployDirectory().toPath();
-      Path trajPath = Filesystem.getDeployDirectory().toPath().resolve("paths/output/" + trajectoryJSON);
+      Path trajPath =
+          Filesystem.getDeployDirectory().toPath().resolve("paths/output/" + trajectoryJSON);
       traj = TrajectoryUtil.fromPathweaverJson(trajPath);
     } catch (IOException ex) {
       DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
@@ -290,16 +291,18 @@ public class RobotContainer {
     }
 
     return new RamseteCommand(
-      traj, 
-      driveTrainSubsystem::getPose, 
-      new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta), 
-      new SimpleMotorFeedforward(Constants.ksVolts, Constants.kvVoltSecondsPerMeter, Constants.kaVoltSecondsSquaredPerMeter),
-      Constants.kDriveKinematics, 
-      driveTrainSubsystem::getWheelSpeeds, 
-      new PIDController(Constants.kPDriveVel, 0, 0), 
-      new PIDController(Constants.kPDriveVel, 0, 0),
-      driveTrainSubsystem::tankDriveVolts,
-      driveTrainSubsystem
-    );
+        traj,
+        driveTrainSubsystem::getPose,
+        new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta),
+        new SimpleMotorFeedforward(
+            Constants.ksVolts,
+            Constants.kvVoltSecondsPerMeter,
+            Constants.kaVoltSecondsSquaredPerMeter),
+        Constants.kDriveKinematics,
+        driveTrainSubsystem::getWheelSpeeds,
+        new PIDController(Constants.kPDriveVel, 0, 0),
+        new PIDController(Constants.kPDriveVel, 0, 0),
+        driveTrainSubsystem::tankDriveVolts,
+        driveTrainSubsystem);
   }
 }
