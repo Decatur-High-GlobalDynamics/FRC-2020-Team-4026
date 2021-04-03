@@ -291,7 +291,7 @@ public class RobotContainer {
 
     return new RamseteCommand(
       traj, 
-      driveTrainSubsystem::getPose, 
+      navigation::getPose, 
       new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta), 
       new SimpleMotorFeedforward(Constants.ksVolts, Constants.kvVoltSecondsPerMeter, Constants.kaVoltSecondsSquaredPerMeter),
       Constants.kDriveKinematics, 
