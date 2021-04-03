@@ -16,6 +16,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 
 import edu.wpi.first.wpilibj.SlewRateLimiter;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
@@ -249,15 +250,13 @@ public class DriveTrainSubsystem extends SubsystemBase {
             < speedInMetersToTicksPer100ms(velocityForStopMetersPerSecond);
   }
 
-  private int speedInMetersToTicksPer100ms(double speed) {
-    return (int) Math.round(speed / (10 * DriveTrainConstants.kEncoderDistancePerPulse));
+  private double speedInMetersToTicksPer100ms(double speed) {
+    return Math.round(speed / (10 * DriveTrainConstants.kEncoderDistancePerPulse));
   }
 
-  /* Never used...
-  private double ticksPer100msToSpeedInMeters(int ticks) {
+  private double ticksPer100msToSpeedInMeters(double ticks) {
     return ticks * 10 * DriveTrainConstants.kEncoderDistancePerPulse;
   }
-  */
 
   public void setRamping(boolean ramping) {
     rampingOn = ramping;
@@ -327,5 +326,15 @@ public class DriveTrainSubsystem extends SubsystemBase {
     }
 
     setMotorPowers(leftMotorOutput, rightMotorOutput);
+  }
+
+  public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+    return new DifferentialDriveWheelSpeeds(ticksPer100msToSpeedInMeters(leftDriveFalconMain.getSelectedSensorVelocity(0)), ticksPer100msToSpeedInMeters(rightDriveFalconMain.getSelectedSensorVelocity(0)));
+  }
+
+  public void tankDriveVolts(double leftVolts, double rightVolts) {
+    leftDriveFalconMain.setVoltage(leftVolts);
+    rightDriveFalconMain.setVoltage(-rightVolts);
+    drive.feed();
   }
 }

@@ -7,14 +7,24 @@
 
 package frc.robot;
 
+import java.io.IOException;
+import java.nio.file.Path;
+
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.controller.RamseteController;
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.commands.AutoIntakeIndex;
 import frc.robot.commands.AutoShootWithHorizontal;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import frc.robot.commands.indexerCommands.HorizontalIndexerIntakeCommand;
 import frc.robot.commands.indexerCommands.HorizontalIndexerOuttakeCommand;
 import frc.robot.commands.climberCommands.SimpleClimberControlCommand;
@@ -48,10 +58,12 @@ import frc.robot.subsystems.TurretSubsystem;
 import frc.robot.subsystems.VerticalIndexerSubsystem;
 import frc.robot.subsystems.HorizontalIndexerSubsystem;
 import frc.robot.constants.LogitechControllerButtons;
+import frc.robot.constants.PathfindingConstants;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
+import edu.wpi.first.wpilibj2.command.RamseteCommand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -292,14 +304,14 @@ public class RobotContainer {
     return new RamseteCommand(
       traj, 
       navigation::getPose, 
-      new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta), 
-      new SimpleMotorFeedforward(Constants.ksVolts, Constants.kvVoltSecondsPerMeter, Constants.kaVoltSecondsSquaredPerMeter),
-      Constants.kDriveKinematics, 
-      driveTrainSubsystem::getWheelSpeeds, 
-      new PIDController(Constants.kPDriveVel, 0, 0), 
-      new PIDController(Constants.kPDriveVel, 0, 0),
-      driveTrainSubsystem::tankDriveVolts,
-      driveTrainSubsystem
+      new RamseteController(PathfindingConstants.kRamseteB, PathfindingConstants.kRamseteZeta), 
+      new SimpleMotorFeedforward(PathfindingConstants.ks, PathfindingConstants.kv, PathfindingConstants.ka),
+      PathfindingConstants.kDriveKinematics, 
+      driveTrain::getWheelSpeeds, 
+      new PIDController(PathfindingConstants.kPDriveVel, 0, 0), 
+      new PIDController(PathfindingConstants.kPDriveVel, 0, 0),
+      driveTrain::tankDriveVolts,
+      driveTrain
     );
   }
 }
