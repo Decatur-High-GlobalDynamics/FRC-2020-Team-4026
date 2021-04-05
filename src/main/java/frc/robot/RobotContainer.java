@@ -86,6 +86,8 @@ public class RobotContainer {
   public static final Joystick driveController = new Joystick(0);
   public static final Joystick secondaryJoystick = new Joystick(1);
 
+  public static final String pathfindingJsonDefault = "Straight.wpilib.json";
+
   enum PossibleAutos {
     IN_FRONT_OF_TARGET_MAX_POWER,
     IN_FRONT_OF_TARGET_MAX_POWER_THEN_BACK,
@@ -244,7 +246,8 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    PossibleAutos choice = autoChoice.getSelected();
+    return getTrajCommandFromJSON(pathfindingJsonDefault);
+    /*PossibleAutos choice = autoChoice.getSelected();
     switch (choice) {
       case IN_FRONT_OF_TARGET_MAX_POWER:
         return getAutoInFrontOfTarget();
@@ -252,7 +255,7 @@ public class RobotContainer {
         return getAutoInFrontOfTargetThenBack();
       default:
         return null;
-    }
+    }*/
   }
 
   private Command getAutoInFrontOfTarget() {
