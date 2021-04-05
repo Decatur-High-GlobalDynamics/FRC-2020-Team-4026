@@ -297,7 +297,8 @@ public class RobotContainer {
     Trajectory traj = new Trajectory();
     try {
       Path dir = Filesystem.getDeployDirectory().toPath();
-      Path trajPath = Filesystem.getDeployDirectory().toPath().resolve("paths/output/" + trajectoryJSON);
+      Path trajPath =
+          Filesystem.getDeployDirectory().toPath().resolve("paths/output/" + trajectoryJSON);
       traj = TrajectoryUtil.fromPathweaverJson(trajPath);
     } catch (IOException ex) {
       DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
