@@ -8,7 +8,6 @@
 package frc.robot;
 
 import java.io.IOException;
-import java.nio.file.Path;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
@@ -99,10 +98,12 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     try {
-      traj = TrajectoryUtil.fromPathweaverJson(Filesystem.getDeployDirectory().toPath().resolve("output/" + pathfindingJsonDefault));
-    }
-    catch (IOException ex) {
-      DriverStation.reportError("Unable to open trajectory: " + pathfindingJsonDefault, ex.getStackTrace());
+      traj =
+          TrajectoryUtil.fromPathweaverJson(
+              Filesystem.getDeployDirectory().toPath().resolve("output/" + pathfindingJsonDefault));
+    } catch (IOException ex) {
+      DriverStation.reportError(
+          "Unable to open trajectory: " + pathfindingJsonDefault, ex.getStackTrace());
     }
     // Configure the button bindings
     configureDriveController();
@@ -301,7 +302,7 @@ public class RobotContainer {
   }
 
   public Command getTrajCommandFromJSON(Trajectory traj) {
-    
+
     return new RamseteCommand(
         traj,
         navigation::getPose,
