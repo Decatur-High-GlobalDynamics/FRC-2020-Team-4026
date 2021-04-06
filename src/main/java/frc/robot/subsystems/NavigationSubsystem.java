@@ -90,4 +90,9 @@ public class NavigationSubsystem extends SubsystemBase {
   public double getAccumulatedHeading() {
     return accumulatedHeading;
   }
+
+  public void resetPose() {
+    navx.reset();
+    calibratePose(new Pose2d());
+  }
 }

@@ -16,9 +16,9 @@ public class PathfindingConstants {
   public static final DifferentialDriveKinematics kDriveKinematics =
       new DifferentialDriveKinematics(kTrackWidthMeters);
   // Our robots max speed. TBD
-  public static final double kMaxSpeedMetersPerSecond = 3;
+  public static final double kMaxSpeedMetersPerSecond = 0.5;
   // Our robots max acceleration. TBD
-  public static final double kMaxAccelMetersPerSecondSquared = 3;
+  public static final double kMaxAccelMetersPerSecondSquared = 0.5;
 
   // Gains for pathfinding. These are what WPI says is good for all bots
   public static final double kRamseteB = 2;

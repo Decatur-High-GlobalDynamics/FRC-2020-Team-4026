@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.commands.AutoIntakeIndex;
 import frc.robot.commands.AutoShootWithHorizontal;
@@ -57,6 +58,7 @@ import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
 import frc.robot.subsystems.VerticalIndexerSubsystem;
 import frc.robot.subsystems.HorizontalIndexerSubsystem;
+import frc.robot.constants.DriveTrainConstants;
 import frc.robot.constants.LogitechControllerButtons;
 import frc.robot.constants.PathfindingConstants;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -87,7 +89,7 @@ public class RobotContainer {
   public static final Joystick secondaryJoystick = new Joystick(1);
 
   public static final String pathfindingJsonDefault = "Straight.wpilib.json";
-  public final Trajectory traj;
+  public Trajectory traj;
 
   enum PossibleAutos {
     IN_FRONT_OF_TARGET_MAX_POWER,
@@ -115,7 +117,7 @@ public class RobotContainer {
     // and eventually vision
     navigation.setDefaultCommand(
         new UpdateNavigationCommand(
-            navigation, () -> driveTrain.getLeftEncoder(), () -> driveTrain.getRightEncoder()));
+            navigation, () -> (driveTrain.getLeftEncoder()*DriveTrainConstants.kEncoderDistancePerPulse), () -> (driveTrain.getRightEncoder()*DriveTrainConstants.kEncoderDistancePerPulse)));
   }
   /**
    * Use this method to define your button->command mappings. Buttons can be created by
@@ -314,5 +316,10 @@ public class RobotContainer {
         new PIDController(PathfindingConstants.kPDriveVel, 0, 0),
         driveTrain::tankDriveVolts,
         driveTrain);
+  }
+
+  public void zeroLocation() {
+    navigation.resetPose();
+    driveTrain.resetEncoder();
   }
 }

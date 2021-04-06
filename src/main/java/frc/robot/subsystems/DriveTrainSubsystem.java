@@ -16,12 +16,14 @@ import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 
 import edu.wpi.first.wpilibj.SlewRateLimiter;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
 
 import frc.robot.constants.DriveTrainConstants;
+import frc.robot.constants.PathfindingConstants;
 import frc.robot.constants.Ports;
 import frc.robot.ITeamTalon;
 import frc.robot.TeamTalonFX;
@@ -335,8 +337,22 @@ public class DriveTrainSubsystem extends SubsystemBase {
   }
 
   public void tankDriveVolts(double leftVolts, double rightVolts) {
-    leftDriveFalconMain.setVoltage(leftVolts);
-    rightDriveFalconMain.setVoltage(-rightVolts);
+    SmartDashboard.putNumber("Subsystems.DriveTrain.leftVolts", leftVolts);
+    SmartDashboard.putNumber("Subsystems.DriveTrain.rightVolts", rightVolts);
+    leftDriveFalconMain.setVoltage(-leftVolts);
+    leftDriveFalconSub.setVoltage(-leftVolts);
+    rightDriveFalconMain.setVoltage(rightVolts);
+    rightDriveFalconSub.setVoltage(rightVolts);
     drive.feed();
+  }
+
+  public void resetEncoder() {
+    leftDriveFalconMain.setSelectedSensorPosition(0, 0, 10);
+    rightDriveFalconMain.setSelectedSensorPosition(0, 0, 10);
+  }
+
+  public void driveAtSpeedAndTurn(double metersPerSecond, double radsPerSecond) {
+    DifferentialDriveWheelSpeeds speeds = PathfindingConstants.kDriveKinematics.toWheelSpeeds(new ChassisSpeeds(metersPerSecond, 0, radsPerSecond));
+    
   }
 }
