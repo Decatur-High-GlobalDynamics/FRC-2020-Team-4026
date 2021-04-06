@@ -329,7 +329,9 @@ public class DriveTrainSubsystem extends SubsystemBase {
   }
 
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-    return new DifferentialDriveWheelSpeeds(ticksPer100msToSpeedInMeters(leftDriveFalconMain.getSelectedSensorVelocity(0)), ticksPer100msToSpeedInMeters(rightDriveFalconMain.getSelectedSensorVelocity(0)));
+    return new DifferentialDriveWheelSpeeds(
+        ticksPer100msToSpeedInMeters(leftDriveFalconMain.getSelectedSensorVelocity(0)),
+        ticksPer100msToSpeedInMeters(rightDriveFalconMain.getSelectedSensorVelocity(0)));
   }
 
   public void tankDriveVolts(double leftVolts, double rightVolts) {

@@ -303,16 +303,16 @@ public class RobotContainer {
   public Command getTrajCommandFromJSON(Trajectory traj) {
     
     return new RamseteCommand(
-      traj, 
-      navigation::getPose, 
-      new RamseteController(PathfindingConstants.kRamseteB, PathfindingConstants.kRamseteZeta), 
-      new SimpleMotorFeedforward(PathfindingConstants.ks, PathfindingConstants.kv, PathfindingConstants.ka),
-      PathfindingConstants.kDriveKinematics, 
-      driveTrain::getWheelSpeeds, 
-      new PIDController(PathfindingConstants.kPDriveVel, 0, 0), 
-      new PIDController(PathfindingConstants.kPDriveVel, 0, 0),
-      driveTrain::tankDriveVolts,
-      driveTrain
-    );
+        traj,
+        navigation::getPose,
+        new RamseteController(PathfindingConstants.kRamseteB, PathfindingConstants.kRamseteZeta),
+        new SimpleMotorFeedforward(
+            PathfindingConstants.ks, PathfindingConstants.kv, PathfindingConstants.ka),
+        PathfindingConstants.kDriveKinematics,
+        driveTrain::getWheelSpeeds,
+        new PIDController(PathfindingConstants.kPDriveVel, 0, 0),
+        new PIDController(PathfindingConstants.kPDriveVel, 0, 0),
+        driveTrain::tankDriveVolts,
+        driveTrain);
   }
 }
