@@ -87,6 +87,7 @@ public class RobotContainer {
   public static final Joystick secondaryJoystick = new Joystick(1);
 
   public static final String pathfindingJsonDefault = "Straight.wpilib.json";
+  public final Trajectory traj;
 
   enum PossibleAutos {
     IN_FRONT_OF_TARGET_MAX_POWER,
@@ -97,6 +98,12 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    try {
+      traj = TrajectoryUtil.fromPathweaverJson(Filesystem.getDeployDirectory().toPath().resolve("output/" + pathfindingJsonDefault));
+    }
+    catch (IOException ex) {
+      DriverStation.reportError("Unable to open trajectory: " + pathfindingJsonDefault, ex.getStackTrace());
+    }
     // Configure the button bindings
     configureDriveController();
     configureSecondaryController();
@@ -246,7 +253,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return getTrajCommandFromJSON(pathfindingJsonDefault);
+    return getTrajCommandFromJSON(traj);
     /*PossibleAutos choice = autoChoice.getSelected();
     switch (choice) {
       case IN_FRONT_OF_TARGET_MAX_POWER:
@@ -293,18 +300,8 @@ public class RobotContainer {
     return new StopDrivetrainCommand(driveTrain);
   }
 
-  public Command getTrajCommandFromJSON(String trajectoryJSON) {
-    Trajectory traj = new Trajectory();
-    try {
-      Path dir = Filesystem.getDeployDirectory().toPath();
-      Path trajPath =
-          Filesystem.getDeployDirectory().toPath().resolve("paths/output/" + trajectoryJSON);
-      traj = TrajectoryUtil.fromPathweaverJson(trajPath);
-    } catch (IOException ex) {
-      DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
-      return null;
-    }
-
+  public Command getTrajCommandFromJSON(Trajectory traj) {
+    
     return new RamseteCommand(
       traj, 
       navigation::getPose, 
