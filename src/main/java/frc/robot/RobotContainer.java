@@ -404,6 +404,30 @@ public class RobotContainer {
                                                                                                                                                                 0.3))))))))))))))))))));
   }
 
+  public Command barrelRace() {
+    return driveForwardConstructor(3.5052, 0.3)
+    .andThen(turnCommandConstructor(90)
+    .andThen(driveForwardConstructor(1.524, 0.3)
+    .andThen(turnCommandConstructor(90)
+    .andThen(driveForwardConstructor(1.524, 0.3)
+    .andThen(turnCommandConstructor(90)
+    .andThen(driveForwardConstructor(1.524, 0.3)
+    .andThen(turnCommandConstructor(90)
+    .andThen(driveForwardConstructor(3.81, 0.3)
+    .andThen(turnCommandConstructor(-90)
+    .andThen(driveForwardConstructor(1.524, 0.3)
+    .andThen(turnCommandConstructor(-90)
+    .andThen(driveForwardConstructor(1.524, 0.3)
+    .andThen(turnCommandConstructor(-90)
+    .andThen(driveForwardConstructor(3.048, 0.3)
+    .andThen(turnCommandConstructor(-90)
+    .andThen(driveForwardConstructor(3.048, 0.3)
+    .andThen(turnCommandConstructor(-90)
+    .andThen(driveForwardConstructor(1.524, 0.3)
+    .andThen(turnCommandConstructor(-90)
+    .andThen(driveForwardConstructor(6.858, 0.3)))))))))))))))))))));
+  }
+
   public Command driveForwardConstructor(double distanceMeters, double speed) {
     return new DriveEncoders(distanceMeters, speed, driveTrain);
   }
