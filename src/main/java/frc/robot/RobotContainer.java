@@ -340,8 +340,33 @@ public class RobotContainer {
                                                                                                                                                                         0.9)))))))))))))))))))));
   }
 
-  public Command driveForwardConstructor(double distance, double speed) {
-    return new DriveEncoders(distance, speed, driveTrain);
+  public Command bounceCommand() {
+
+    return driveForwardConstructor(1.524, 0.3)
+      .andThen(turnCommandConstructor(-90)
+      .andThen(driveForwardConstructor(1.2192, 0.3)
+      .andThen(turnCommandConstructor(180)
+      .andThen(driveForwardConstructor(1.2192, 0.3)
+      .andThen(turnCommandConstructor(-90)
+      .andThen(driveForwardConstructor(.762, 0.3)
+      .andThen(turnCommandConstructor(90)
+      .andThen(driveForwardConstructor(1.524, 0.3)
+      .andThen(turnCommandConstructor(-90)
+      .andThen(driveForwardConstructor(2.7432, 0.3)
+      .andThen(turnCommandConstructor(180)
+      .andThen(driveForwardConstructor(2.7432, 0.3)
+      .andThen(turnCommandConstructor(-90)
+      .andThen(driveForwardConstructor(2.286, 0.3)
+      .andThen(turnCommandConstructor(-90)
+      .andThen(driveForwardConstructor(2.7432, 0.3)
+      .andThen(turnCommandConstructor(180)
+      .andThen(driveForwardConstructor(1.2192, 0.3)
+      .andThen(turnCommandConstructor(-90))
+      .andThen(driveForwardConstructor(1.524, 0.3))))))))))))))))))));
+  }
+
+  public Command driveForwardConstructor(double distanceMeters, double speed) {
+    return new DriveEncoders(distanceMeters, speed, driveTrain);
   }
 
   public Command turnCommandConstructor(double angle) {
