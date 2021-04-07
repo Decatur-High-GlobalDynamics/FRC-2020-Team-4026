@@ -14,7 +14,8 @@ public class TurnCommand extends CommandBase {
   double speed;
   NavigationSubsystem nav;
   /** Creates a new TurnCommand. */
-  public TurnCommand(double angle, double speed, DriveTrainSubsystem driveTrain, NavigationSubsystem nav) {
+  public TurnCommand(
+      double angle, double speed, DriveTrainSubsystem driveTrain, NavigationSubsystem nav) {
     addRequirements(driveTrain);
     addRequirements(nav);
     nav.resetHeading();
