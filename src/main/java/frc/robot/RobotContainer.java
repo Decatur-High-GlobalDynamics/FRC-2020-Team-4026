@@ -38,6 +38,7 @@ import frc.robot.commands.drivingCommands.EnableBrakeModeCommand;
 import frc.robot.commands.drivingCommands.SetSpeedMode;
 import frc.robot.commands.drivingCommands.StopDrivetrainCommand;
 import frc.robot.commands.drivingCommands.TankDriveCommand;
+import frc.robot.commands.drivingCommands.TurnCommand;
 import frc.robot.commands.drivingCommands.GTADriveCommand;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
@@ -232,7 +233,8 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    PossibleAutos choice = autoChoice.getSelected();
+    return slolemChallenge();
+    /*PossibleAutos choice = autoChoice.getSelected();
     switch (choice) {
       case IN_FRONT_OF_TARGET_MAX_POWER:
         return getAutoInFrontOfTarget();
@@ -240,7 +242,7 @@ public class RobotContainer {
         return getAutoInFrontOfTargetThenBack();
       default:
         return null;
-    }
+    }*/
   }
 
   private Command getAutoInFrontOfTarget() {
@@ -272,6 +274,39 @@ public class RobotContainer {
     // This drives and spins up, and when driving finishes, shoots for 10 seconds
     return (driveForward.raceWith(spinUpShooter))
         .andThen((shoot.withTimeout(5)).andThen(driveBack));
+  }
+
+  private Command slolemChallenge() {
+
+    return driveForwardConstructor(1.524, 0.9)
+      .andThen(turnCommandConstructor(-89)
+      .andThen(driveForwardConstructor(1.524, 0.9)
+      .andThen(turnCommandConstructor(90)
+      .andThen(driveForwardConstructor(4.572, 0.9)
+      .andThen(turnCommandConstructor(89)
+      .andThen(driveForwardConstructor(1.524, 0.9)
+      .andThen(turnCommandConstructor(-89)
+      .andThen(driveForwardConstructor(1.524, 0.9)
+      .andThen(turnCommandConstructor(-89)
+      .andThen(driveForwardConstructor(1.524, 0.9)
+      .andThen(turnCommandConstructor(-89)
+      .andThen(driveForwardConstructor(1.524, 0.9)
+      .andThen(turnCommandConstructor(-89)
+      .andThen(driveForwardConstructor(1.524, 0.9)
+      .andThen(turnCommandConstructor(93)
+      .andThen(driveForwardConstructor(4.572, 0.9)
+      .andThen(turnCommandConstructor(89)
+      .andThen(driveForwardConstructor(1.524, 0.9)
+      .andThen(turnCommandConstructor(-40).
+      andThen(driveForwardConstructor(1.524, 0.9)))))))))))))))))))));
+  }
+
+  public Command driveForwardConstructor(double distance, double speed) {
+    return new DriveEncoders(distance, speed, driveTrain);
+  }
+
+  public Command turnCommandConstructor(double angle) {
+    return new TurnCommand(angle, 0.2, driveTrain, navigation);
   }
 
   public Command getStopDriveTrainCommand() {
