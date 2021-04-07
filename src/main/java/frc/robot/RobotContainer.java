@@ -343,26 +343,65 @@ public class RobotContainer {
   public Command bounceCommand() {
 
     return driveForwardConstructor(1.524, 0.3)
-      .andThen(turnCommandConstructor(-90)
-      .andThen(driveForwardConstructor(1.2192, 0.3)
-      .andThen(turnCommandConstructor(180)
-      .andThen(driveForwardConstructor(1.2192, 0.3)
-      .andThen(turnCommandConstructor(-90)
-      .andThen(driveForwardConstructor(.762, 0.3)
-      .andThen(turnCommandConstructor(90)
-      .andThen(driveForwardConstructor(1.524, 0.3)
-      .andThen(turnCommandConstructor(-90)
-      .andThen(driveForwardConstructor(2.7432, 0.3)
-      .andThen(turnCommandConstructor(180)
-      .andThen(driveForwardConstructor(2.7432, 0.3)
-      .andThen(turnCommandConstructor(-90)
-      .andThen(driveForwardConstructor(2.286, 0.3)
-      .andThen(turnCommandConstructor(-90)
-      .andThen(driveForwardConstructor(2.7432, 0.3)
-      .andThen(turnCommandConstructor(180)
-      .andThen(driveForwardConstructor(1.2192, 0.3)
-      .andThen(turnCommandConstructor(-90))
-      .andThen(driveForwardConstructor(1.524, 0.3))))))))))))))))))));
+        .andThen(
+            turnCommandConstructor(-90)
+                .andThen(
+                    driveForwardConstructor(1.2192, 0.3)
+                        .andThen(
+                            turnCommandConstructor(180)
+                                .andThen(
+                                    driveForwardConstructor(1.2192, 0.3)
+                                        .andThen(
+                                            turnCommandConstructor(-90)
+                                                .andThen(
+                                                    driveForwardConstructor(.762, 0.3)
+                                                        .andThen(
+                                                            turnCommandConstructor(90)
+                                                                .andThen(
+                                                                    driveForwardConstructor(
+                                                                            1.524, 0.3)
+                                                                        .andThen(
+                                                                            turnCommandConstructor(
+                                                                                    -90)
+                                                                                .andThen(
+                                                                                    driveForwardConstructor(
+                                                                                            2.7432,
+                                                                                            0.3)
+                                                                                        .andThen(
+                                                                                            turnCommandConstructor(
+                                                                                                    180)
+                                                                                                .andThen(
+                                                                                                    driveForwardConstructor(
+                                                                                                            2.7432,
+                                                                                                            0.3)
+                                                                                                        .andThen(
+                                                                                                            turnCommandConstructor(
+                                                                                                                    -90)
+                                                                                                                .andThen(
+                                                                                                                    driveForwardConstructor(
+                                                                                                                            2.286,
+                                                                                                                            0.3)
+                                                                                                                        .andThen(
+                                                                                                                            turnCommandConstructor(
+                                                                                                                                    -90)
+                                                                                                                                .andThen(
+                                                                                                                                    driveForwardConstructor(
+                                                                                                                                            2.7432,
+                                                                                                                                            0.3)
+                                                                                                                                        .andThen(
+                                                                                                                                            turnCommandConstructor(
+                                                                                                                                                    180)
+                                                                                                                                                .andThen(
+                                                                                                                                                    driveForwardConstructor(
+                                                                                                                                                            1.2192,
+                                                                                                                                                            0.3)
+                                                                                                                                                        .andThen(
+                                                                                                                                                            turnCommandConstructor(
+                                                                                                                                                                -90))
+                                                                                                                                                        .andThen(
+                                                                                                                                                            driveForwardConstructor(
+                                                                                                                                                                1.524,
+                                                                                                                                                                0.3))))))))))))))))))));
   }
 
   public Command driveForwardConstructor(double distanceMeters, double speed) {
