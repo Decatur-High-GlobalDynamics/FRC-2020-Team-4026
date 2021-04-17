@@ -142,12 +142,10 @@ public class TurretSubsystem extends SubsystemBase {
         (long) SmartDashboard.getNumber("Subsystems.Turret.minEncoderRange", minEncoderRange);
     SmartDashboard.putNumber("Subsystems.Turret.minEncoderRange", minEncoderRange);
 
-    fastSpeed =
-        (long) SmartDashboard.getNumber("Subsystems.Turret.fastSpeed", fastSpeed);
+    fastSpeed = (long) SmartDashboard.getNumber("Subsystems.Turret.fastSpeed", fastSpeed);
     SmartDashboard.putNumber("Subsystems.Turret.fastSpeed", fastSpeed);
 
-    slowSpeed =
-        (long) SmartDashboard.getNumber("Subsystems.Turret.slowSpeed", slowSpeed);
+    slowSpeed = (long) SmartDashboard.getNumber("Subsystems.Turret.slowSpeed", slowSpeed);
     SmartDashboard.putNumber("Subsystems.Turret.slowSpeed", slowSpeed);
 
     radPerPulse = SmartDashboard.getNumber("Subsystems.Turret.radPerPulse", radPerPulse);
