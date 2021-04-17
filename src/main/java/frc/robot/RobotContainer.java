@@ -22,6 +22,7 @@ import frc.robot.commands.intakeCommands.SimpleIntakeCommand;
 import frc.robot.commands.intakeCommands.SimpleOuttakeCommand;
 import frc.robot.commands.turretCommands.SimpleTurretCCWCommand;
 import frc.robot.commands.turretCommands.SimpleTurretCWCommand;
+import frc.robot.commands.turretCommands.PointTurretAtTargetSpeed;
 import frc.robot.commands.turretCommands.PointTurretAtTargetWithAngleCommand;
 import frc.robot.commands.turretCommands.PrepareTurretCommand;
 import frc.robot.commands.drivingCommands.DriveStraightCommand;
