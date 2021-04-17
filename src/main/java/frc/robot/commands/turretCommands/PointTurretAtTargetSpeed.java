@@ -31,9 +31,9 @@ public class PointTurretAtTargetSpeed extends CommandBase {
       double angleError = vision.getLastSeenTx();
       if (angleError > 0.1) {
         if (Math.abs(angleError) > 10) {
-          turret.turnAtVelocity(turret.fastSpeed);
+          turret.turnAtVelocity(-turret.fastSpeed);
         } else {
-          turret.turnAtVelocity(turret.slowSpeed);
+          turret.turnAtVelocity(-turret.slowSpeed);
         }
       } else if (angleError < -0.1) {
         if (Math.abs(angleError) > 10) {
