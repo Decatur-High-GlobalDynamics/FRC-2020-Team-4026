@@ -23,10 +23,10 @@ public class PointTurretAtTargetSimple extends CommandBase {
   @Override
   public void execute() {
     if (vision.isValid() && Math.abs(vision.getLastSeenTx()) > 0.1) {
-      if (vision.getLastSeenTx() > 0) {
-        turret.goClockwise(0.1);
+      if (vision.getLastSeenTx() > 0.1) {
+        turret.goClockwise(0.05);
       } else {
-        turret.goCounterClockwise(0.1);
+        turret.goCounterClockwise(0.05);
       }
     } else {
       turret.stop();

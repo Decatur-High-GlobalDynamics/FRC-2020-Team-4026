@@ -22,6 +22,7 @@ import frc.robot.commands.intakeCommands.SimpleIntakeCommand;
 import frc.robot.commands.intakeCommands.SimpleOuttakeCommand;
 import frc.robot.commands.turretCommands.MoveTurretWithJoystick;
 import frc.robot.commands.turretCommands.PointTurretAtTargetSimple;
+import frc.robot.commands.turretCommands.PointTurretAtTargetWithAngleCommand;
 import frc.robot.commands.turretCommands.PrepareTurretCommand;
 import frc.robot.commands.turretCommands.SimpleTurretCCWCommand;
 import frc.robot.commands.turretCommands.SimpleTurretCWCommand;
@@ -186,7 +187,7 @@ public class RobotContainer {
         new SimpleIntakeCommand(this.intake)
             .alongWith(new HorizontalIndexerIntakeCommand(this.horizontalIndexer)));
     // When A is held, Intake Out
-    a.whileHeld(new PointTurretAtTargetSimple(this.turret));
+    a.whileHeld(new PointTurretAtTargetWithAngleCommand(this.turret));
     // When B is held, Horizontal Indexer out
     b.whileHeld(
         new SimpleOuttakeCommand(this.intake)
@@ -211,14 +212,15 @@ public class RobotContainer {
     start.whenPressed(new PrepareTurretCommand(this.turret));
 
     // Shooting from the green zone - closest
-    dPadUp.whileHeld(new PidShootCommand(shooter, 2.25, 1.20));
+    dPadUp.whileHeld(new PidShootCommand(shooter, 2.25, 1.2
+    ));
     // Shooting from the yellow zone - one further
     dPadRight.whileHeld(
-        new PidShootCommand(shooter, 1.95, 1.75)); // 1.9, 1.8 works but long wait time for spinup
+        new PidShootCommand(shooter, 1.95, 2.55)); // 1.9, 1.8 works but long wait time for spinup
     // Shooting from the blue zone - one further
-    dPadDown.whileHeld(new PidShootCommand(shooter, 2.75, 2.6));
+    dPadDown.whileHeld(new PidShootCommand(shooter, 2.15, 3.50));
     // Shooting from the red zone - furthest
-    dPadLeft.whileHeld(new PidShootCommand(shooter, 2.25, 3.55));
+    dPadLeft.whileHeld(new PidShootCommand(shooter, 2.30, 3.60));
 
     turret.setDefaultCommand(new MoveTurretWithJoystick(turret, () -> secondaryJoystick.getX()));
 
