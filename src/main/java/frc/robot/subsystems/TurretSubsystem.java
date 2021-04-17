@@ -67,8 +67,10 @@ public class TurretSubsystem extends SubsystemBase {
     this.turretLimit = Objects.requireNonNull(turretLimit, "turretLimit must not be null");
     this.visionSubsystem =
         Objects.requireNonNull(visionSubsystem, "visionSubsystem must not be null");
-    this.pidParamsDefault = Objects.requireNonNull(pidParamsDefault, "pidParamsDefault must not be null");
-    this.pidParamsVelocity = Objects.requireNonNull(pidParamsVelocity, "pidParamsVelocity must not be null");
+    this.pidParamsDefault =
+        Objects.requireNonNull(pidParamsDefault, "pidParamsDefault must not be null");
+    this.pidParamsVelocity =
+        Objects.requireNonNull(pidParamsVelocity, "pidParamsVelocity must not be null");
 
     turretMotor.configFactoryDefault();
 
@@ -92,7 +94,8 @@ public class TurretSubsystem extends SubsystemBase {
     VisionSubsystem visionSubsystem = VisionSubsystem.Create();
     PidParameters pidParamsDefault = new PidParameters(0.25, 0.001, 0.0, 0, 0, 0.15, 1);
     PidParameters pidParamsVelocity = new PidParameters(0.0, 0.0, 0.0, 0, 0, 0.15, 1);
-    return new TurretSubsystem(turretMotor, turretLimit, visionSubsystem, pidParamsDefault, pidParamsVelocity);
+    return new TurretSubsystem(
+        turretMotor, turretLimit, visionSubsystem, pidParamsDefault, pidParamsVelocity);
   }
 
   private boolean isPowerOkay(double powerToCheck) {
@@ -160,52 +163,69 @@ public class TurretSubsystem extends SubsystemBase {
 
     turretMotor.periodic();
     // Display and Update PID parameters
-    if (turretMotor.getControlMode() != ControlMode.Velocity) pidParamsDefault.periodic("Subsystems.Turret", turretMotor, 0);
+    if (turretMotor.getControlMode() != ControlMode.Velocity)
+      pidParamsDefault.periodic("Subsystems.Turret", turretMotor, 0);
     PidParameters previousPidParametersDefault = pidParamsDefault.clone();
 
-    pidParamsDefault.kF = SmartDashboard.getNumber("Subsystems.Turret.kFDefault", pidParamsDefault.kF);
+    pidParamsDefault.kF =
+        SmartDashboard.getNumber("Subsystems.Turret.kFDefault", pidParamsDefault.kF);
     SmartDashboard.putNumber("Subsystems.Turret.kFDefault", pidParamsDefault.kF);
-    pidParamsDefault.kP = SmartDashboard.getNumber("Subsystems.Turret.kPDefault", pidParamsDefault.kP);
+    pidParamsDefault.kP =
+        SmartDashboard.getNumber("Subsystems.Turret.kPDefault", pidParamsDefault.kP);
     SmartDashboard.putNumber("Subsystems.Turret.kPDefault", pidParamsDefault.kP);
-    pidParamsDefault.kI = SmartDashboard.getNumber("Subsystems.Turret.kIDefault", pidParamsDefault.kI);
+    pidParamsDefault.kI =
+        SmartDashboard.getNumber("Subsystems.Turret.kIDefault", pidParamsDefault.kI);
     SmartDashboard.putNumber("Subsystems.Turret.kIDefault", pidParamsDefault.kI);
-    pidParamsDefault.kD = SmartDashboard.getNumber("Subsystems.Turret.kDDefault", pidParamsDefault.kD);
+    pidParamsDefault.kD =
+        SmartDashboard.getNumber("Subsystems.Turret.kDDefault", pidParamsDefault.kD);
     SmartDashboard.putNumber("Subsystems.Turret.kDDefault", pidParamsDefault.kD);
     pidParamsDefault.kPeakOutput =
-        SmartDashboard.getNumber("Subsystems.Turret.kPeakOutputDefault", pidParamsDefault.kPeakOutput);
+        SmartDashboard.getNumber(
+            "Subsystems.Turret.kPeakOutputDefault", pidParamsDefault.kPeakOutput);
     SmartDashboard.putNumber("Subsystems.Turret.kPeakOutputDefault", pidParamsDefault.kPeakOutput);
     pidParamsDefault.errorTolerance =
         (int)
-            SmartDashboard.getNumber("Subsystems.Turret.errorToleranceDefault", pidParamsDefault.errorTolerance);
-    SmartDashboard.putNumber("Subsystems.Turret.errorToleranceDefault", pidParamsDefault.errorTolerance);
+            SmartDashboard.getNumber(
+                "Subsystems.Turret.errorToleranceDefault", pidParamsDefault.errorTolerance);
+    SmartDashboard.putNumber(
+        "Subsystems.Turret.errorToleranceDefault", pidParamsDefault.errorTolerance);
     // If the pidParameters have changed, load them into motor
-    if (!previousPidParametersDefault.equals(pidParamsDefault) && turretMotor.getControlMode() != ControlMode.Velocity) {
+    if (!previousPidParametersDefault.equals(pidParamsDefault)
+        && turretMotor.getControlMode() != ControlMode.Velocity) {
       turretMotor.configureWithPidParameters(pidParamsDefault, 0);
     }
 
-    if (turretMotor.getControlMode() == ControlMode.Velocity) pidParamsVelocity.periodic("Subsystems.Turret", turretMotor, 0);
+    if (turretMotor.getControlMode() == ControlMode.Velocity)
+      pidParamsVelocity.periodic("Subsystems.Turret", turretMotor, 0);
     PidParameters previousPidParametersVelocity = pidParamsVelocity.clone();
 
-    pidParamsVelocity.kF = SmartDashboard.getNumber("Subsystems.Turret.kFVel", pidParamsVelocity.kF);
+    pidParamsVelocity.kF =
+        SmartDashboard.getNumber("Subsystems.Turret.kFVel", pidParamsVelocity.kF);
     SmartDashboard.putNumber("Subsystems.Turret.kFVel", pidParamsVelocity.kF);
-    pidParamsVelocity.kP = SmartDashboard.getNumber("Subsystems.Turret.kPVel", pidParamsVelocity.kP);
+    pidParamsVelocity.kP =
+        SmartDashboard.getNumber("Subsystems.Turret.kPVel", pidParamsVelocity.kP);
     SmartDashboard.putNumber("Subsystems.Turret.kPVel", pidParamsVelocity.kP);
-    pidParamsVelocity.kI = SmartDashboard.getNumber("Subsystems.Turret.kIVel", pidParamsVelocity.kI);
+    pidParamsVelocity.kI =
+        SmartDashboard.getNumber("Subsystems.Turret.kIVel", pidParamsVelocity.kI);
     SmartDashboard.putNumber("Subsystems.Turret.kIVel", pidParamsVelocity.kI);
-    pidParamsVelocity.kD = SmartDashboard.getNumber("Subsystems.Turret.kDVel", pidParamsVelocity.kD);
+    pidParamsVelocity.kD =
+        SmartDashboard.getNumber("Subsystems.Turret.kDVel", pidParamsVelocity.kD);
     SmartDashboard.putNumber("Subsystems.Turret.kDVel", pidParamsVelocity.kD);
     pidParamsVelocity.kPeakOutput =
         SmartDashboard.getNumber("Subsystems.Turret.kPeakOutputVel", pidParamsVelocity.kPeakOutput);
     SmartDashboard.putNumber("Subsystems.Turret.kPeakOutputVel", pidParamsVelocity.kPeakOutput);
     pidParamsVelocity.errorTolerance =
         (int)
-            SmartDashboard.getNumber("Subsystems.Turret.errorToleranceVel", pidParamsVelocity.errorTolerance);
-    SmartDashboard.putNumber("Subsystems.Turret.errorToleranceVel", pidParamsVelocity.errorTolerance);
+            SmartDashboard.getNumber(
+                "Subsystems.Turret.errorToleranceVel", pidParamsVelocity.errorTolerance);
+    SmartDashboard.putNumber(
+        "Subsystems.Turret.errorToleranceVel", pidParamsVelocity.errorTolerance);
 
-    if (!previousPidParametersVelocity.equals(pidParamsVelocity) && turretMotor.getControlMode() == ControlMode.Velocity) {
+    if (!previousPidParametersVelocity.equals(pidParamsVelocity)
+        && turretMotor.getControlMode() == ControlMode.Velocity) {
       turretMotor.configureWithPidParameters(pidParamsVelocity, 0);
     }
-    
+
     SmartDashboard.putNumber(
         "Subsystems.Turret.xAngleAdjusted", this.visionSubsystem.getLastSeenTx());
 
