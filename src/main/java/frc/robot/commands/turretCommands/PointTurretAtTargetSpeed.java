@@ -11,7 +11,7 @@ import frc.robot.subsystems.VisionSubsystem;
 public class PointTurretAtTargetSpeed extends CommandBase {
   TurretSubsystem turret;
   VisionSubsystem vision;
-  
+
   /** Creates a new PointTurretAtTargetWithAngleCommand. */
   public PointTurretAtTargetSpeed(TurretSubsystem turret) {
     this.turret = turret;
