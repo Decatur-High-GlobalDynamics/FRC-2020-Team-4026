@@ -11,8 +11,7 @@ import frc.robot.subsystems.VisionSubsystem;
 public class PointTurretAtTargetSpeed extends CommandBase {
   TurretSubsystem turret;
   VisionSubsystem vision;
-  final double fastSpeed = 500;
-  final double slowSpeed = 250;
+  
   /** Creates a new PointTurretAtTargetWithAngleCommand. */
   public PointTurretAtTargetSpeed(TurretSubsystem turret) {
     this.turret = turret;
@@ -32,16 +31,16 @@ public class PointTurretAtTargetSpeed extends CommandBase {
       double angleError = vision.getLastSeenTx();
       if (angleError > 0.1) {
         if (Math.abs(angleError) > 10) {
-          turret.turnAtVelocity(fastSpeed);
+          turret.turnAtVelocity(turret.fastSpeed);
         } else {
-          turret.turnAtVelocity(slowSpeed);
+          turret.turnAtVelocity(turret.slowSpeed);
         }
       }
       else if (angleError < -0.1) {
         if (Math.abs(angleError) > 10) {
-          turret.turnAtVelocity(fastSpeed);
+          turret.turnAtVelocity(turret.fastSpeed);
         } else {
-          turret.turnAtVelocity(slowSpeed);
+          turret.turnAtVelocity(turret.slowSpeed);
         }
       }
     } else {

@@ -34,6 +34,9 @@ public class TurretSubsystem extends SubsystemBase {
   private boolean isTurretCalibrating = false;
   private final PidParameters pidParams;
 
+  double fastSpeed = 500;
+  double slowSpeed = 250;
+
   // Number of encoder ticks to go when rotating
   private int rotationSpeed = 500;
 
@@ -138,6 +141,14 @@ public class TurretSubsystem extends SubsystemBase {
     minEncoderRange =
         (long) SmartDashboard.getNumber("Subsystems.Turret.minEncoderRange", minEncoderRange);
     SmartDashboard.putNumber("Subsystems.Turret.minEncoderRange", minEncoderRange);
+
+    fastSpeed =
+        (long) SmartDashboard.getNumber("Subsystems.Turret.fastSpeed", fastSpeed);
+    SmartDashboard.putNumber("Subsystems.Turret.fastSpeed", fastSpeed);
+
+    slowSpeed =
+        (long) SmartDashboard.getNumber("Subsystems.Turret.slowSpeed", slowSpeed);
+    SmartDashboard.putNumber("Subsystems.Turret.slowSpeed", slowSpeed);
 
     radPerPulse = SmartDashboard.getNumber("Subsystems.Turret.radPerPulse", radPerPulse);
     SmartDashboard.putNumber("Subsystems.Turret.radPerPulse", radPerPulse);
