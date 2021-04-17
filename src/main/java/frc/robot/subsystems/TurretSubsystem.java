@@ -283,7 +283,9 @@ public class TurretSubsystem extends SubsystemBase {
   }
 
   public void startRotatingToEncoderPosition(long encoderPosition) {
-    turretMotor.configureWithPidParameters(pidParams, 0);
+    if (encoderPosition == turretMotor.getClosedLoopTarget(0)) {
+      return;
+    }
     long reqPosition = encoderPosition;
     if (!(this.getCurrentCommand() instanceof PrepareTurretCommand)) {
       reqPosition = (long) MathUtil.clamp(reqPosition, minEncoderRange, 0);
