@@ -36,8 +36,7 @@ public class PointTurretAtTargetSpeed extends CommandBase {
         } else {
           turret.turnAtVelocity(slowSpeed);
         }
-      }
-      else if (angleError < -0.1) {
+      } else if (angleError < -0.1) {
         if (Math.abs(angleError) > 10) {
           turret.turnAtVelocity(fastSpeed);
         } else {
