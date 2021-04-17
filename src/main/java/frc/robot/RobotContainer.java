@@ -198,7 +198,7 @@ public class RobotContainer {
     rightBumper.whileHeld(new PidShootCommand(this.shooter, 1, 1));
     // --------Turret Button Bindings--------
     // When right bumper pressed, aim at vision target if possible
-    leftBumper.whileHeld(new PointTurretAtTargetWithAngleCommand(this.turret));
+    leftBumper.whileHeld(new PointTurretAtTargetSpeed(this.turret));
     // When right dpad is held, Turret Clockwise
     dPadRight.whileHeld(new SimpleTurretCWCommand(this.turret));
     // When left dpad is held, Turret Counterclockwise

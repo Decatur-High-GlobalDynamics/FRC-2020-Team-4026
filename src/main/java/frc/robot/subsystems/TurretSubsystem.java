@@ -326,4 +326,12 @@ public class TurretSubsystem extends SubsystemBase {
   public VisionSubsystem getVisionSubsystem() {
     return this.visionSubsystem;
   }
+
+  public void turnAtVelocity(double velocity) {
+    if (velocity == turretMotor.getClosedLoopTarget(0)) {
+      return;
+    }
+    SmartDashboard.putNumber("Subsystems.Turret.RequestedVelocity", velocity);
+    turretMotor.set(ControlMode.Velocity, velocity);
+  }
 }
