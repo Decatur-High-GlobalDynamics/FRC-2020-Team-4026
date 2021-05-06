@@ -90,7 +90,7 @@ public class NavigationSubsystem extends SubsystemBase {
   public double getAccumulatedHeading() {
     return accumulatedHeading;
   }
-  
+
   public void resetHeading() {
     navx.reset();
   }
