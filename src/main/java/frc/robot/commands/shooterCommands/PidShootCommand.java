@@ -34,7 +34,8 @@ public class PidShootCommand extends CommandBase {
     double bottomShootingVelocityFraction =
         SmartDashboard.getNumber(
             "Commands.PidShooter.BottomSpeedFraction", this.bottomVelocityFraction);
-    SmartDashboard.putNumber("Commands.PidShooter.BottomSpeedFraction", bottomShootingVelocityFraction);
+    SmartDashboard.putNumber(
+        "Commands.PidShooter.BottomSpeedFraction", bottomShootingVelocityFraction);
 
     shooter.setMotorVelocities(topVelocityFraction, bottomVelocityFraction);
   }
