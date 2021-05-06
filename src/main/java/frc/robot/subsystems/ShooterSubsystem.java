@@ -41,8 +41,8 @@ public class ShooterSubsystem extends SubsystemBase {
       kIZoneBot = 0,
       kPeakOutputTop = 1,
       kPeakOutputBot = 1,
-      maxVelTop = 5600,
-      maxVelBot = 5600,
+      maxVelTop = 20000,
+      maxVelBot = 20000,
       maxAccTop = 1500,
       maxAccBot = 1500;
   private static int errorToleranceTop = 10, errorToleranceBot = 10;
