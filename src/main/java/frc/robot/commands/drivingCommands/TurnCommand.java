@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.NavigationSubsystem;
 
+//Note: Turn Command will RESET the gyro which will cause your robot to forget it's angle, if that matters
 public class TurnCommand extends CommandBase {
   DriveTrainSubsystem driveTrain;
   double angle;
