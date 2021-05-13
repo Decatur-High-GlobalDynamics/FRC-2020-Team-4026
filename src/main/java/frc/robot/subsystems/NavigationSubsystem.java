@@ -91,8 +91,16 @@ public class NavigationSubsystem extends SubsystemBase {
     return accumulatedHeading;
   }
 
+  public void reset() {
+    resetGyro();
+    resetPose();
+  }
+
   public void resetPose() {
-    navx.reset();
     calibratePose(new Pose2d());
+  }
+
+  public void resetGyro() {
+    navx.reset();
   }
 }

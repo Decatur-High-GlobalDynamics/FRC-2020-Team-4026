@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import frc.robot.TeamUtils;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class VisionSubsystem extends SubsystemBase {
 
@@ -32,6 +33,7 @@ public class VisionSubsystem extends SubsystemBase {
       this.tv = tv;
       if (tv) {
         this.lastTimeTargetSeen = Timer.getFPGATimestamp();
+        SmartDashboard.putNumber("Subsystems.Vision.LastTimeSeen", lastTimeTargetSeen);
         double lastSeenTx = (double) TeamUtils.getFromNetworkTable("limelight", "tx");
         double lastSeenTy = (double) TeamUtils.getFromNetworkTable("limelight", "ty");
         this.lastSeenTx = lastSeenTx;
