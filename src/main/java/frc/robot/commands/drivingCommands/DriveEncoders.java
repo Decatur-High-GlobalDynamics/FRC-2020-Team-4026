@@ -48,7 +48,7 @@ public class DriveEncoders extends CommandBase {
     SmartDashboard.putNumber("Subsystems.DriveTrain.leftEncoder", this.drive.getLeftEncoder());
     SmartDashboard.putNumber("Subsystems.DriveTrain.rightEncoder", this.drive.getRightEncoder());
 
-    drive.setMotorPowers(speed, -speed);
+    drive.setMotorPowers(speed, speed);
   }
 
   // Called once the command ends or is interrupted.

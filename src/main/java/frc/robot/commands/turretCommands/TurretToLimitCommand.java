@@ -14,7 +14,7 @@ public class TurretToLimitCommand extends CommandBase {
   /** Creates a new TurretToLimitCommand. */
   private final TurretSubsystem turret;
 
-  private double calibrationTurnPower = 0.1;
+  private double calibrationTurnPower = 0.25;
 
   public TurretToLimitCommand(TurretSubsystem turret) {
     // Use addRequirements() here to declare subsystem dependencies.

@@ -10,7 +10,6 @@ package frc.robot.subsystems;
 import java.util.Objects;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -25,7 +24,7 @@ public class TurretSubsystem extends SubsystemBase {
   private final TeamTalonSRX turretMotor;
   private final DigitalInput turretLimit;
   private final VisionSubsystem visionSubsystem;
-  private final double baseTurnSpeed = .1;
+  private final double baseTurnSpeed = .25;
   private double maxTurnSpeed = baseTurnSpeed;
   private static final boolean sensorPhase = true;
   private static final boolean motorInvert = true;
@@ -85,7 +84,7 @@ public class TurretSubsystem extends SubsystemBase {
     TeamTalonSRX turretMotor = new TeamTalonSRX("Subsystems.Turret.motor", Ports.TurretCAN);
     DigitalInput turretLimit = new DigitalInput(Ports.TurretLimitDIO);
     VisionSubsystem visionSubsystem = VisionSubsystem.Create();
-    PidParameters pidParams = new PidParameters(0.25, 0.001, 0.0, 0, 0, 0.15, 10);
+    PidParameters pidParams = new PidParameters(0.25, 0.001, 0.0, 0, 0, 0.15, 2);
     return new TurretSubsystem(turretMotor, turretLimit, visionSubsystem, pidParams);
   }
 
@@ -183,6 +182,11 @@ public class TurretSubsystem extends SubsystemBase {
     } else {
       SmartDashboard.putNumber("Subsystems.Turret.targetPosition", 0);
       SmartDashboard.putNumber("Subsystems.Turret.error", 0);
+    }
+    if (turretMotor.getControlMode() == ControlMode.PercentOutput) {
+      SmartDashboard.putNumber("Subsystems.Turret.PercentOut", turretMotor.getMotorOutputPercent());
+    } else {
+      SmartDashboard.putNumber("Subsystems.Turret.PercentOut", 0);
     }
     if (!hasBeenCalibrated && !(isTurretCalibrating)) {
       // new TurretToLimitCommand(this).schedule();
@@ -284,6 +288,7 @@ public class TurretSubsystem extends SubsystemBase {
     if (!(this.getCurrentCommand() instanceof PrepareTurretCommand)) {
       reqPosition = (long) MathUtil.clamp(reqPosition, minEncoderRange, 0);
     }
+    SmartDashboard.putNumber("Subsystems.Turret.RequestedPosition", reqPosition);
     turretMotor.set(ControlMode.Position, reqPosition);
   }
 
