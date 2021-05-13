@@ -33,16 +33,16 @@ public class ShooterSubsystem extends SubsystemBase {
       kPBot = 0.00005,
       kITop = 0.000001,
       kIBot = 0.000001,
-      kDTop = 0,
+      kDTop = 0.00001,
       kDBot = 0,
-      kFTop = 0.0004,
+      kFTop = 0.0005,
       kFBot = 0.000156,
       kIZoneTop = 0,
       kIZoneBot = 0,
       kPeakOutputTop = 1,
       kPeakOutputBot = 1,
-      maxVelTop = 2000,
-      maxVelBot = 2000,
+      maxVelTop = 20000,
+      maxVelBot = 20000,
       maxAccTop = 1500,
       maxAccBot = 1500;
   private static int errorToleranceTop = 10, errorToleranceBot = 10;
@@ -226,14 +226,14 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void setShooterVelTop(double speed) {
-    // speed = MathUtil.clamp(speed, 0, maxRotationSpeedTop);
+    // speed = MathUtil.clamp(speed, 0, maxVelTop);
     shooter_top.configureWithPidParameters(topPidParameters, 0);
     shooter_top.setSmartMotionVelocity(speed);
     // this.shooter_top.set(speed);
   }
 
   public void setShooterVelBot(double speed) {
-    // speed = MathUtil.clamp(speed, 0, maxRotationSpeedBot);
+    // speed = MathUtil.clamp(speed, 0, maxVelBot);
     shooter_bottom.configureWithPidParameters(botPidParameters, 0);
     shooter_bottom.setSmartMotionVelocity(speed);
     // this.shooter_bottom.set(speed);
