@@ -18,7 +18,6 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
-import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.commands.AutoIntakeIndex;
 import frc.robot.commands.AutoShootWithHorizontal;
@@ -118,7 +117,9 @@ public class RobotContainer {
     // and eventually vision
     navigation.setDefaultCommand(
         new UpdateNavigationCommand(
-            navigation, () -> (driveTrain.getLeftEncoder()*DriveTrainConstants.kEncoderDistancePerPulse), () -> (driveTrain.getRightEncoder()*DriveTrainConstants.kEncoderDistancePerPulse)));
+            navigation,
+            () -> (driveTrain.getLeftEncoder() * DriveTrainConstants.kEncoderDistancePerPulse),
+            () -> (driveTrain.getRightEncoder() * DriveTrainConstants.kEncoderDistancePerPulse)));
   }
   /**
    * Use this method to define your button->command mappings. Buttons can be created by

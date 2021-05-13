@@ -352,7 +352,8 @@ public class DriveTrainSubsystem extends SubsystemBase {
   }
 
   public void driveAtSpeedAndTurn(double metersPerSecond, double radsPerSecond) {
-    DifferentialDriveWheelSpeeds speeds = PathfindingConstants.kDriveKinematics.toWheelSpeeds(new ChassisSpeeds(metersPerSecond, 0, radsPerSecond));
-    
+    DifferentialDriveWheelSpeeds speeds =
+        PathfindingConstants.kDriveKinematics.toWheelSpeeds(
+            new ChassisSpeeds(metersPerSecond, 0, radsPerSecond));
   }
 }
