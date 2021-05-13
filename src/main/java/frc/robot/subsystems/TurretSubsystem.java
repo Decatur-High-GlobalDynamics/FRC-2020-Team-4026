@@ -92,8 +92,8 @@ public class TurretSubsystem extends SubsystemBase {
     TeamTalonSRX turretMotor = new TeamTalonSRX("Subsystems.Turret.motor", Ports.TurretCAN);
     DigitalInput turretLimit = new DigitalInput(Ports.TurretLimitDIO);
     VisionSubsystem visionSubsystem = VisionSubsystem.Create();
-    PidParameters pidParamsDefault = new PidParameters(0.25, 0.001, 0.0, 0, 0, 0.15, 1);
-    PidParameters pidParamsVelocity = new PidParameters(0.0, 0.0, 0.0, 0, 0, 0.15, 1);
+    PidParameters pidParamsDefault = new PidParameters(0.25, 0.001, 0.0, 0, 0, 0.15, 2);
+    PidParameters pidParamsVelocity = new PidParameters(0.0, 0.0, 0.0, 0, 0, 0.15, 2);
     return new TurretSubsystem(
         turretMotor, turretLimit, visionSubsystem, pidParamsDefault, pidParamsVelocity);
   }
