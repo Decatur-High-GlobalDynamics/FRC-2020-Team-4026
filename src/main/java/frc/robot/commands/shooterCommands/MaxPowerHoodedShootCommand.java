@@ -43,4 +43,3 @@ public class MaxPowerHoodedShootCommand extends CommandBase {
     return false;
   }
 }
-
