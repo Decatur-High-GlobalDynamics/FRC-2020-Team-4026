@@ -7,8 +7,8 @@ public class Ports {
   public static final int RightDriveFalconMainCAN = 3;
   public static final int RightDriveFalconSubCAN = 4;
 
-  public static final int TopShooterMotorCAN = 6;
-  public static final int BotShooterMotorCAN = 5;
+  public static final int LeftShooterMotorCAN = 6;
+  public static final int RightShooterMotorCAN = 5;
 
   public static final int LeftClimbCAN = 7;
   public static final int RightClimbCAN = 12;
