@@ -33,7 +33,5 @@ public class AutoShootPower extends CommandBase {
     return false;
   }
 
-  private double getDistance(double xangle, double yangle) {
-    
-  }
+  private double getDistance(double xangle, double yangle) {}
 }
