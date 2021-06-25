@@ -41,13 +41,10 @@ public class HoodedShooterSubsystem extends SubsystemBase {
   }
 
   public HoodedShooterSubsystem(
-      TeamSparkMAX shooter_follow,
-      TeamSparkMAX shooter_main,
-      PidParameters pidParameters) {
+      TeamSparkMAX shooter_follow, TeamSparkMAX shooter_main, PidParameters pidParameters) {
     this.shooter_follow = Objects.requireNonNull(shooter_follow, "shooter_follow must not be null");
     this.shooter_main = Objects.requireNonNull(shooter_main, "shooter_main must not be null");
-    this.pidParameters =
-        Objects.requireNonNull(pidParameters, "pidParameters must not be null");
+    this.pidParameters = Objects.requireNonNull(pidParameters, "pidParameters must not be null");
 
     shooter_follow.follow(shooter_main);
     shooter_main.setInverted(false);
@@ -59,16 +56,7 @@ public class HoodedShooterSubsystem extends SubsystemBase {
         new TeamSparkMAX("Subsystems.Shooter.Bottom", Ports.BotShooterMotorCAN);
     TeamSparkMAX shooter_top = new TeamSparkMAX("Subsystems.Shooter.Top", Ports.TopShooterMotorCAN);
     PidParameters pidParameters =
-        new PidParameters(
-            kP,
-            kI,
-            kD,
-            kF,
-            kIZone,
-            kPeakOutput,
-            maxVel,
-            maxAcc,
-            errorTolerance);
+        new PidParameters(kP, kI, kD, kF, kIZone, kPeakOutput, maxVel, maxAcc, errorTolerance);
     return new HoodedShooterSubsystem(shooter_bottom, shooter_top, pidParameters);
   }
 
@@ -77,7 +65,7 @@ public class HoodedShooterSubsystem extends SubsystemBase {
     shooter_follow.periodic();
     shooter_main.periodic();
     pidParameters.periodic("Subsystems.Shooter.Main", shooter_main, 0);
-    pidParameters.periodic("Subsystems.Shooter.Follow", shooter_follow,0);
+    pidParameters.periodic("Subsystems.Shooter.Follow", shooter_follow, 0);
 
     // This method will be called once per scheduler run
     shooterPower =
@@ -133,7 +121,7 @@ public class HoodedShooterSubsystem extends SubsystemBase {
   }
 
   public void setMotor(double speed) {
-    this.shooter_main.setSmartMotionVelocity(speed);  
+    this.shooter_main.setSmartMotionVelocity(speed);
   }
 
   public double getShooterPower() {
