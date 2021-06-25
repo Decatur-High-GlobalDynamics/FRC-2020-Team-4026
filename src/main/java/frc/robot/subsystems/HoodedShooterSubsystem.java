@@ -16,37 +16,24 @@ import frc.robot.TeamSparkMAX;
 import frc.robot.TeamUtils;
 
 public class HoodedShooterSubsystem extends SubsystemBase {
-  private double maxRotationSpeedBot = 2226.5625;
-  private double maxRotationSpeedTop = 1640.625;
+  private double maxRotationSpeed = 1640.625;
   // Use 24500 for bot at init line
-
-  private double targetSpeedBot = 585.9375;
   // Values for 95% (max power for shooting)
-  private final TeamSparkMAX shooter_bottom;
-  private final TeamSparkMAX shooter_top;
+  private final TeamSparkMAX shooter_main;
+  private final TeamSparkMAX shooter_follow;
   /** Creates a new ShooterSubsystem. */
-  private double shooterPowerTop = 0.95;
+  private double shooterPower = 0.95;
 
-  private double shooterPowerBot = 0.95;
-
-  private static double kPTop = 0.00005,
-      kPBot = 0.00005,
-      kITop = 0.000001,
-      kIBot = 0.000001,
-      kDTop = 0.00001,
-      kDBot = 0,
-      kFTop = 0.0005,
-      kFBot = 0.000156,
-      kIZoneTop = 0,
-      kIZoneBot = 0,
-      kPeakOutputTop = 1,
-      kPeakOutputBot = 1,
-      maxVelTop = 20000,
-      maxVelBot = 20000,
-      maxAccTop = 1500,
-      maxAccBot = 1500;
-  private static int errorToleranceTop = 10, errorToleranceBot = 10;
-  private PidParameters topPidParameters, botPidParameters;
+  private static double kP = 0.00005,
+      kI = 0.000001,
+      kD = 0.00001,
+      kF = 0.0005,
+      kIZone = 0,
+      kPeakOutput = 1,
+      maxVel = 20000,
+      maxAcc = 1500;
+  private static int errorTolerance = 10;
+  private PidParameters pidParameters;
 
   public HoodedShooterSubsystem() {
     throw new IllegalArgumentException(
@@ -54,116 +41,74 @@ public class HoodedShooterSubsystem extends SubsystemBase {
   }
 
   public HoodedShooterSubsystem(
-      TeamSparkMAX shooter_bottom,
-      TeamSparkMAX shooter_top,
-      PidParameters topPidParameters,
-      PidParameters botPidParameters) {
-    this.shooter_bottom = Objects.requireNonNull(shooter_bottom, "shooter_bottom must not be null");
-    this.shooter_top = Objects.requireNonNull(shooter_top, "shooter_top must not be null");
-    this.topPidParameters =
-        Objects.requireNonNull(topPidParameters, "topPidParameters must not be null");
-    this.botPidParameters =
-        Objects.requireNonNull(botPidParameters, "botPidParameters must not be null");
+      TeamSparkMAX shooter_follow,
+      TeamSparkMAX shooter_main,
+      PidParameters pidParameters) {
+    this.shooter_follow = Objects.requireNonNull(shooter_follow, "shooter_follow must not be null");
+    this.shooter_main = Objects.requireNonNull(shooter_main, "shooter_main must not be null");
+    this.pidParameters =
+        Objects.requireNonNull(pidParameters, "pidParameters must not be null");
 
-    shooter_bottom.setInverted(true);
-    shooter_top.setInverted(false);
+    shooter_follow.follow(shooter_main);
+    shooter_main.setInverted(false);
     stop();
   }
 
-  public static ShooterSubsystem Create() {
+  public static HoodedShooterSubsystem Create() {
     TeamSparkMAX shooter_bottom =
         new TeamSparkMAX("Subsystems.Shooter.Bottom", Ports.BotShooterMotorCAN);
     TeamSparkMAX shooter_top = new TeamSparkMAX("Subsystems.Shooter.Top", Ports.TopShooterMotorCAN);
-    PidParameters topPidParameters =
+    PidParameters pidParameters =
         new PidParameters(
-            kPTop,
-            kITop,
-            kDTop,
-            kFTop,
-            kIZoneTop,
-            kPeakOutputTop,
-            maxVelTop,
-            maxAccTop,
-            errorToleranceTop);
-    PidParameters botPidParameters =
-        new PidParameters(
-            kPBot,
-            kIBot,
-            kDBot,
-            kFBot,
-            kIZoneBot,
-            kPeakOutputBot,
-            maxVelBot,
-            maxAccBot,
-            errorToleranceBot);
-    return new ShooterSubsystem(shooter_bottom, shooter_top, topPidParameters, botPidParameters);
+            kP,
+            kI,
+            kD,
+            kF,
+            kIZone,
+            kPeakOutput,
+            maxVel,
+            maxAcc,
+            errorTolerance);
+    return new HoodedShooterSubsystem(shooter_bottom, shooter_top, pidParameters);
   }
 
   @Override
   public void periodic() {
-    shooter_bottom.periodic();
-    shooter_top.periodic();
-    topPidParameters.periodic("Subsystems.Shooter.Top", shooter_top, 0);
-    botPidParameters.periodic("Subsystems.Shooter.Bot", shooter_bottom, 0);
+    shooter_follow.periodic();
+    shooter_main.periodic();
+    pidParameters.periodic("Subsystems.Shooter.Main", shooter_main, 0);
+    pidParameters.periodic("Subsystems.Shooter.Follow", shooter_follow,0);
 
     // This method will be called once per scheduler run
-    shooterPowerTop =
-        -Math.abs(SmartDashboard.getNumber("Subsystems.Shooter.shooterPowerTop", shooterPowerTop));
-    SmartDashboard.putNumber("Subsystems.Shooter.shooterPowerTop", shooterPowerTop);
-    shooterPowerBot =
-        -Math.abs(SmartDashboard.getNumber("Subsystems.Shooter.shooterPowerBot", shooterPowerBot));
-    SmartDashboard.putNumber("Subsystems.Shooter.shooterPowerBot", shooterPowerBot);
+    shooterPower =
+        -Math.abs(SmartDashboard.getNumber("Subsystems.Shooter.shooterPowerTop", shooterPower));
+    SmartDashboard.putNumber("Subsystems.Shooter.shooterPowerTop", shooterPower);
 
-    SmartDashboard.putNumber("Subsystems.Shooter.maxRotationSpeedTop", maxRotationSpeedTop);
-    SmartDashboard.putNumber("Subsystems.Shooter.maxRotaitonSpeedBot", maxRotationSpeedBot);
-
-    /*
-    targetSpeedTop = (int) SmartDashboard.getNumber("Subsystems.Shooter.targetSpeedTop", targetSpeedTop);
-    SmartDashboard.putNumber("Subsystems.Shooter.targetSpeedTop", targetSpeedTop);
-    */
-    targetSpeedBot = SmartDashboard.getNumber("Subsystems.Shooter.targetSpeedBot", targetSpeedBot);
-    SmartDashboard.putNumber("Subsystems.Shooter.targetSpeedBot", targetSpeedBot);
+    SmartDashboard.putNumber("Subsystems.Shooter.maxRotationSpeedTop", maxRotationSpeed);
 
     SmartDashboard.putBoolean("Subsystems.Shooter.isShooterReady", this.isShooterReady());
 
     SmartDashboard.putNumber("Subsystems.Shooter.yAngleAdjusted", this.getVisionYAngle());
     SmartDashboard.putNumber("Subsystems.Shooter.knotDistance", this.getKnotDistance());
 
-    kPTop = SmartDashboard.getNumber("Subsystems.Shooter.kPTop", kPTop);
-    topPidParameters.kP = kPTop;
-    SmartDashboard.putNumber("Subsystems.Shooter.kPTop", kPTop);
-    kPBot = SmartDashboard.getNumber("Subsystems.Shooter.kPBot", kPBot);
-    botPidParameters.kP = kPBot;
-    SmartDashboard.putNumber("Subsystems.Shooter.kPBot", kPBot);
-    kITop = SmartDashboard.getNumber("Subsystems.Shooter.kITop", kITop);
-    topPidParameters.kI = kITop;
-    SmartDashboard.putNumber("Subsystems.Shooter.kITop", kITop);
-    kIBot = SmartDashboard.getNumber("Subsystems.Shooter.kIBot", kIBot);
-    botPidParameters.kI = kIBot;
-    SmartDashboard.putNumber("Subsystems.Shooter.kIBot", kIBot);
-    kDTop = SmartDashboard.getNumber("Subsystems.Shooter.kDTop", kDTop);
-    topPidParameters.kD = kDTop;
-    SmartDashboard.putNumber("Subsystems.Shooter.kDTop", kDTop);
-    kDBot = SmartDashboard.getNumber("Subsystems.Shooter.kDBot", kDBot);
-    botPidParameters.kD = kDBot;
-    SmartDashboard.putNumber("Subsystems.Shooter.kDBot", kDBot);
-    kFTop = SmartDashboard.getNumber("Subsystems.Shooter.kFTop", kFTop);
-    topPidParameters.kF = kFTop;
-    SmartDashboard.putNumber("Subsystems.Shooter.kFTop", kFTop);
-    kFBot = SmartDashboard.getNumber("Subsystems.Shooter.kFBot", kFBot);
-    botPidParameters.kF = kFBot;
-    SmartDashboard.putNumber("Subsystems.Shooter.kFBot", kFBot);
-    kIZoneTop = SmartDashboard.getNumber("Subsystems.Shooter.kIZoneTop", kIZoneTop);
-    topPidParameters.kIZone = kIZoneTop;
-    SmartDashboard.putNumber("Subsystems.Shooter.kIZoneTop", kIZoneTop);
-    kIZoneBot = SmartDashboard.getNumber("Subsystems.Shooter.kIZoneBot", kIZoneBot);
-    botPidParameters.kIZone = kIZoneBot;
-    SmartDashboard.putNumber("Subsystems.Shooter.kIZoneBot", kIZoneBot);
-    kPeakOutputTop = SmartDashboard.getNumber("Subsystems.Shooter.kPeakOutputTop", kPeakOutputTop);
-    topPidParameters.kPeakOutput = kPeakOutputTop;
-    SmartDashboard.putNumber("Subsystems.Shooter.kPeakOutputTop", kPeakOutputTop);
-    kPeakOutputBot = SmartDashboard.getNumber("Subsystems.Shooter.kPeakOutputBot", kPeakOutputBot);
-    botPidParameters.kPeakOutput = kPeakOutputBot;
+    kP = SmartDashboard.getNumber("Subsystems.Shooter.kP", kP);
+    pidParameters.kP = kP;
+    SmartDashboard.putNumber("Subsystems.Shooter.kP", kP);
+    kI = SmartDashboard.getNumber("Subsystems.Shooter.kI", kI);
+    pidParameters.kI = kI;
+    SmartDashboard.putNumber("Subsystems.Shooter.kI", kI);
+    kD = SmartDashboard.getNumber("Subsystems.Shooter.kD", kD);
+    pidParameters.kD = kD;
+    SmartDashboard.putNumber("Subsystems.Shooter.kD", kD);
+    kF = SmartDashboard.getNumber("Subsystems.Shooter.kF", kF);
+    pidParameters.kF = kF;
+    SmartDashboard.putNumber("Subsystems.Shooter.kF", kF);
+    kIZone = SmartDashboard.getNumber("Subsystems.Shooter.kIZone", kIZone);
+    pidParameters.kIZone = kIZone;
+    SmartDashboard.putNumber("Subsystems.Shooter.kIZone", kIZone);
+    kPeakOutput = SmartDashboard.getNumber("Subsystems.Shooter.kPeakOutput", kPeakOutput);
+    pidParameters.kPeakOutput = kPeakOutput;
+    SmartDashboard.putNumber("Subsystems.Shooter.kPeakOutput", kPeakOutput);
     /*SmartDashboard.putNumber("Subsystems.Shooter.kPeakOutputBot", kPeakOutputBot);
     maxVelTop = SmartDashboard.getNumber("Subsystems.Shooter.maxVelTop", maxVelTop);
     topPidParameters.maxVel = maxVelTop;
@@ -177,89 +122,44 @@ public class HoodedShooterSubsystem extends SubsystemBase {
     maxAccBot = SmartDashboard.getNumber("Subsystems.Shooter.maxAccBot", maxAccBot);
     botPidParameters.maxAcc = maxAccBot;
     SmartDashboard.putNumber("Subsystems.Shooter.maxAccBot", maxAccBot);*/
-    errorToleranceTop =
-        (int) SmartDashboard.getNumber("Subsystems.Shooter.errorToleranceTop", errorToleranceTop);
-    topPidParameters.errorTolerance = errorToleranceTop;
-    SmartDashboard.putNumber("Subsystems.Shooter.errorToleranceTop", errorToleranceTop);
-    errorToleranceBot =
-        (int) SmartDashboard.getNumber("Subsystems.Shooter.errorToleranceBot", errorToleranceBot);
-    botPidParameters.errorTolerance = errorToleranceBot;
-    SmartDashboard.putNumber("Subsystems.Shooter.errorToleranceBot", errorToleranceBot);
+    errorTolerance =
+        (int) SmartDashboard.getNumber("Subsystems.Shooter.errorTolerance", errorTolerance);
+    pidParameters.errorTolerance = errorTolerance;
+    SmartDashboard.putNumber("Subsystems.Shooter.errorTolerance", errorTolerance);
   }
 
   public boolean isShooterReady() {
-    return Math.abs(shooter_top.getVelocityError()) <= 600.0
-        && Math.abs(shooter_bottom.getVelocityError()) <= 300.0;
+    return Math.abs(shooter_main.getVelocityError()) <= 600.0;
   }
 
-  public void setBottomMotor(double speed) {
-    this.shooter_bottom.setSmartMotionVelocity(speed);
-    // this.shooter_bottom.set(Math.abs(speed));
+  public void setMotor(double speed) {
+    this.shooter_main.setSmartMotionVelocity(speed);  
   }
 
-  public void setTopMotor(double speed) {
-    this.shooter_top.setSmartMotionVelocity(speed);
-    // this.shooter_top.set(Math.abs(speed));
-  }
-
-  public double getShooterPowerTop() {
-    return shooterPowerTop;
-  }
-
-  public double getShooterPowerBot() {
-    return shooterPowerBot;
+  public double getShooterPower() {
+    return shooterPower;
   }
 
   public void stop() {
-    this.shooter_bottom.setSmartMotionVelocity(0);
-    this.shooter_top.setSmartMotionVelocity(0);
-    this.shooter_bottom.set(0);
-    this.shooter_top.set(0);
+    this.shooter_main.setSmartMotionVelocity(0);
+    this.shooter_main.set(0);
   }
 
-  public double getShooterSpeedTop() {
-    return shooter_top.canEncoder.getVelocity();
+  public double getShooterSpeed() {
+    return shooter_main.canEncoder.getVelocity();
   }
 
-  public double getShooterSpeedBot() {
-    return shooter_bottom.canEncoder.getVelocity();
+  public void setShooterVel(double speed) {
+    shooter_main.configureWithPidParameters(pidParameters, 0);
+    shooter_main.setSmartMotionVelocity(speed);
   }
 
-  public void setShooterVelTop(double speed) {
-    // speed = MathUtil.clamp(speed, 0, maxVelTop);
-    shooter_top.configureWithPidParameters(topPidParameters, 0);
-    shooter_top.setSmartMotionVelocity(speed);
-    // this.shooter_top.set(speed);
+  public double getMaxVel() {
+    return maxRotationSpeed;
   }
 
-  public void setShooterVelBot(double speed) {
-    // speed = MathUtil.clamp(speed, 0, maxVelBot);
-    shooter_bottom.configureWithPidParameters(botPidParameters, 0);
-    shooter_bottom.setSmartMotionVelocity(speed);
-    // this.shooter_bottom.set(speed);
-  }
-
-  public double getMaxVelTop() {
-    return maxRotationSpeedTop;
-  }
-
-  public double getMaxVelBot() {
-    return maxRotationSpeedBot;
-  }
-
-  public void setMotorVelocities(double topSpeedFraction, double botSpeedFraction) {
-    setShooterVelTop((topSpeedFraction * maxRotationSpeedTop));
-    setShooterVelBot((botSpeedFraction * maxRotationSpeedBot));
-  }
-
-  /*
-  public int getTargetSpeedTop(){
-    return targetSpeedTop;
-  }
-  */
-
-  public double getTargetSpeedBot() {
-    return targetSpeedBot;
+  public void setShooterVelFraction(double speedFraction) {
+    setShooterVel((speedFraction * maxRotationSpeed));
   }
 
   public double getVisionYAngle() {
