@@ -19,7 +19,7 @@ public class AutoShoot extends CommandBase {
   private final int targetSpeed;
 
   public AutoShoot(
-    HoodedShooterSubsystem shooter, VerticalIndexerSubsystem verticalIndexer, int targetSpeed) {
+      HoodedShooterSubsystem shooter, VerticalIndexerSubsystem verticalIndexer, int targetSpeed) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.shooter = shooter;
     this.verticalIndexer = verticalIndexer;
