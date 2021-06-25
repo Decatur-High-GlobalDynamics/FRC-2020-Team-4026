@@ -21,7 +21,7 @@ public class AutoShootWithHorizontal extends CommandBase {
   private final int targetSpeed;
 
   public AutoShootWithHorizontal(
-    HoodedShooterSubsystem shooter,
+      HoodedShooterSubsystem shooter,
       VerticalIndexerSubsystem verticalIndexer,
       HorizontalIndexerSubsystem horizontalIndexer,
       int targetSpeed) {

@@ -15,8 +15,7 @@ public class PidShootCommand extends CommandBase {
   HoodedShooterSubsystem shooter;
   double velocityFraction;
   /** Creates a new SimpleShootCommand. */
-  public PidShootCommand(
-    HoodedShooterSubsystem shooter, double velocityFraction) {
+  public PidShootCommand(HoodedShooterSubsystem shooter, double velocityFraction) {
     this.shooter = shooter;
     this.velocityFraction = velocityFraction;
     // Use addRequirements() here to declare subsystem dependencies.
