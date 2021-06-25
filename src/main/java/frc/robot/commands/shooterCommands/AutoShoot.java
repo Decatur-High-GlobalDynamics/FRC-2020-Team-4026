@@ -5,26 +5,26 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands;
+package frc.robot.commands.shooterCommands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VerticalIndexerSubsystem;
 
-public class AutoShootTesting extends CommandBase {
+public class AutoShoot extends CommandBase {
   /** Creates a new AutoShoot. */
   private final ShooterSubsystem shooter;
 
   private final VerticalIndexerSubsystem verticalIndexer;
-  private double targetSpeedTop;
-  private double targetSpeedBot;
+  private int targetSpeedTop;
+  private final int targetSpeedBot;
 
-  public AutoShootTesting(ShooterSubsystem shooter, VerticalIndexerSubsystem verticalIndexer) {
+  public AutoShoot(
+      ShooterSubsystem shooter, VerticalIndexerSubsystem verticalIndexer, int targetSpeedBot) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.shooter = shooter;
     this.verticalIndexer = verticalIndexer;
-
+    this.targetSpeedBot = targetSpeedBot;
     addRequirements(shooter);
     addRequirements(verticalIndexer);
   }
@@ -34,8 +34,7 @@ public class AutoShootTesting extends CommandBase {
   public void initialize() {
     // In the future, get speeds from the lookup table based on vision
     // Also, potentially rotate turret
-    targetSpeedBot = shooter.getTargetSpeedBot();
-    targetSpeedTop = (targetSpeedBot * (2.5 / 6.5));
+    targetSpeedTop = (int) (targetSpeedBot * (2.5 / 6.5));
     shooter.setShooterVelBot(targetSpeedBot);
     shooter.setShooterVelTop(targetSpeedTop);
   }
@@ -48,8 +47,6 @@ public class AutoShootTesting extends CommandBase {
     } else {
       verticalIndexer.stop();
     }
-    SmartDashboard.putNumber("Commands.AutoShootTestingCommand.targetSpeedTop", targetSpeedTop);
-    SmartDashboard.putNumber("Commands.AutoShootTestingCommand.targetSpeedBot", targetSpeedBot);
   }
 
   // Called once the command ends or is interrupted.

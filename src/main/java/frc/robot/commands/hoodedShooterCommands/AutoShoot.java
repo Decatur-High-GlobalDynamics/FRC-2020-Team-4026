@@ -5,26 +5,25 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands;
+package frc.robot.commands.hoodedShooterCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.HoodedShooterSubsystem;
 import frc.robot.subsystems.VerticalIndexerSubsystem;
 
 public class AutoShoot extends CommandBase {
   /** Creates a new AutoShoot. */
-  private final ShooterSubsystem shooter;
+  private final HoodedShooterSubsystem shooter;
 
   private final VerticalIndexerSubsystem verticalIndexer;
-  private int targetSpeedTop;
-  private final int targetSpeedBot;
+  private final int targetSpeed;
 
   public AutoShoot(
-      ShooterSubsystem shooter, VerticalIndexerSubsystem verticalIndexer, int targetSpeedBot) {
+    HoodedShooterSubsystem shooter, VerticalIndexerSubsystem verticalIndexer, int targetSpeed) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.shooter = shooter;
     this.verticalIndexer = verticalIndexer;
-    this.targetSpeedBot = targetSpeedBot;
+    this.targetSpeed = targetSpeed;
     addRequirements(shooter);
     addRequirements(verticalIndexer);
   }
@@ -34,9 +33,7 @@ public class AutoShoot extends CommandBase {
   public void initialize() {
     // In the future, get speeds from the lookup table based on vision
     // Also, potentially rotate turret
-    targetSpeedTop = (int) (targetSpeedBot * (2.5 / 6.5));
-    shooter.setShooterVelBot(targetSpeedBot);
-    shooter.setShooterVelTop(targetSpeedTop);
+    shooter.setShooterVel(targetSpeed);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -52,8 +49,7 @@ public class AutoShoot extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooter.setShooterVelTop(0);
-    shooter.setShooterVelBot(0);
+    shooter.stop();
     verticalIndexer.stop();
   }
 

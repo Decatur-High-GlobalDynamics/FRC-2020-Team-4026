@@ -5,35 +5,28 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands;
+package frc.robot.commands.shooterCommands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.HorizontalIndexerSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VerticalIndexerSubsystem;
 
-public class AutoShootWithHorizontal extends CommandBase {
+public class AutoShootTesting extends CommandBase {
   /** Creates a new AutoShoot. */
   private final ShooterSubsystem shooter;
 
   private final VerticalIndexerSubsystem verticalIndexer;
-  private final HorizontalIndexerSubsystem horizontalIndexer;
-  private int targetSpeedTop;
-  private final int targetSpeedBot;
+  private double targetSpeedTop;
+  private double targetSpeedBot;
 
-  public AutoShootWithHorizontal(
-      ShooterSubsystem shooter,
-      VerticalIndexerSubsystem verticalIndexer,
-      HorizontalIndexerSubsystem horizontalIndexer,
-      int targetSpeedBot) {
+  public AutoShootTesting(ShooterSubsystem shooter, VerticalIndexerSubsystem verticalIndexer) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.shooter = shooter;
     this.verticalIndexer = verticalIndexer;
-    this.horizontalIndexer = horizontalIndexer;
-    this.targetSpeedBot = targetSpeedBot;
+
     addRequirements(shooter);
     addRequirements(verticalIndexer);
-    addRequirements(horizontalIndexer);
   }
 
   // Called when the command is initially scheduled.
@@ -41,7 +34,8 @@ public class AutoShootWithHorizontal extends CommandBase {
   public void initialize() {
     // In the future, get speeds from the lookup table based on vision
     // Also, potentially rotate turret
-    targetSpeedTop = (int) (targetSpeedBot * (2.5 / 6.5));
+    targetSpeedBot = shooter.getTargetSpeedBot();
+    targetSpeedTop = (targetSpeedBot * (2.5 / 6.5));
     shooter.setShooterVelBot(targetSpeedBot);
     shooter.setShooterVelTop(targetSpeedTop);
   }
@@ -51,11 +45,11 @@ public class AutoShootWithHorizontal extends CommandBase {
   public void execute() {
     if (shooter.isShooterReady()) {
       verticalIndexer.up();
-      horizontalIndexer.intake();
     } else {
       verticalIndexer.stop();
-      horizontalIndexer.stop();
     }
+    SmartDashboard.putNumber("Commands.AutoShootTestingCommand.targetSpeedTop", targetSpeedTop);
+    SmartDashboard.putNumber("Commands.AutoShootTestingCommand.targetSpeedBot", targetSpeedBot);
   }
 
   // Called once the command ends or is interrupted.
@@ -64,7 +58,6 @@ public class AutoShootWithHorizontal extends CommandBase {
     shooter.setShooterVelTop(0);
     shooter.setShooterVelBot(0);
     verticalIndexer.stop();
-    horizontalIndexer.stop();
   }
 
   // Returns true when the command should end.
