@@ -18,6 +18,8 @@ import frc.robot.TeamUtils;
 public class ShooterSubsystem extends SubsystemBase {
   private double maxRotationSpeedBot = 2226.5625;
   private double maxRotationSpeedTop = 1640.625;
+
+  private VisionSubsystem visionSubsystem;
   // Use 24500 for bot at init line
 
   private double targetSpeedBot = 585.9375;
@@ -57,13 +59,16 @@ public class ShooterSubsystem extends SubsystemBase {
       TeamSparkMAX shooter_bottom,
       TeamSparkMAX shooter_top,
       PidParameters topPidParameters,
-      PidParameters botPidParameters) {
+      PidParameters botPidParameters,
+      VisionSubsystem visionSubsystem) {
     this.shooter_bottom = Objects.requireNonNull(shooter_bottom, "shooter_bottom must not be null");
     this.shooter_top = Objects.requireNonNull(shooter_top, "shooter_top must not be null");
     this.topPidParameters =
         Objects.requireNonNull(topPidParameters, "topPidParameters must not be null");
     this.botPidParameters =
         Objects.requireNonNull(botPidParameters, "botPidParameters must not be null");
+    this.visionSubsystem =
+        Objects.requireNonNull(visionSubsystem, "visionSubsystem must not be null");
 
     shooter_bottom.setInverted(true);
     shooter_top.setInverted(false);
@@ -96,7 +101,8 @@ public class ShooterSubsystem extends SubsystemBase {
             maxVelBot,
             maxAccBot,
             errorToleranceBot);
-    return new ShooterSubsystem(shooter_bottom, shooter_top, topPidParameters, botPidParameters);
+    VisionSubsystem visionSubsystem = VisionSubsystem.Create();
+    return new ShooterSubsystem(shooter_bottom, shooter_top, topPidParameters, botPidParameters, visionSubsystem);
   }
 
   @Override
@@ -263,11 +269,10 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public double getVisionYAngle() {
-    Object result = TeamUtils.getFromNetworkTable("angles", "yAngle");
-    if (result == null) {
+    if (!visionSubsystem.isValid()) {
       return 4026.0;
     } else {
-      return (Double) result + 37.0;
+      return visionSubsystem.getLastSeenTy() + 37.0;
     }
   }
 
