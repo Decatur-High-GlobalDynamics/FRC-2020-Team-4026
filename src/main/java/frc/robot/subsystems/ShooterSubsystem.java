@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Ports;
 import frc.robot.PidParameters;
 import frc.robot.TeamSparkMAX;
-import frc.robot.TeamUtils;
 
 public class ShooterSubsystem extends SubsystemBase {
   private double maxRotationSpeedBot = 2226.5625;
@@ -102,7 +101,8 @@ public class ShooterSubsystem extends SubsystemBase {
             maxAccBot,
             errorToleranceBot);
     VisionSubsystem visionSubsystem = VisionSubsystem.Create();
-    return new ShooterSubsystem(shooter_bottom, shooter_top, topPidParameters, botPidParameters, visionSubsystem);
+    return new ShooterSubsystem(
+        shooter_bottom, shooter_top, topPidParameters, botPidParameters, visionSubsystem);
   }
 
   @Override
