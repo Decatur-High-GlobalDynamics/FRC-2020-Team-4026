@@ -4,6 +4,7 @@
 
 package frc.robot.commands.shooterCommands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ShooterSubsystem;
 
@@ -21,7 +22,11 @@ public class AutoShootPower extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    double velocityFraction = getPowerFromDistance(shooter.getKnotDistance());
+    SmartDashboard.putNumber("Commands.PidShooter.velocityFraction", velocityFraction);
+    shooter.setMotorVelocities(velocityFraction, velocityFraction);
+  }
 
   // Called once the command ends or is interrupted.
   @Override
@@ -33,7 +38,7 @@ public class AutoShootPower extends CommandBase {
     return false;
   }
 
-  private double getDistance(double xangle, double yangle) {
-    
+  private double getPowerFromDistance(double distance) {
+    return 1;
   }
 }
