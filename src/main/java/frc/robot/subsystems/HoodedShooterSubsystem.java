@@ -24,10 +24,10 @@ public class HoodedShooterSubsystem extends SubsystemBase {
   /** Creates a new ShooterSubsystem. */
   private double shooterPower = 0.95;
 
-  private static double kP = 0,
-      kI = 0,
-      kD = 0,
-      kF = 0,
+  private static double kP = 0.00005,
+      kI = 0.000001,
+      kD = 0.00001,
+      kF = 0.0005,
       kIZone = 0,
       kPeakOutput = 1,
       maxVel = 20000,
