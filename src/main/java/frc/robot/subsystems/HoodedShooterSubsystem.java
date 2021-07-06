@@ -52,12 +52,12 @@ public class HoodedShooterSubsystem extends SubsystemBase {
   }
 
   public static HoodedShooterSubsystem Create() {
-    TeamSparkMAX shooter_bottom =
-        new TeamSparkMAX("Subsystems.Shooter.Bottom", Ports.BotShooterMotorCAN);
-    TeamSparkMAX shooter_top = new TeamSparkMAX("Subsystems.Shooter.Top", Ports.TopShooterMotorCAN);
+    TeamSparkMAX shooter_follow =
+        new TeamSparkMAX("Subsystems.Shooter.Bottom", Ports.FollowerShooterMotorCAN);
+    TeamSparkMAX shooter_lead = new TeamSparkMAX("Subsystems.Shooter.Top", Ports.LeadShooterMotorCAN);
     PidParameters pidParameters =
         new PidParameters(kP, kI, kD, kF, kIZone, kPeakOutput, maxVel, maxAcc, errorTolerance);
-    return new HoodedShooterSubsystem(shooter_bottom, shooter_top, pidParameters);
+    return new HoodedShooterSubsystem(shooter_follow, shooter_lead, pidParameters);
   }
 
   @Override
