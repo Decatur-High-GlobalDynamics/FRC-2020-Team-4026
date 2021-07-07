@@ -17,7 +17,6 @@ import frc.robot.commands.hoodedShooterCommands.AutoShootWithHorizontal;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.indexerCommands.HorizontalIndexerIntakeCommand;
 import frc.robot.commands.indexerCommands.HorizontalIndexerOuttakeCommand;
-import frc.robot.commands.climberCommands.SimpleClimberControlCommand;
 import frc.robot.commands.intakeCommands.SimpleIntakeCommand;
 import frc.robot.commands.intakeCommands.SimpleOuttakeCommand;
 import frc.robot.commands.turretCommands.SimpleTurretCCWCommand;
@@ -175,9 +174,9 @@ public class RobotContainer {
     Button dPadLeft = new POVButton(secondaryJoystick, LogitechControllerButtons.left);
 
     // Configure climber to respond to both joysticks by default
-    climber.setDefaultCommand(
-        new SimpleClimberControlCommand(
-            climber, () -> secondaryJoystick.getY(), () -> secondaryJoystick.getThrottle()));
+    // climber.setDefaultCommand(
+    //     new SimpleClimberControlCommand(
+    //         climber, () -> secondaryJoystick.getY(), () -> secondaryJoystick.getThrottle()));
 
     // --------Intake and Indexer Button Bindings--------
     // When Y is held, Intake and Horizontal Indexer out (Synchronized)
@@ -195,7 +194,7 @@ public class RobotContainer {
     // When Left Trigger is held, Vertical Indexer down
     leftTrigger.whileHeld(new VerticalIndexerDownCommand(this.verticalIndexer));
     // When button 5 is pressed (Right Bumper), shoot at constant speed
-    rightBumper.whileHeld(new PidShootCommand(this.shooter, 1));
+    rightBumper.whileHeld(new PidShootCommand(this.shooter, 0.5));
     // --------Turret Button Bindings--------
     // When right bumper pressed, aim at vision target if possible
     leftBumper.whileHeld(new PointTurretAtTargetWithAngleCommand(this.turret));
