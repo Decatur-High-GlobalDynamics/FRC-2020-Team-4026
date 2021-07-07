@@ -46,8 +46,8 @@ public class HoodedShooterSubsystem extends SubsystemBase {
     this.shooter_main = Objects.requireNonNull(shooter_main, "shooter_main must not be null");
     this.pidParameters = Objects.requireNonNull(pidParameters, "pidParameters must not be null");
 
-    shooter_follow.follow(shooter_main);
     shooter_main.setInverted(false);
+    shooter_follow.setInverted(true);
     stop();
   }
 
@@ -117,11 +117,12 @@ public class HoodedShooterSubsystem extends SubsystemBase {
   }
 
   public boolean isShooterReady() {
-    return Math.abs(shooter_main.getVelocityError()) <= 600.0;
+    return ((Math.abs(shooter_main.getVelocityError()) <= 600.0) && (Math.abs(shooter_follow.getVelocityError()) <= 600.0));
   }
 
   public void setMotor(double speed) {
     this.shooter_main.setSmartMotionVelocity(speed);
+    this.shooter_follow.setSmartMotionVelocity(speed);
   }
 
   public double getShooterPower() {
@@ -131,15 +132,27 @@ public class HoodedShooterSubsystem extends SubsystemBase {
   public void stop() {
     this.shooter_main.setSmartMotionVelocity(0);
     this.shooter_main.set(0);
+    this.shooter_follow.setSmartMotionVelocity(0);
+    this.shooter_follow.set(0);
   }
 
   public double getShooterSpeed() {
+    return getShooterMainSpeed();
+  }
+
+  public double getShooterMainSpeed() {
     return shooter_main.canEncoder.getVelocity();
   }
 
-  public void setShooterVel(double speed) {
+  public double getShooterFollowSpeed() {
+    return shooter_follow.canEncoder.getVelocity();
+  }
+
+  public void setShooterVel(double speed) { 
     shooter_main.configureWithPidParameters(pidParameters, 0);
     shooter_main.setSmartMotionVelocity(speed);
+    shooter_follow.configureWithPidParameters(pidParameters, 0);
+    shooter_follow.setSmartMotionVelocity(speed);
   }
 
   public double getMaxVel() {
