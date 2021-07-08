@@ -283,15 +283,18 @@ public class RobotContainer {
     Command driveForward = new DriveEncoders(1.2192, .5, driveTrain);
     // This spins up the shooter - note: it doesn't stop the shooter, which might be concerning
     Command spinUp = new SpinUpShooterCommand(shooter, 1, 1);
-    // This shoots with PID - We should adjust the value to the setpoint at wherever we start the bot
+    // This shoots with PID - We should adjust the value to the setpoint at wherever we start the
+    // bot
     Command shoot = new PidShootCommand(shooter, 1, 1);
     // This indexes the horizontal indexer in
     Command horizIn = new HorizontalIndexerIntakeCommand(horizontalIndexer);
     // This indexes the vertical indexer up
     Command vertUp = new VerticalIndexerUpCommand(verticalIndexer);
 
-    //This lets the shooter spin, then keeps it spinning and indexes up for 5 seconds to allow all balls to be shot, then drives forwards. Times can be adjusted as needed
-    return spinUp.andThen((shoot.alongWith(horizIn.alongWith(vertUp)).withTimeout(5)).andThen(driveForward));
+    // This lets the shooter spin, then keeps it spinning and indexes up for 5 seconds to allow all
+    // balls to be shot, then drives forwards. Times can be adjusted as needed
+    return spinUp.andThen(
+        (shoot.alongWith(horizIn.alongWith(vertUp)).withTimeout(5)).andThen(driveForward));
   }
 
   public Command getStopDriveTrainCommand() {
