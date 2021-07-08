@@ -70,10 +70,10 @@ public class HoodedShooterSubsystem extends SubsystemBase {
 
     // This method will be called once per scheduler run
     shooterPower =
-        -Math.abs(SmartDashboard.getNumber("Subsystems.Shooter.shooterPowerTop", shooterPower));
-    SmartDashboard.putNumber("Subsystems.Shooter.shooterPowerTop", shooterPower);
+        -Math.abs(SmartDashboard.getNumber("Subsystems.Shooter.shooterPower", shooterPower));
+    SmartDashboard.putNumber("Subsystems.Shooter.shooterPower", shooterPower);
 
-    SmartDashboard.putNumber("Subsystems.Shooter.maxRotationSpeedTop", maxRotationSpeed);
+    SmartDashboard.putNumber("Subsystems.Shooter.maxRotationSpeed", maxRotationSpeed);
 
     SmartDashboard.putBoolean("Subsystems.Shooter.isShooterReady", this.isShooterReady());
 
