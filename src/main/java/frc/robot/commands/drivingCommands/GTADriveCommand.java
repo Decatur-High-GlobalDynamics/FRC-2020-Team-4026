@@ -13,18 +13,20 @@ public class GTADriveCommand extends CommandBase {
   private final DoubleSupplier rightStick;
   private final BooleanSupplier rightTrigger;
   private final BooleanSupplier leftTrigger;
+  private final BooleanSupplier maxSpeedButton;
 
   public GTADriveCommand(
       DriveTrainSubsystem driveTrain,
       DoubleSupplier leftStick,
       DoubleSupplier rightStick,
       BooleanSupplier rightTrigger,
-      BooleanSupplier leftTrigger) {
+      BooleanSupplier leftTrigger, BooleanSupplier maxSpeedButton) {
     this.driveTrain = driveTrain;
     this.leftStick = leftStick;
     this.rightStick = rightStick;
     this.rightTrigger = rightTrigger;
     this.leftTrigger = leftTrigger;
+    this.maxSpeedButton = maxSpeedButton;
 
     addRequirements(driveTrain);
   }
@@ -39,10 +41,18 @@ public class GTADriveCommand extends CommandBase {
     } else if (leftTrigger.getAsBoolean()) {
       // If the right stick is all the way forward, go at max, if it's not touched, go at half, if
       // it's pulled back, don't move
-      powerToSet = -((-rightStick.getAsDouble() + 1) / 2);
+      if (maxSpeedButton.getAsBoolean()) {
+        powerToSet = -1;
+      } else {
+        powerToSet = -((-rightStick.getAsDouble() + 1) / 2);
+      }
       // If just the right trigger is pressed, go forward based on right stick
     } else if (rightTrigger.getAsBoolean()) {
-      powerToSet = (-rightStick.getAsDouble() + 1) / 2;
+      if (maxSpeedButton.getAsBoolean()) {
+        powerToSet = -1;
+      } else {
+        powerToSet = (-rightStick.getAsDouble() + 1) / 2;
+      }
     }
     // This feeds the powers to curve drive - the power, the turn, which is leftStick's value, and
     // whether power is below a threshold - if it is we assume we're turning in place

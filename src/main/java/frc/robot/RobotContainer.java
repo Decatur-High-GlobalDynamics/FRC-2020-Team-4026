@@ -124,7 +124,7 @@ public class RobotContainer {
               () -> driveController.getX(),
               () -> driveController.getThrottle(),
               () -> rightTrigger.get(),
-              () -> leftTrigger.get()));
+              () -> leftTrigger.get(), () -> x.get()));
 
       // --------Drivetrain Button Bindings--------
       // When left bumper held, enable brake mode
