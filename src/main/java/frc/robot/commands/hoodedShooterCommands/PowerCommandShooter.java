@@ -9,13 +9,14 @@ package frc.robot.commands.hoodedShooterCommands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.HoodedShooterNoPID;
+import frc.robot.subsystems.HoodedShooterSubsystem;
+import frc.robot.subsystems.HoodedShooterSubsystem;
 
 public class PowerCommandShooter extends CommandBase {
-  HoodedShooterNoPID shooter;
+  HoodedShooterSubsystem shooter;
   double power;
   /** Creates a new SimpleShootCommand. */
-  public PowerCommandShooter(HoodedShooterNoPID shooter, double power) {
+  public PowerCommandShooter(HoodedShooterSubsystem shooter, double power) {
     this.shooter = shooter;
     this.power = power;
     // Use addRequirements() here to declare subsystem dependencies.
