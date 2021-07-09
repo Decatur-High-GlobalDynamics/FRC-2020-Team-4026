@@ -20,7 +20,8 @@ public class GTADriveCommand extends CommandBase {
       DoubleSupplier leftStick,
       DoubleSupplier rightStick,
       BooleanSupplier rightTrigger,
-      BooleanSupplier leftTrigger, BooleanSupplier maxSpeedButton) {
+      BooleanSupplier leftTrigger,
+      BooleanSupplier maxSpeedButton) {
     this.driveTrain = driveTrain;
     this.leftStick = leftStick;
     this.rightStick = rightStick;
