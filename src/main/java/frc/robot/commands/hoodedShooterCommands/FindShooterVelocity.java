@@ -5,23 +5,21 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.shooterCommands;
+package frc.robot.commands.hoodedShooterCommands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.HoodedShooterSubsystem;
 
 public class FindShooterVelocity extends CommandBase {
   /** Creates a new FindTurretVelocity. */
   private final double percentTarget;
 
-  private int currVelBot = 0;
-  private int currVelTop = 0;
-  private final ShooterSubsystem shooter;
-  private boolean botDone = false;
-  private boolean topDone = false;
+  private int currVel = 0;
+  private final HoodedShooterSubsystem shooter;
+  private boolean done = false;
 
-  public FindShooterVelocity(ShooterSubsystem shooter, double percentTarget) {
+  public FindShooterVelocity(HoodedShooterSubsystem shooter, double percentTarget) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.percentTarget = percentTarget;
     this.shooter = shooter;
@@ -34,22 +32,13 @@ public class FindShooterVelocity extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (shooter.getShooterPowerBot() < percentTarget) {
-      currVelBot += 5;
-      shooter.setShooterVelBot(currVelBot);
+    if (shooter.getShooterPower() < percentTarget) {
+      currVel += 5;
+      shooter.setMotor(currVel);
     } else {
-      SmartDashboard.putNumber("80% power bot velocity", shooter.getShooterSpeedBot());
-      botDone = true;
-      shooter.setTopMotor(0);
-    }
-
-    if (shooter.getShooterPowerTop() < percentTarget) {
-      currVelTop += 5;
-      shooter.setBottomMotor(currVelTop);
-    } else {
-      SmartDashboard.putNumber("80% power top velocity", shooter.getShooterPowerTop());
-      topDone = true;
-      shooter.setTopMotor(0);
+      SmartDashboard.putNumber("80% power velocity", shooter.getShooterPower());
+      done = true;
+      shooter.setMotor(0);
     }
   }
 
@@ -60,6 +49,6 @@ public class FindShooterVelocity extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return topDone && botDone;
+    return done;
   }
 }

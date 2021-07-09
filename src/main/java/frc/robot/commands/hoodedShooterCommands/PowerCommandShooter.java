@@ -5,22 +5,20 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.shooterCommands;
+package frc.robot.commands.hoodedShooterCommands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.HoodedShooterSubsystem;
+import frc.robot.subsystems.HoodedShooterSubsystem;
 
-public class PidShootCommand extends CommandBase {
-  ShooterSubsystem shooter;
-  double topVelocityFraction;
-  double bottomVelocityFraction;
+public class PowerCommandShooter extends CommandBase {
+  HoodedShooterSubsystem shooter;
+  double power;
   /** Creates a new SimpleShootCommand. */
-  public PidShootCommand(
-      ShooterSubsystem shooter, double topVelocityFraction, double bottomVelocityFraction) {
+  public PowerCommandShooter(HoodedShooterSubsystem shooter, double power) {
     this.shooter = shooter;
-    this.topVelocityFraction = topVelocityFraction;
-    this.bottomVelocityFraction = bottomVelocityFraction;
+    this.power = power;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(shooter);
   }
@@ -28,16 +26,10 @@ public class PidShootCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    double topShootingVelocityFraction =
-        SmartDashboard.getNumber("Commands.PidShooter.topSpeedFraction", this.topVelocityFraction);
-    SmartDashboard.putNumber("Commands.PidShooter.topSpeedFraction", topShootingVelocityFraction);
-    double bottomShootingVelocityFraction =
-        SmartDashboard.getNumber(
-            "Commands.PidShooter.BottomSpeedFraction", this.bottomVelocityFraction);
-    SmartDashboard.putNumber(
-        "Commands.PidShooter.BottomSpeedFraction", bottomShootingVelocityFraction);
+    double shootingPower = SmartDashboard.getNumber("Commands.PowerShooter.power", this.power);
+    SmartDashboard.putNumber("Commands.PowerShooter.power", shootingPower);
 
-    shooter.setMotorVelocities(topVelocityFraction, bottomVelocityFraction);
+    shooter.setShooterPower(power);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -45,9 +37,8 @@ public class PidShootCommand extends CommandBase {
   public void execute() {
     // Update it every time to ensure that it keeps working - there was some weirdness this helped
     // fix
-    SmartDashboard.putNumber("Commands.PidShooter.topSpeedFraction", topVelocityFraction);
-    SmartDashboard.putNumber("Commands.PidShooter.BottomSpeedFraction", bottomVelocityFraction);
-    shooter.setMotorVelocities(topVelocityFraction, bottomVelocityFraction);
+    SmartDashboard.putNumber("Commands.PowerShooter.power", power);
+    shooter.setShooterPower(power);
   }
 
   // Called once the command ends or is interrupted.

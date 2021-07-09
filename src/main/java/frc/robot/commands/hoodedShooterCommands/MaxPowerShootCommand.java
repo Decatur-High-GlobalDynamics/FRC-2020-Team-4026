@@ -5,18 +5,17 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.shooterCommands;
+package frc.robot.commands.hoodedShooterCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.HoodedShooterSubsystem;
 
-public class ConstantShootCommand extends CommandBase {
-  /** Creates a new ConstantShootCommand. */
-  ShooterSubsystem shooter;
-
-  public ConstantShootCommand(ShooterSubsystem shooter) {
-    // Use addRequirements() here to declare subsystem dependencies.
+public class MaxPowerShootCommand extends CommandBase {
+  private final HoodedShooterSubsystem shooter;
+  /** Creates a new MaxPowerShootCommand. */
+  public MaxPowerShootCommand(HoodedShooterSubsystem shooter) {
     this.shooter = shooter;
+    // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(shooter);
   }
 
@@ -27,8 +26,7 @@ public class ConstantShootCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooter.setBottomMotor(shooter.getShooterPowerBot());
-    shooter.setTopMotor(shooter.getShooterPowerTop());
+    shooter.setShooterVelFraction(1);
   }
 
   // Called once the command ends or is interrupted.
