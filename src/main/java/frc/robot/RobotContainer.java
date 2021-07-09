@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.commands.AutoIntakeIndex;
+import frc.robot.commands.climberCommands.SimpleClimberControlCommand;
 import frc.robot.commands.hoodedShooterCommands.AutoShootWithHorizontal;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.indexerCommands.HorizontalIndexerIntakeCommand;
@@ -173,10 +174,10 @@ public class RobotContainer {
     // LogitechControllerButtons.down);
     Button dPadLeft = new POVButton(secondaryJoystick, LogitechControllerButtons.left);
 
-    // Configure climber to respond to both joysticks by default
-    // climber.setDefaultCommand(
-    //     new SimpleClimberControlCommand(
-    //         climber, () -> secondaryJoystick.getY(), () -> secondaryJoystick.getThrottle()));
+    //Configure climber to respond to both joysticks by default
+    climber.setDefaultCommand(
+         new SimpleClimberControlCommand(
+             climber, () -> secondaryJoystick.getY(), () -> secondaryJoystick.getThrottle()));
 
     // --------Intake and Indexer Button Bindings--------
     // When Y is held, Intake and Horizontal Indexer out (Synchronized)
