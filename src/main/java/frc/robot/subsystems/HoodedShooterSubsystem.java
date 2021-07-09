@@ -121,7 +121,8 @@ public class HoodedShooterSubsystem extends SubsystemBase {
   }
 
   public boolean isShooterReady() {
-    return ((Math.abs(shooter_main.getVelocityError()) <= 600.0) && (Math.abs(shooter_follow.getVelocityError()) <= 600.0));
+    return ((Math.abs(shooter_main.getVelocityError()) <= 600.0)
+        && (Math.abs(shooter_follow.getVelocityError()) <= 600.0));
   }
 
   public void setMotor(double speed) {
@@ -152,7 +153,7 @@ public class HoodedShooterSubsystem extends SubsystemBase {
     return shooter_follow.canEncoder.getVelocity();
   }
 
-  public void setShooterVel(double speed) { 
+  public void setShooterVel(double speed) {
     shooter_main.configureWithPidParameters(pidParameters, 0);
     shooter_main.setSmartMotionVelocity(speed);
     shooter_follow.configureWithPidParameters(pidParameters, 0);
