@@ -174,10 +174,10 @@ public class RobotContainer {
     // LogitechControllerButtons.down);
     Button dPadLeft = new POVButton(secondaryJoystick, LogitechControllerButtons.left);
 
-    //Configure climber to respond to both joysticks by default
+    // Configure climber to respond to both joysticks by default
     climber.setDefaultCommand(
-         new SimpleClimberControlCommand(
-             climber, () -> secondaryJoystick.getY(), () -> secondaryJoystick.getThrottle()));
+        new SimpleClimberControlCommand(
+            climber, () -> secondaryJoystick.getY(), () -> secondaryJoystick.getThrottle()));
 
     // --------Intake and Indexer Button Bindings--------
     // When Y is held, Intake and Horizontal Indexer out (Synchronized)
