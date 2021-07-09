@@ -25,8 +25,7 @@ public class PowerCommandShooter extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    double shootingPower =
-        SmartDashboard.getNumber("Commands.PowerShooter.power", this.power);
+    double shootingPower = SmartDashboard.getNumber("Commands.PowerShooter.power", this.power);
     SmartDashboard.putNumber("Commands.PowerShooter.power", shootingPower);
 
     shooter.setShooterPower(power);
