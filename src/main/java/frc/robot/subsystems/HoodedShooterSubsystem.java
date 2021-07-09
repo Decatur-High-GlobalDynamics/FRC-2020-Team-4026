@@ -80,6 +80,9 @@ public class HoodedShooterSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Subsystems.Shooter.yAngleAdjusted", this.getVisionYAngle());
     SmartDashboard.putNumber("Subsystems.Shooter.knotDistance", this.getKnotDistance());
 
+    SmartDashboard.putNumber("Subsystems.HoodedShooter.MainSpeedPer100ms", this.getShooterMainSpeed());
+    SmartDashboard.putNumber("Subsystems.HoodedShooter.FollowerSpeedPer100ms", this.getShooterFollowSpeed());
+
     kP = SmartDashboard.getNumber("Subsystems.Shooter.kP", kP);
     pidParameters.kP = kP;
     SmartDashboard.putNumber("Subsystems.Shooter.kP", kP);
@@ -162,6 +165,11 @@ public class HoodedShooterSubsystem extends SubsystemBase {
 
   public void setShooterVelFraction(double speedFraction) {
     setShooterVel((speedFraction * maxRotationSpeed));
+  }
+
+  public void setShooterPower(double power) {
+    shooter_main.set(power);
+    shooter_follow.set(power);
   }
 
   public double getVisionYAngle() {
