@@ -296,8 +296,12 @@ public class RobotContainer {
     // This indexes the vertical indexer up
     Command vertUp = new VerticalIndexerUpCommand(verticalIndexer);
 
-    //This lets the shooter spin, then keeps it spinning and indexes up for 5 seconds to allow all balls to be shot, then drives forwards. While it does this the turret aims. Times can be adjusted as needed
-    return aimTurret.alongWith(spinUp.andThen((shoot.alongWith(horizIn.alongWith(vertUp)).withTimeout(5)).andThen(driveForward)));
+    // This lets the shooter spin, then keeps it spinning and indexes up for 5 seconds to allow all
+    // balls to be shot, then drives forwards. While it does this the turret aims. Times can be
+    // adjusted as needed
+    return aimTurret.alongWith(
+        spinUp.andThen(
+            (shoot.alongWith(horizIn.alongWith(vertUp)).withTimeout(5)).andThen(driveForward)));
   }
 
   private Command getAutoDriveJulyHEAT() {
