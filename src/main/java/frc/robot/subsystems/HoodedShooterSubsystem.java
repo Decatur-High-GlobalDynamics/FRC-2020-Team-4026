@@ -16,7 +16,7 @@ import frc.robot.TeamSparkMAX;
 import frc.robot.TeamUtils;
 
 public class HoodedShooterSubsystem extends SubsystemBase {
-  private double maxRotationSpeed = 1640.625;
+  private double maxRotationSpeed = 5600.;
   // Use 24500 for bot at init line
   // Values for 95% (max power for shooting)
   private final TeamSparkMAX shooter_main;
@@ -24,9 +24,9 @@ public class HoodedShooterSubsystem extends SubsystemBase {
   /** Creates a new ShooterSubsystem. */
   private double shooterPower = 0.95;
 
-  private static double kP = 0.00005,
-      kI = 0.000001,
-      kD = 0.00001,
+  private static double kP = 0.0001,
+      kI = 0.000000,
+      kD = 0.00000,
       kF = 0.0005,
       kIZone = 0,
       kPeakOutput = 1,
