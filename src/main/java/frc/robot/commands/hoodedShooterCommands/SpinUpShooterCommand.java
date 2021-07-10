@@ -16,8 +16,7 @@ public class SpinUpShooterCommand extends CommandBase {
   HoodedShooterSubsystem shooter;
   double velocityFraction;
   /** Creates a new SpinUpShooterCommand. */
-  public SpinUpShooterCommand(
-    HoodedShooterSubsystem shooter, double velocityFraction) {
+  public SpinUpShooterCommand(HoodedShooterSubsystem shooter, double velocityFraction) {
     this.shooter = shooter;
     this.velocityFraction = velocityFraction;
     // Use addRequirements() here to declare subsystem dependencies.
@@ -28,11 +27,8 @@ public class SpinUpShooterCommand extends CommandBase {
   @Override
   public void initialize() {
     double shootingVelocityFraction =
-        SmartDashboard.getNumber(
-            "Commands.SpinUpShooter.topSpeedFraction", this.velocityFraction);
-    SmartDashboard.putNumber(
-        "Commands.SpinUpShooter.topSpeedFraction", shootingVelocityFraction);
-
+        SmartDashboard.getNumber("Commands.SpinUpShooter.topSpeedFraction", this.velocityFraction);
+    SmartDashboard.putNumber("Commands.SpinUpShooter.topSpeedFraction", shootingVelocityFraction);
 
     shooter.setShooterVelFraction(velocityFraction);
   }
