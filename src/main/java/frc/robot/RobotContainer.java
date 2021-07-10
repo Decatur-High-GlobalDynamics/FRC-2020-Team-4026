@@ -306,7 +306,8 @@ public class RobotContainer {
     // adjusted as needed
     return aimTurret.alongWith(
         spinUp.andThen(
-            (shoot.alongWith(horizIn.alongWith(vertUp)).withTimeout(5)).andThen(turnAround.andThen(driveForward))));
+            (shoot.alongWith(horizIn.alongWith(vertUp)).withTimeout(5))
+                .andThen(turnAround.andThen(driveForward))));
   }
 
   private Command getAutoDriveJulyHEAT() {
