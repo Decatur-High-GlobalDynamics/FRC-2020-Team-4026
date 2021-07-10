@@ -6,22 +6,20 @@
 3. It prints to smart dashboard with a different prefix. Change 2 might be problematic
 */
 
-package frc.robot.commands.shooterCommands;
+package frc.robot.commands.hoodedShooterCommands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.HoodedShooterSubsystem;
 
 public class SpinUpShooterCommand extends CommandBase {
-  ShooterSubsystem shooter;
-  double topVelocityFraction;
-  double bottomVelocityFraction;
+  HoodedShooterSubsystem shooter;
+  double velocityFraction;
   /** Creates a new SpinUpShooterCommand. */
   public SpinUpShooterCommand(
-      ShooterSubsystem shooter, double topVelocityFraction, double bottomVelocityFraction) {
+    HoodedShooterSubsystem shooter, double velocityFraction) {
     this.shooter = shooter;
-    this.topVelocityFraction = topVelocityFraction;
-    this.bottomVelocityFraction = bottomVelocityFraction;
+    this.velocityFraction = velocityFraction;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(shooter);
   }
@@ -29,18 +27,14 @@ public class SpinUpShooterCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    double topShootingVelocityFraction =
+    double shootingVelocityFraction =
         SmartDashboard.getNumber(
-            "Commands.SpinUpShooter.topSpeedFraction", this.topVelocityFraction);
+            "Commands.SpinUpShooter.topSpeedFraction", this.velocityFraction);
     SmartDashboard.putNumber(
-        "Commands.SpinUpShooter.topSpeedFraction", topShootingVelocityFraction);
-    double bottomShootingVelocityFraction =
-        SmartDashboard.getNumber(
-            "Commands.SpinUpShooter.BottomSpeedFraction", this.bottomVelocityFraction);
-    SmartDashboard.putNumber(
-        "Commands.SpinUpShooter.BottomSpeedFraction", bottomShootingVelocityFraction);
+        "Commands.SpinUpShooter.topSpeedFraction", shootingVelocityFraction);
 
-    shooter.setMotorVelocities(topVelocityFraction, bottomVelocityFraction);
+
+    shooter.setShooterVelFraction(velocityFraction);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -48,9 +42,8 @@ public class SpinUpShooterCommand extends CommandBase {
   public void execute() {
     // Update it every time to ensure that it keeps working - there was some weirdness this helped
     // fix
-    SmartDashboard.putNumber("Commands.SpinUpShooter.topSpeedFraction", topVelocityFraction);
-    SmartDashboard.putNumber("Commands.SpinUpShooter.BottomSpeedFraction", bottomVelocityFraction);
-    shooter.setMotorVelocities(topVelocityFraction, bottomVelocityFraction);
+    SmartDashboard.putNumber("Commands.SpinUpShooter.speedFraction", velocityFraction);
+    shooter.setShooterVelFraction(velocityFraction);
   }
 
   // Called once the command ends or is interrupted.
