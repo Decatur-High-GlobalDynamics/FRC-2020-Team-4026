@@ -1,12 +1,12 @@
-package frc.robot.commands.shooterCommands;
+package frc.robot.commands.hoodedShooterCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.HoodedShooterSubsystem;
 
 public class StopShootCommand extends CommandBase {
-  ShooterSubsystem shooter;
+  HoodedShooterSubsystem shooter;
 
-  public StopShootCommand(ShooterSubsystem shooter) {
+  public StopShootCommand(HoodedShooterSubsystem shooter) {
     this.shooter = shooter;
     addRequirements(shooter);
   }
