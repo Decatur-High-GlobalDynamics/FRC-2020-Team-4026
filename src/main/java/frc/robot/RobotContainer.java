@@ -39,6 +39,7 @@ import frc.robot.commands.drivingCommands.EnableBrakeModeCommand;
 import frc.robot.commands.drivingCommands.SetSpeedMode;
 import frc.robot.commands.drivingCommands.StopDrivetrainCommand;
 import frc.robot.commands.drivingCommands.TankDriveCommand;
+import frc.robot.commands.drivingCommands.TurnCommand;
 import frc.robot.commands.drivingCommands.GTADriveCommand;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
@@ -286,6 +287,8 @@ public class RobotContainer {
     double shooterSpeed = 0.37;
     // This command drives forward 4 feet when run
     Command driveForward = new DriveEncoders(1.2192, .5, driveTrain);
+    // Turns around 180 degrees
+    Command turnAround = new TurnCommand(180, .5, driveTrain, navigation);
     // This spins up the shooter - note: it doesn't stop the shooter, which might be concerning
     Command spinUp = new SpinUpShooterCommand(shooter, shooterSpeed);
     // This shoots with PID - We should adjust the value to the setpoint at wherever we start the
@@ -303,7 +306,7 @@ public class RobotContainer {
     // adjusted as needed
     return aimTurret.alongWith(
         spinUp.andThen(
-            (shoot.alongWith(horizIn.alongWith(vertUp)).withTimeout(5)).andThen(driveForward)));
+            (shoot.alongWith(horizIn.alongWith(vertUp)).withTimeout(5)).andThen(turnAround.andThen(driveForward))));
   }
 
   private Command getAutoDriveJulyHEAT() {
