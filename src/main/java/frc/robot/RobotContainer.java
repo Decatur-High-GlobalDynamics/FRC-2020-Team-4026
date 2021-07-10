@@ -285,10 +285,10 @@ public class RobotContainer {
     // This command drives forward 4 feet when run
     Command driveForward = new DriveEncoders(1.2192, .5, driveTrain);
     // This spins up the shooter - note: it doesn't stop the shooter, which might be concerning
-    Command spinUp = new SpinUpShooterCommand(shooter, 1, 1);
+    Command spinUp = new SpinUpShooterCommand(shooter, 0.37);
     // This shoots with PID - We should adjust the value to the setpoint at wherever we start the
     // bot
-    Command shoot = new PidShootCommand(shooter, 1, 1);
+    Command shoot = new PidShootCommand(shooter, 0.37);
     // This aims the turret
     Command aimTurret = new PointTurretAtTargetWithAngleCommand(turret);
     // This indexes the horizontal indexer in
