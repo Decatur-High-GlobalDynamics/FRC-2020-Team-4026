@@ -35,6 +35,8 @@ public class HoodedShooterSubsystem extends SubsystemBase {
   private static int errorTolerance = 10;
   private PidParameters pidParameters;
 
+  private final double spinUpTolerance = 100;
+
   public HoodedShooterSubsystem() {
     throw new IllegalArgumentException(
         "not allowed! ctor must provide parameters for all dependencies");
@@ -123,8 +125,8 @@ public class HoodedShooterSubsystem extends SubsystemBase {
   }
 
   public boolean isShooterReady() {
-    return ((Math.abs(shooter_main.getVelocityError()) <= 600.0)
-        && (Math.abs(shooter_follow.getVelocityError()) <= 600.0));
+    return ((Math.abs(shooter_main.getVelocityError()) <= spinUpTolerance)
+        && (Math.abs(shooter_follow.getVelocityError()) <= spinUpTolerance));
   }
 
   public void setMotor(double speed) {
