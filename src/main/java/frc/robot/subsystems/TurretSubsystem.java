@@ -33,6 +33,7 @@ public class TurretSubsystem extends SubsystemBase {
   private final int stallThresh = 30;
   private boolean isTurretCalibrating = false;
   private final PidParameters pidParams;
+  private final PidParameters pidParamsForAim;
 
   // Number of encoder ticks to go when rotating
   private int rotationSpeed = 500;
@@ -57,12 +58,14 @@ public class TurretSubsystem extends SubsystemBase {
       TeamTalonSRX turretMotor,
       DigitalInput turretLimit,
       VisionSubsystem visionSubsystem,
-      PidParameters pidParams) {
+      PidParameters pidParams,
+      PidParameters pidParamsForAim) {
     this.turretMotor = Objects.requireNonNull(turretMotor, "turretMotor must not be null");
     this.turretLimit = Objects.requireNonNull(turretLimit, "turretLimit must not be null");
     this.visionSubsystem =
         Objects.requireNonNull(visionSubsystem, "visionSubsystem must not be null");
     this.pidParams = Objects.requireNonNull(pidParams, "pidParams must not be null");
+    this.pidParamsForAim = Objects.requireNonNull(pidParamsForAim, "pidParamsForAim must not be null");
 
     turretMotor.configFactoryDefault();
 
@@ -85,7 +88,8 @@ public class TurretSubsystem extends SubsystemBase {
     DigitalInput turretLimit = new DigitalInput(Ports.TurretLimitDIO);
     VisionSubsystem visionSubsystem = VisionSubsystem.Create();
     PidParameters pidParams = new PidParameters(0.25, 0.001, 0.0, 0, 0, 0.15, 2);
-    return new TurretSubsystem(turretMotor, turretLimit, visionSubsystem, pidParams);
+    PidParameters pidParamsForAim = new PidParameters(0.5, 0.003, 0.0, 0, 20, 0.15, 2);
+    return new TurretSubsystem(turretMotor, turretLimit, visionSubsystem, pidParams, pidParamsForAim);
   }
 
   private boolean isPowerOkay(double powerToCheck) {
@@ -141,6 +145,7 @@ public class TurretSubsystem extends SubsystemBase {
 
     radPerPulse = SmartDashboard.getNumber("Subsystems.Turret.radPerPulse", radPerPulse);
     SmartDashboard.putNumber("Subsystems.Turret.radPerPulse", radPerPulse);
+    SmartDashboard.putNumber("Subsystems.Turret.turretPosition", this.getTicks());
     SmartDashboard.putNumber("Subsystems.Turret.turretPosition-rads", this.getRadians());
 
     SmartDashboard.putBoolean("Subsystems.Turret.isTurretCalibrating", isTurretCalibrating);
@@ -289,12 +294,30 @@ public class TurretSubsystem extends SubsystemBase {
       reqPosition = (long) MathUtil.clamp(reqPosition, minEncoderRange, 0);
     }
     SmartDashboard.putNumber("Subsystems.Turret.RequestedPosition", reqPosition);
+    SmartDashboard.putNumber("Subsystems.Turret.RequestedPosition-rads", convertToRad(reqPosition));
+    SmartDashboard.putNumber("Subsystems.Turret.CurrentPosition", getTicks());
+    SmartDashboard.putNumber("Subsystems.Turret.CurrentError", getClosedLoopError());
+    SmartDashboard.putNumber("Subsystems.Turret.StatorCurrent", turretMotor.getStatorCurrent());
+    turretMotor.set(ControlMode.Position, reqPosition);
+  }
+
+  public void startRotatingToEncoderPosition(long encoderPosition, PidParameters params) {
+    turretMotor.configureWithPidParameters(params, 0);
+    long reqPosition = encoderPosition;
+    if (!(this.getCurrentCommand() instanceof PrepareTurretCommand)) {
+      reqPosition = (long) MathUtil.clamp(reqPosition, minEncoderRange, 0);
+    }
+    SmartDashboard.putNumber("Subsystems.Turret.RequestedPosition", reqPosition);
+    SmartDashboard.putNumber("Subsystems.Turret.RequestedPosition-rads", convertToRad(reqPosition));
+    SmartDashboard.putNumber("Subsystems.Turret.CurrentPosition", getTicks());
+    SmartDashboard.putNumber("Subsystems.Turret.CurrentError", getClosedLoopError());
+    SmartDashboard.putNumber("Subsystems.Turret.StatorCurrent", turretMotor.getStatorCurrent());
     turretMotor.set(ControlMode.Position, reqPosition);
   }
 
   public void startRotatingToPosition(double targetRad) {
     long targetTicks = Math.round(convertToTicks(targetRad));
-    startRotatingToEncoderPosition(targetTicks);
+    startRotatingToEncoderPosition(targetTicks, pidParamsForAim);
   }
 
   public void resetEncoder() {
@@ -315,6 +338,10 @@ public class TurretSubsystem extends SubsystemBase {
 
   public boolean getTurretLimitSwitch() {
     return !turretLimit.get();
+  }
+
+  public double getClosedLoopError() {
+    return turretMotor.getClosedLoopError();
   }
 
   public boolean isRadsAllowed(double rads) {
