@@ -32,7 +32,6 @@ import frc.robot.commands.indexerCommands.VerticalIndexerUpCommand;
 import frc.robot.commands.navigationCommands.UpdateNavigationCommand;
 import frc.robot.commands.hoodedShooterCommands.ConstantShootCommand;
 import frc.robot.commands.hoodedShooterCommands.MaxPowerShootCommand;
-import frc.robot.commands.hoodedShooterCommands.PidShootCommand;
 import frc.robot.commands.drivingCommands.DisableRampingCommand;
 import frc.robot.commands.drivingCommands.DriveEncoders;
 import frc.robot.commands.drivingCommands.EnableBrakeModeCommand;
@@ -196,7 +195,13 @@ public class RobotContainer {
     // When Left Trigger is held, Vertical Indexer down
     leftTrigger.whileHeld(new VerticalIndexerDownCommand(this.verticalIndexer));
     // When button 5 is pressed (Right Bumper), shoot at constant speed
-    rightBumper.whileHeld(new AutoShoot(this.shooter, this.verticalIndexer, this.horizontalIndexer, this.turret.getVisionSubsystem(), this.turret));
+    rightBumper.whileHeld(
+        new AutoShoot(
+            this.shooter,
+            this.verticalIndexer,
+            this.horizontalIndexer,
+            this.turret.getVisionSubsystem(),
+            this.turret));
     // --------Turret Button Bindings--------
     // When right bumper pressed, aim at vision target if possible
     leftBumper.whileHeld(new PointTurretAtTargetWithAngleCommand(this.turret));
