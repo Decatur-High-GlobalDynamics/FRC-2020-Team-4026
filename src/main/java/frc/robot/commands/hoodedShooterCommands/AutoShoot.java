@@ -20,13 +20,18 @@ import frc.robot.subsystems.VisionSubsystem;
 public class AutoShoot extends CommandBase {
   /** Creates a new AutoShoot. */
   private final HoodedShooterSubsystem shooter;
+
   private final VisionSubsystem vision;
   private final PointTurretAtTargetWithAngleCommand aimTurret;
   private final HorizontalIndexerIntakeCommand horizontalIntake;
   private final VerticalIndexerUpCommand verticalUp;
 
   public AutoShoot(
-      HoodedShooterSubsystem shooter, VerticalIndexerSubsystem verticalIndexer, HorizontalIndexerSubsystem horizontalIndexer, VisionSubsystem vision, TurretSubsystem turret) {
+      HoodedShooterSubsystem shooter,
+      VerticalIndexerSubsystem verticalIndexer,
+      HorizontalIndexerSubsystem horizontalIndexer,
+      VisionSubsystem vision,
+      TurretSubsystem turret) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.shooter = shooter;
     this.vision = vision;
