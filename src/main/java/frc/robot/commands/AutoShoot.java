@@ -66,6 +66,8 @@ public class AutoShoot extends CommandBase {
   public void end(boolean interrupted) {
     shooter.stop();
     aimTurret.cancel();
+    verticalUp.cancel();
+    horizontalIntake.cancel();
   }
 
   // Returns true when the command should end.
