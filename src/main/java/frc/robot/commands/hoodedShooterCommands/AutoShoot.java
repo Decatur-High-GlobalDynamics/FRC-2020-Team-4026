@@ -8,41 +8,56 @@
 package frc.robot.commands.hoodedShooterCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.commands.indexerCommands.HorizontalIndexerIntakeCommand;
+import frc.robot.commands.indexerCommands.VerticalIndexerUpCommand;
+import frc.robot.commands.turretCommands.PointTurretAtTargetWithAngleCommand;
 import frc.robot.subsystems.HoodedShooterSubsystem;
+import frc.robot.subsystems.HorizontalIndexerSubsystem;
+import frc.robot.subsystems.TurretSubsystem;
 import frc.robot.subsystems.VerticalIndexerSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
 
 public class AutoShoot extends CommandBase {
   /** Creates a new AutoShoot. */
   private final HoodedShooterSubsystem shooter;
-
-  private final VerticalIndexerSubsystem verticalIndexer;
-  private final int targetSpeed;
+  private final VisionSubsystem vision;
+  private final PointTurretAtTargetWithAngleCommand aimTurret;
+  private final HorizontalIndexerIntakeCommand horizontalIntake;
+  private final VerticalIndexerUpCommand verticalUp;
 
   public AutoShoot(
-      HoodedShooterSubsystem shooter, VerticalIndexerSubsystem verticalIndexer, int targetSpeed) {
+      HoodedShooterSubsystem shooter, VerticalIndexerSubsystem verticalIndexer, HorizontalIndexerSubsystem horizontalIndexer, VisionSubsystem vision, TurretSubsystem turret) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.shooter = shooter;
-    this.verticalIndexer = verticalIndexer;
-    this.targetSpeed = targetSpeed;
+    this.vision = vision;
+    this.horizontalIntake = new HorizontalIndexerIntakeCommand(horizontalIndexer);
+    this.verticalUp = new VerticalIndexerUpCommand(verticalIndexer);
+    this.aimTurret = new PointTurretAtTargetWithAngleCommand(turret);
     addRequirements(shooter);
-    addRequirements(verticalIndexer);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    // In the future, get speeds from the lookup table based on vision
-    // Also, potentially rotate turret
-    shooter.setShooterVel(targetSpeed);
+    aimTurret.schedule();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (shooter.isShooterReady()) {
-      verticalIndexer.up();
+    if (vision.isValid()) {
+      shooter.setShooterVelFraction(getTargetSpeed(vision.getLastSeenTy()));
+      if (shooter.isShooterReady()) {
+        verticalUp.schedule();
+        horizontalIntake.schedule();
+      } else {
+        verticalUp.cancel();
+        horizontalIntake.cancel();
+      }
     } else {
-      verticalIndexer.stop();
+      shooter.stop();
+      verticalUp.cancel();
+      horizontalIntake.cancel();
     }
   }
 
@@ -50,12 +65,16 @@ public class AutoShoot extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     shooter.stop();
-    verticalIndexer.stop();
+    aimTurret.cancel();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     return false;
+  }
+
+  private double getTargetSpeed(double currentAngle) {
+    return 0.5;
   }
 }
