@@ -98,6 +98,8 @@ public class TeamSparkMAX extends CANSparkMax {
 
     // SmartDashboard.putString(smartDashboardPrefix + "Mode", getControlMode().toString());
     SmartDashboard.putNumber(smartDashboardPrefix + "EmergencyStops", numEStops);
+
+    SmartDashboard.putNumber(smartDashboardPrefix + ".VelocityError", getVelocityError());
     /*
     switch (getControlMode()) {
       case Position:
