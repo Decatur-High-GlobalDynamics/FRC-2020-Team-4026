@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.commands.AutoIntakeIndex;
 import frc.robot.commands.climberCommands.SimpleClimberControlCommand;
+import frc.robot.commands.AutoShoot;
 import frc.robot.commands.hoodedShooterCommands.AutoShootWithHorizontal;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.indexerCommands.HorizontalIndexerIntakeCommand;
@@ -195,7 +196,7 @@ public class RobotContainer {
     // When Left Trigger is held, Vertical Indexer down
     leftTrigger.whileHeld(new VerticalIndexerDownCommand(this.verticalIndexer));
     // When button 5 is pressed (Right Bumper), shoot at constant speed
-    rightBumper.whileHeld(new PidShootCommand(this.shooter, .42));
+    rightBumper.whileHeld(new AutoShoot(this.shooter, this.verticalIndexer, this.horizontalIndexer, this.turret.getVisionSubsystem(), this.turret));
     // --------Turret Button Bindings--------
     // When right bumper pressed, aim at vision target if possible
     leftBumper.whileHeld(new PointTurretAtTargetWithAngleCommand(this.turret));
