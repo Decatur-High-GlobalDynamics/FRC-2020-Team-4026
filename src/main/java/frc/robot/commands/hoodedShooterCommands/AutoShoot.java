@@ -47,7 +47,7 @@ public class AutoShoot extends CommandBase {
   public void execute() {
     if (vision.isValid()) {
       shooter.setShooterVelFraction(getTargetSpeed(vision.getLastSeenTy()));
-      if (shooter.isShooterReady()) {
+      if (shooter.isShooterReady() && Math.abs(vision.getLastSeenTx()) < 1) {
         verticalUp.schedule();
         horizontalIntake.schedule();
       } else {
