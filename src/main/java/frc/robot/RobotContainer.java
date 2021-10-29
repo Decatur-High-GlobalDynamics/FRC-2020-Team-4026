@@ -288,6 +288,7 @@ public class RobotContainer {
     // This shoots with PID - We should adjust the value to the setpoint at wherever we start the
     // bot
     Command shoot = new PidShootCommand(shooter, shooterSpeed);
+    Command shoot2 = new PidShootCommand(shooter, shooterSpeed);
     // This aims the turret
     Command aimTurret = new PointTurretAtTargetWithAngleCommand(turret);
     // This indexes the horizontal indexer in
@@ -298,9 +299,9 @@ public class RobotContainer {
     // This lets the shooter spin, then keeps it spinning and indexes up for 5 seconds to allow all
     // balls to be shot, then drives forwards. While it does this the turret aims. Times can be
     // adjusted as needed
-    return aimTurret.alongWith(
-        spinUp.andThen(
-            (shoot.alongWith(horizIn.alongWith(vertUp)).withTimeout(5)).andThen(driveBack)));
+    return aimTurret.withTimeout(2).andThen(
+        shoot.withTimeout(4).andThen(
+            (shoot2.alongWith(horizIn.alongWith(vertUp)).withTimeout(5)).andThen(driveBack)));
   }
 
   public Command getStopDriveTrainCommand() {
