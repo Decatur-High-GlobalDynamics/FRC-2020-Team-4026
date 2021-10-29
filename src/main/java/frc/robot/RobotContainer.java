@@ -78,6 +78,7 @@ public class RobotContainer {
   enum PossibleAutos {
     IN_FRONT_OF_TARGET_MAX_POWER,
     IN_FRONT_OF_TARGET_MAX_POWER_THEN_BACK,
+    SHOOT_THEN_DRIVE_JULY_HEAT,
   }
 
   SendableChooser<PossibleAutos> autoChoice = new SendableChooser<PossibleAutos>();
@@ -239,6 +240,8 @@ public class RobotContainer {
         return getAutoInFrontOfTarget();
       case IN_FRONT_OF_TARGET_MAX_POWER_THEN_BACK:
         return getAutoInFrontOfTargetThenBack();
+      case SHOOT_THEN_DRIVE_JULY_HEAT:
+        return getAutoShootThenDriveJulyHEAT();
       default:
         return null;
     }
@@ -277,7 +280,7 @@ public class RobotContainer {
 
   private Command getAutoShootThenDriveJulyHEAT() {
     // This is the speed the shooter will spin
-    double shooterSpeed = 0.37;
+    double shooterSpeed = 0.42;
     // This command drives forward 4 feet when run
     Command driveBack = new DriveEncoders(-1.2192, -.5, driveTrain);
     // This spins up the shooter - note: it doesn't stop the shooter, which might be concerning
