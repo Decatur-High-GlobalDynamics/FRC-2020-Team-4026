@@ -7,6 +7,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
@@ -45,6 +46,8 @@ public class ClimberSubsystem extends SubsystemBase {
     this.rightLimit = Objects.requireNonNull(rightLimit, "rightLimit must not be null");
     this.rightHookLimit = Objects.requireNonNull(rightHookLimit, "rightHookLimit must not be null");
     this.leftHookLimit = Objects.requireNonNull(leftHookLimit, "leftHookLimit must not be null");
+    leftClimber.setNeutralMode(NeutralMode.Brake);
+    rightClimber.setNeutralMode(NeutralMode.Brake);
   }
 
   // ClimberSubsystem Factory
