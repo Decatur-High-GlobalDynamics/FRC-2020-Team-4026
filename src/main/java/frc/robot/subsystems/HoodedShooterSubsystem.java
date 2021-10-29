@@ -35,7 +35,7 @@ public class HoodedShooterSubsystem extends SubsystemBase {
   private static int errorTolerance = 10;
   private PidParameters pidParameters;
 
-  private final double spinUpTolerance = 100;
+  private final double spinUpTolerance = 200;
 
   public HoodedShooterSubsystem() {
     throw new IllegalArgumentException(
