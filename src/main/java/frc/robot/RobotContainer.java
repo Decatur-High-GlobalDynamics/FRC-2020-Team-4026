@@ -284,11 +284,9 @@ public class RobotContainer {
     double shooterSpeed = 0.42;
     // This command drives forward 4 feet when run
     Command driveForward = new DriveEncoders(1.2192, .5, driveTrain);
-    // This spins up the shooter - note: it doesn't stop the shooter, which might be concerning
-    Command spinUp = new SpinUpShooterCommand(shooter, shooterSpeed);
     // This shoots with PID - We should adjust the value to the setpoint at wherever we start the
     // bot
-    Command shoot = new PidShootCommand(shooter, shooterSpeed);
+    Command spinUp = new SpinUpShooterCommand(shooter, shooterSpeed);
     Command shoot2 = new PidShootCommand(shooter, shooterSpeed);
     // This aims the turret
     Command aimTurret = new PointTurretAtTargetWithAngleCommand(turret);
@@ -300,14 +298,11 @@ public class RobotContainer {
     // This lets the shooter spin, then keeps it spinning and indexes up for 5 seconds to allow all
     // balls to be shot, then drives forwards. While it does this the turret aims. Times can be
     // adjusted as needed
-    return aimTurret
-        .withTimeout(2)
-        .andThen(
-            shoot
-                .withTimeout(4)
-                .andThen(
-                    (shoot2.alongWith(horizIn.alongWith(vertUp)).withTimeout(5))
-                        .andThen(driveForward)));
+    return spinUp
+              .withTimeout(6)
+              .andThen(
+                    (shoot2.alongWith(horizIn.alongWith(vertUp)).withTimeout(3))
+                        .andThen(driveForward));
   }
 
   public Command getStopDriveTrainCommand() {
