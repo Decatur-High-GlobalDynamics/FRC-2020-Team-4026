@@ -32,6 +32,7 @@ import frc.robot.commands.navigationCommands.UpdateNavigationCommand;
 import frc.robot.commands.hoodedShooterCommands.ConstantShootCommand;
 import frc.robot.commands.hoodedShooterCommands.MaxPowerShootCommand;
 import frc.robot.commands.hoodedShooterCommands.PidShootCommand;
+import frc.robot.commands.hoodedShooterCommands.SpinUpShooterCommand;
 import frc.robot.commands.drivingCommands.DisableRampingCommand;
 import frc.robot.commands.drivingCommands.DriveEncoders;
 import frc.robot.commands.drivingCommands.EnableBrakeModeCommand;
