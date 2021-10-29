@@ -299,9 +299,14 @@ public class RobotContainer {
     // This lets the shooter spin, then keeps it spinning and indexes up for 5 seconds to allow all
     // balls to be shot, then drives forwards. While it does this the turret aims. Times can be
     // adjusted as needed
-    return aimTurret.withTimeout(2).andThen(
-        shoot.withTimeout(4).andThen(
-            (shoot2.alongWith(horizIn.alongWith(vertUp)).withTimeout(5)).andThen(driveBack)));
+    return aimTurret
+        .withTimeout(2)
+        .andThen(
+            shoot
+                .withTimeout(4)
+                .andThen(
+                    (shoot2.alongWith(horizIn.alongWith(vertUp)).withTimeout(5))
+                        .andThen(driveBack)));
   }
 
   public Command getStopDriveTrainCommand() {
