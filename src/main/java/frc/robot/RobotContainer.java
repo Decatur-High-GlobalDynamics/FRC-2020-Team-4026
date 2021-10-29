@@ -32,12 +32,14 @@ import frc.robot.commands.navigationCommands.UpdateNavigationCommand;
 import frc.robot.commands.hoodedShooterCommands.ConstantShootCommand;
 import frc.robot.commands.hoodedShooterCommands.MaxPowerShootCommand;
 import frc.robot.commands.hoodedShooterCommands.PidShootCommand;
+import frc.robot.commands.hoodedShooterCommands.SpinUpShooterCommand;
 import frc.robot.commands.drivingCommands.DisableRampingCommand;
 import frc.robot.commands.drivingCommands.DriveEncoders;
 import frc.robot.commands.drivingCommands.EnableBrakeModeCommand;
 import frc.robot.commands.drivingCommands.SetSpeedMode;
 import frc.robot.commands.drivingCommands.StopDrivetrainCommand;
 import frc.robot.commands.drivingCommands.TankDriveCommand;
+import frc.robot.commands.drivingCommands.TurnCommand;
 import frc.robot.commands.drivingCommands.GTADriveCommand;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
@@ -77,6 +79,8 @@ public class RobotContainer {
   enum PossibleAutos {
     IN_FRONT_OF_TARGET_MAX_POWER,
     IN_FRONT_OF_TARGET_MAX_POWER_THEN_BACK,
+    SHOOT_THEN_DRIVE_JULY_HEAT,
+    DRIVE_JULY_HEAT,
   }
 
   SendableChooser<PossibleAutos> autoChoice = new SendableChooser<PossibleAutos>();
@@ -238,6 +242,10 @@ public class RobotContainer {
         return getAutoInFrontOfTarget();
       case IN_FRONT_OF_TARGET_MAX_POWER_THEN_BACK:
         return getAutoInFrontOfTargetThenBack();
+      case SHOOT_THEN_DRIVE_JULY_HEAT:
+        return getAutoShootThenDriveJulyHEAT();
+      case DRIVE_JULY_HEAT:
+        return getAutoDriveJulyHEAT();
       default:
         return null;
     }
@@ -272,6 +280,41 @@ public class RobotContainer {
     // This drives and spins up, and when driving finishes, shoots for 10 seconds
     return (driveForward.raceWith(spinUpShooter))
         .andThen((shoot.withTimeout(5)).andThen(driveBack));
+  }
+
+  private Command getAutoShootThenDriveJulyHEAT() {
+    // This is the speed the shooter will spin
+    double shooterSpeed = 0.37;
+    // This command drives forward 4 feet when run
+    Command driveForward = new DriveEncoders(1.2192, .5, driveTrain);
+    // Turns around 180 degrees
+    Command turnAround = new TurnCommand(175, .5, driveTrain, navigation);
+    // This spins up the shooter - note: it doesn't stop the shooter, which might be concerning
+    Command spinUp = new SpinUpShooterCommand(shooter, shooterSpeed);
+    // This shoots with PID - We should adjust the value to the setpoint at wherever we start the
+    // bot
+    Command shoot = new PidShootCommand(shooter, shooterSpeed);
+    // This aims the turret
+    Command aimTurret = new PointTurretAtTargetWithAngleCommand(turret);
+    // This indexes the horizontal indexer in
+    Command horizIn = new HorizontalIndexerIntakeCommand(horizontalIndexer);
+    // This indexes the vertical indexer up
+    Command vertUp = new VerticalIndexerUpCommand(verticalIndexer);
+
+    // This lets the shooter spin, then keeps it spinning and indexes up for 5 seconds to allow all
+    // balls to be shot, then drives forwards. While it does this the turret aims. Times can be
+    // adjusted as needed
+    return aimTurret.alongWith(
+        spinUp.andThen(
+            (shoot.alongWith(horizIn.alongWith(vertUp)).withTimeout(5))
+                .andThen(turnAround.andThen(driveForward))));
+  }
+
+  private Command getAutoDriveJulyHEAT() {
+    // This command drives forward 4 feet when run
+    Command driveForward = new DriveEncoders(1.2192, .5, driveTrain);
+
+    return driveForward;
   }
 
   public Command getStopDriveTrainCommand() {
