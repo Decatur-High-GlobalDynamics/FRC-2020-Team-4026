@@ -282,7 +282,7 @@ public class RobotContainer {
     // This is the speed the shooter will spin
     double shooterSpeed = 0.42;
     // This command drives forward 4 feet when run
-    Command driveBack = new DriveEncoders(-1.2192, -.5, driveTrain);
+    Command driveBack = new DriveEncoders(1.2192, .5, driveTrain);
     // This spins up the shooter - note: it doesn't stop the shooter, which might be concerning
     Command spinUp = new SpinUpShooterCommand(shooter, shooterSpeed);
     // This shoots with PID - We should adjust the value to the setpoint at wherever we start the
