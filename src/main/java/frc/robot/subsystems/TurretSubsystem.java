@@ -353,4 +353,8 @@ public class TurretSubsystem extends SubsystemBase {
   public VisionSubsystem getVisionSubsystem() {
     return this.visionSubsystem;
   }
+
+  public boolean isReadyToClimb() {
+    return getTicks() < -8000;
+  }
 }
