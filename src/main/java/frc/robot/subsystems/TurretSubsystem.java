@@ -38,7 +38,7 @@ public class TurretSubsystem extends SubsystemBase {
   private int rotationSpeed = 500;
 
   // Location (based on limitswitch = 0) of far clockwise range
-  private long minEncoderRange = -7000;
+  private long minEncoderRange = -8621;
 
   // How many radians per encoder tick
   // Found as follows: Straight ahead was -2914, Facing right was -6798
