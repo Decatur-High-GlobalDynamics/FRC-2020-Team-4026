@@ -209,7 +209,7 @@ public class RobotContainer {
     // When button 9 is pressed, zero the turret
     home.whenPressed(new TurretToLimitCommand(this.turret));
     // When button 10 is pressed, get the turret out of the way for climbing
-    start.whenPressed(new PrepareTurretCommand(this.turret));
+    start.whenPressed(new PrepareTurretCommand(this.turret).andThen(new SimpleTurretCWCommand(this.turret).withTimeout(1)));
 
     dPadUp.whileHeld(new MaxPowerShootCommand(shooter));
 
