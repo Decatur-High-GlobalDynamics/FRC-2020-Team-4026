@@ -78,7 +78,8 @@ public class RobotContainer {
   enum PossibleAutos {
     IN_FRONT_OF_TARGET_MAX_POWER,
     IN_FRONT_OF_TARGET_MAX_POWER_THEN_BACK,
-    SHOOT_THEN_DRIVE_JULY_HEAT,
+    BACKWARDS_SHOOT,
+    FORWARDS_SHOOT,
   }
 
   SendableChooser<PossibleAutos> autoChoice = new SendableChooser<PossibleAutos>();
@@ -241,8 +242,10 @@ public class RobotContainer {
         return getAutoInFrontOfTarget();
       case IN_FRONT_OF_TARGET_MAX_POWER_THEN_BACK:
         return getAutoInFrontOfTargetThenBack();
-      case SHOOT_THEN_DRIVE_JULY_HEAT:
-        return getAutoShootThenDriveJulyHEAT();
+      case FORWARDS_SHOOT:
+        return driveForwardAuto();
+      case BACKWARDS_SHOOT:
+        return driveBackAuto();
       default:
         return null;
     }
@@ -279,11 +282,37 @@ public class RobotContainer {
         .andThen((shoot.withTimeout(5)).andThen(driveBack));
   }
 
-  private Command getAutoShootThenDriveJulyHEAT() {
+  private Command driveForwardAuto() {
     // This is the speed the shooter will spin
     double shooterSpeed = 0.42;
     // This command drives forward 4 feet when run
     Command driveForward = new DriveEncoders(1.2192, .5, driveTrain);
+    // This shoots with PID - We should adjust the value to the setpoint at wherever we start the
+    // bot
+    Command spinUp = new SpinUpShooterCommand(shooter, shooterSpeed);
+    Command shoot2 = new PidShootCommand(shooter, shooterSpeed);
+    // This aims the turret
+    Command aimTurret = new PointTurretAtTargetWithAngleCommand(turret);
+    // This indexes the horizontal indexer in
+    Command horizIn = new HorizontalIndexerIntakeCommand(horizontalIndexer);
+    // This indexes the vertical indexer up
+    Command vertUp = new VerticalIndexerUpCommand(verticalIndexer);
+
+    // This lets the shooter spin, then keeps it spinning and indexes up for 5 seconds to allow all
+    // balls to be shot, then drives forwards. While it does this the turret aims. Times can be
+    // adjusted as needed
+    return spinUp
+              .withTimeout(6)
+              .andThen(
+                    (shoot2.alongWith(horizIn.alongWith(vertUp)).withTimeout(3))
+                        .andThen(driveForward));
+  }
+
+  private Command driveBackAuto() {
+    // This is the speed the shooter will spin
+    double shooterSpeed = 0.42;
+    // This command drives forward 4 feet when run
+    Command driveForward = new DriveEncoders(-1.2192, -.5, driveTrain);
     // This shoots with PID - We should adjust the value to the setpoint at wherever we start the
     // bot
     Command spinUp = new SpinUpShooterCommand(shooter, shooterSpeed);
