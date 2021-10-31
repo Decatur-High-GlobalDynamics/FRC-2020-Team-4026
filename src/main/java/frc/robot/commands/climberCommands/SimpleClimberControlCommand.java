@@ -17,6 +17,7 @@ import frc.robot.subsystems.TurretSubsystem;
 public class SimpleClimberControlCommand extends CommandBase {
   /** Creates a new SimpleClimberControlCommand. */
   private ClimberSubsystem climber;
+
   private TurretSubsystem turret;
 
   private DoubleSupplier leftPower;
@@ -27,7 +28,11 @@ public class SimpleClimberControlCommand extends CommandBase {
   boolean overridden = false;
 
   public SimpleClimberControlCommand(
-      ClimberSubsystem climber, DoubleSupplier leftPower, DoubleSupplier rightPower, TurretSubsystem turret, BooleanSupplier dpadUp) {
+      ClimberSubsystem climber,
+      DoubleSupplier leftPower,
+      DoubleSupplier rightPower,
+      TurretSubsystem turret,
+      BooleanSupplier dpadUp) {
     this.climber = climber;
     this.leftPower = leftPower;
     this.rightPower = rightPower;

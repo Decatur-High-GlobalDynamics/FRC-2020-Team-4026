@@ -177,11 +177,14 @@ public class RobotContainer {
     // LogitechControllerButtons.down);
     Button dPadLeft = new POVButton(secondaryJoystick, LogitechControllerButtons.left);
 
-
     // Configure climber to respond to both joysticks by default
     climber.setDefaultCommand(
         new SimpleClimberControlCommand(
-            climber, () -> secondaryJoystick.getY(), () -> secondaryJoystick.getThrottle(), turret, () -> dPadUp.get()));
+            climber,
+            () -> secondaryJoystick.getY(),
+            () -> secondaryJoystick.getThrottle(),
+            turret,
+            () -> dPadUp.get()));
 
     // --------Intake and Indexer Button Bindings--------
     // When Y is held, Intake and Horizontal Indexer out (Synchronized)
@@ -210,7 +213,9 @@ public class RobotContainer {
     // When button 9 is pressed, zero the turret
     home.whenPressed(new TurretToLimitCommand(this.turret));
     // When button 10 is pressed, get the turret out of the way for climbing
-    start.whenPressed(new PrepareTurretCommand(this.turret).andThen(new SimpleTurretCWCommand(this.turret).withTimeout(1)));
+    start.whenPressed(
+        new PrepareTurretCommand(this.turret)
+            .andThen(new SimpleTurretCWCommand(this.turret).withTimeout(1)));
 
     dPadUp.whileHeld(new MaxPowerShootCommand(shooter));
 
@@ -302,10 +307,9 @@ public class RobotContainer {
     // balls to be shot, then drives forwards. While it does this the turret aims. Times can be
     // adjusted as needed
     return spinUp
-              .withTimeout(6)
-              .andThen(
-                    (shoot2.alongWith(horizIn.alongWith(vertUp)).withTimeout(3))
-                        .andThen(driveForward));
+        .withTimeout(6)
+        .andThen(
+            (shoot2.alongWith(horizIn.alongWith(vertUp)).withTimeout(3)).andThen(driveForward));
   }
 
   private Command driveBackAuto() {
@@ -328,10 +332,9 @@ public class RobotContainer {
     // balls to be shot, then drives forwards. While it does this the turret aims. Times can be
     // adjusted as needed
     return spinUp
-              .withTimeout(6)
-              .andThen(
-                    (shoot2.alongWith(horizIn.alongWith(vertUp)).withTimeout(3))
-                        .andThen(driveForward));
+        .withTimeout(6)
+        .andThen(
+            (shoot2.alongWith(horizIn.alongWith(vertUp)).withTimeout(3)).andThen(driveForward));
   }
 
   public Command getStopDriveTrainCommand() {
