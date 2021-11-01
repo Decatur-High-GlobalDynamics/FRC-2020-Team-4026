@@ -7,23 +7,37 @@
 
 package frc.robot.commands.climberCommands;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ClimberSubsystem;
+import frc.robot.subsystems.TurretSubsystem;
 
 public class SimpleClimberControlCommand extends CommandBase {
   /** Creates a new SimpleClimberControlCommand. */
   private ClimberSubsystem climber;
 
+  private TurretSubsystem turret;
+
   private DoubleSupplier leftPower;
   private DoubleSupplier rightPower;
 
+  private BooleanSupplier dpadUp;
+
+  boolean overridden = false;
+
   public SimpleClimberControlCommand(
-      ClimberSubsystem climber, DoubleSupplier leftPower, DoubleSupplier rightPower) {
+      ClimberSubsystem climber,
+      DoubleSupplier leftPower,
+      DoubleSupplier rightPower,
+      TurretSubsystem turret,
+      BooleanSupplier dpadUp) {
     this.climber = climber;
     this.leftPower = leftPower;
     this.rightPower = rightPower;
+    this.turret = turret;
+    this.dpadUp = dpadUp;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(climber);
   }
@@ -35,8 +49,15 @@ public class SimpleClimberControlCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    this.climber.setLeftClimber(this.leftPower.getAsDouble());
-    this.climber.setRightClimber(this.rightPower.getAsDouble());
+    if (dpadUp.getAsBoolean()) {
+      overridden = true;
+    }
+    if (turret.isReadyToClimb() || overridden) {
+      this.climber.setLeftClimber(this.leftPower.getAsDouble());
+      this.climber.setRightClimber(this.rightPower.getAsDouble());
+    } else {
+      this.climber.stop();
+    }
   }
 
   // Called once the command ends or is interrupted.

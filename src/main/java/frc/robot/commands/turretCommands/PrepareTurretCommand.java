@@ -14,21 +14,24 @@ public class PrepareTurretCommand extends CommandBase {
   /** Creates a new PrepareTurretCommand. */
   private final TurretSubsystem turret;
 
+  private int startingEStops;
+
   public PrepareTurretCommand(TurretSubsystem turret) {
     this.turret = turret;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(turret);
+    startingEStops = turret.getNumEStops();
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    turret.startRotatingToPosition(3 * Math.PI / 2);
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    turret.goClockwise();
+  }
 
   // Called once the command ends or is interrupted.
   @Override
@@ -39,6 +42,6 @@ public class PrepareTurretCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return !turret.isMotorBusy();
+    return turret.isReadyToClimb();
   }
 }

@@ -32,6 +32,7 @@ import frc.robot.commands.navigationCommands.UpdateNavigationCommand;
 import frc.robot.commands.hoodedShooterCommands.ConstantShootCommand;
 import frc.robot.commands.hoodedShooterCommands.MaxPowerShootCommand;
 import frc.robot.commands.hoodedShooterCommands.PidShootCommand;
+import frc.robot.commands.hoodedShooterCommands.SpinUpShooterCommand;
 import frc.robot.commands.drivingCommands.DisableRampingCommand;
 import frc.robot.commands.drivingCommands.DriveEncoders;
 import frc.robot.commands.drivingCommands.EnableBrakeModeCommand;
@@ -77,6 +78,8 @@ public class RobotContainer {
   enum PossibleAutos {
     IN_FRONT_OF_TARGET_MAX_POWER,
     IN_FRONT_OF_TARGET_MAX_POWER_THEN_BACK,
+    BACKWARDS_SHOOT,
+    FORWARDS_SHOOT,
   }
 
   SendableChooser<PossibleAutos> autoChoice = new SendableChooser<PossibleAutos>();
@@ -177,7 +180,11 @@ public class RobotContainer {
     // Configure climber to respond to both joysticks by default
     climber.setDefaultCommand(
         new SimpleClimberControlCommand(
-            climber, () -> secondaryJoystick.getY(), () -> secondaryJoystick.getThrottle()));
+            climber,
+            () -> secondaryJoystick.getY(),
+            () -> secondaryJoystick.getThrottle(),
+            turret,
+            () -> dPadUp.get()));
 
     // --------Intake and Indexer Button Bindings--------
     // When Y is held, Intake and Horizontal Indexer out (Synchronized)
@@ -206,7 +213,9 @@ public class RobotContainer {
     // When button 9 is pressed, zero the turret
     home.whenPressed(new TurretToLimitCommand(this.turret));
     // When button 10 is pressed, get the turret out of the way for climbing
-    start.whenPressed(new PrepareTurretCommand(this.turret));
+    start.whenPressed(
+        new PrepareTurretCommand(this.turret)
+            .andThen(new SimpleTurretCWCommand(this.turret).withTimeout(1)));
 
     dPadUp.whileHeld(new MaxPowerShootCommand(shooter));
 
@@ -238,6 +247,10 @@ public class RobotContainer {
         return getAutoInFrontOfTarget();
       case IN_FRONT_OF_TARGET_MAX_POWER_THEN_BACK:
         return getAutoInFrontOfTargetThenBack();
+      case FORWARDS_SHOOT:
+        return driveForwardAuto();
+      case BACKWARDS_SHOOT:
+        return driveBackAuto();
       default:
         return null;
     }
@@ -272,6 +285,56 @@ public class RobotContainer {
     // This drives and spins up, and when driving finishes, shoots for 10 seconds
     return (driveForward.raceWith(spinUpShooter))
         .andThen((shoot.withTimeout(5)).andThen(driveBack));
+  }
+
+  private Command driveForwardAuto() {
+    // This is the speed the shooter will spin
+    double shooterSpeed = 0.42;
+    // This command drives forward 4 feet when run
+    Command driveForward = new DriveEncoders(1.2192, .5, driveTrain);
+    // This shoots with PID - We should adjust the value to the setpoint at wherever we start the
+    // bot
+    Command spinUp = new SpinUpShooterCommand(shooter, shooterSpeed);
+    Command shoot2 = new PidShootCommand(shooter, shooterSpeed);
+    // This aims the turret
+    Command aimTurret = new PointTurretAtTargetWithAngleCommand(turret);
+    // This indexes the horizontal indexer in
+    Command horizIn = new HorizontalIndexerIntakeCommand(horizontalIndexer);
+    // This indexes the vertical indexer up
+    Command vertUp = new VerticalIndexerUpCommand(verticalIndexer);
+
+    // This lets the shooter spin, then keeps it spinning and indexes up for 5 seconds to allow all
+    // balls to be shot, then drives forwards. While it does this the turret aims. Times can be
+    // adjusted as needed
+    return spinUp
+        .withTimeout(6)
+        .andThen(
+            (shoot2.alongWith(horizIn.alongWith(vertUp)).withTimeout(3)).andThen(driveForward));
+  }
+
+  private Command driveBackAuto() {
+    // This is the speed the shooter will spin
+    double shooterSpeed = 0.42;
+    // This command drives forward 4 feet when run
+    Command driveForward = new DriveEncoders(-1.2192, -.5, driveTrain);
+    // This shoots with PID - We should adjust the value to the setpoint at wherever we start the
+    // bot
+    Command spinUp = new SpinUpShooterCommand(shooter, shooterSpeed);
+    Command shoot2 = new PidShootCommand(shooter, shooterSpeed);
+    // This aims the turret
+    Command aimTurret = new PointTurretAtTargetWithAngleCommand(turret);
+    // This indexes the horizontal indexer in
+    Command horizIn = new HorizontalIndexerIntakeCommand(horizontalIndexer);
+    // This indexes the vertical indexer up
+    Command vertUp = new VerticalIndexerUpCommand(verticalIndexer);
+
+    // This lets the shooter spin, then keeps it spinning and indexes up for 5 seconds to allow all
+    // balls to be shot, then drives forwards. While it does this the turret aims. Times can be
+    // adjusted as needed
+    return spinUp
+        .withTimeout(6)
+        .andThen(
+            (shoot2.alongWith(horizIn.alongWith(vertUp)).withTimeout(3)).andThen(driveForward));
   }
 
   public Command getStopDriveTrainCommand() {
