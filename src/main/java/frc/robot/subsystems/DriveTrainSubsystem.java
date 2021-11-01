@@ -12,30 +12,57 @@ import java.util.Objects;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonSRXSimCollection;
-import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.hal.SimDouble;
+import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.SlewRateLimiter;
+import edu.wpi.first.wpilibj.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
+import edu.wpi.first.wpiutil.math.VecBuilder;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.constants.DriveTrainConstants;
 import frc.robot.constants.Ports;
 import frc.robot.ITeamTalon;
 import frc.robot.TeamTalonFX;
+import frc.robot.TeamTalonSRX;
 
 public class DriveTrainSubsystem extends SubsystemBase {
-  final DifferentialDrive drive;
+  private final DifferentialDrive drive;
+  private final NavigationSubsystem nav;
 
-  ITeamTalon rightDriveFalconMain;
-  ITeamTalon leftDriveFalconMain;
-  ITeamTalon rightDriveFalconSub;
-  ITeamTalon leftDriveFalconSub;
-  TalonSRXSimCollection rightDriveFalconMainSim;
-  TalonSRXSimCollection leftDriveFalconMainSim;
-  TalonSRXSimCollection rightDriveFalconSubSim;
-  TalonSRXSimCollection leftDriveFalconSubSim;
+  private static ITeamTalon rightDriveFalconMain;
+  private static ITeamTalon leftDriveFalconMain;
+  private static ITeamTalon rightDriveFalconSub;
+  private static ITeamTalon leftDriveFalconSub;
+
+  // Simulation stuff
+  private DifferentialDrivetrainSim drivetrainSim;
+  private final Field2d field = new Field2d();
+  private double leftEncoderSimVelocity = 0, rightEncoderSimVelocity = 0;
+  private double leftEncoderSimPosition = 0, rightEncoderSimPosition = 0;
+
+  @SuppressWarnings("unused")
+  private static TalonSRXSimCollection rightDriveFalconMainSim;
+
+  @SuppressWarnings("unused")
+  private static TalonSRXSimCollection leftDriveFalconMainSim;
+
+  @SuppressWarnings("unused")
+  private static TalonSRXSimCollection rightDriveFalconSubSim;
+
+  @SuppressWarnings("unused")
+  private static TalonSRXSimCollection leftDriveFalconSubSim;
+
   // This is a temp number that's theoretically best
   public double maxPowerChange = 21.5;
   public static double maxOutputSlow = .5;
@@ -71,27 +98,59 @@ public class DriveTrainSubsystem extends SubsystemBase {
       ITeamTalon rightDriveFalconMain,
       ITeamTalon leftDriveFalconMain,
       ITeamTalon rightDriveFalconSub,
-      ITeamTalon leftDriveFalconSub) {
-    this.rightDriveFalconMain =
+      ITeamTalon leftDriveFalconSub,
+      NavigationSubsystem nav) {
+    rightDriveFalconMain =
         Objects.requireNonNull(rightDriveFalconMain, "rightDriveFalconMain must not be null");
-    this.leftDriveFalconMain =
+    leftDriveFalconMain =
         Objects.requireNonNull(leftDriveFalconMain, "leftDriveFalconMain must not be null");
-    this.rightDriveFalconSub =
+    rightDriveFalconSub =
         Objects.requireNonNull(rightDriveFalconSub, "rightDriveFalconSub must not be null");
-    this.leftDriveFalconSub =
+    leftDriveFalconSub =
         Objects.requireNonNull(leftDriveFalconSub, "leftDriveFalconSub must not be null");
+    this.nav = nav;
+
+    if (RobotBase.isSimulation()) {
+      rightDriveFalconMainSim = ((WPI_TalonSRX) rightDriveFalconMain).getSimCollection();
+      leftDriveFalconMainSim = ((WPI_TalonSRX) rightDriveFalconMain).getSimCollection();
+      rightDriveFalconSubSim = ((WPI_TalonSRX) rightDriveFalconMain).getSimCollection();
+      leftDriveFalconSubSim = ((WPI_TalonSRX) rightDriveFalconMain).getSimCollection();
+    }
 
     setupDrivetrain();
     drive = new DifferentialDrive(leftDriveFalconMain, rightDriveFalconMain);
     setupDifferentialDrive();
+
+    if (RobotBase.isSimulation()) {
+      drivetrainSim =
+          new DifferentialDrivetrainSim(
+              DriveTrainConstants.kPlant,
+              DCMotor.getFalcon500(2),
+              DriveTrainConstants.kDriveGearRatio,
+              DriveTrainConstants.kTrackWidthMeters,
+              DriveTrainConstants.kWheelRadiusMeters,
+              VecBuilder.fill(0, 0, 0.0001, 0.1, 0.1, 0.005, 0.005) // Tune default STDEV?
+              );
+    }
+  }
+
+  private void configureTalon(ITeamTalon talon) {
+    talon.configFactoryDefault();
+    talon.configSelectedFeedbackSensor(
+        FeedbackDevice.IntegratedSensor, 0, 50); // use internal encoder
+    talon.setSelectedSensorPosition(0, 0, 50); // zero encoders
+    talon.config_kP(
+        0, 0); // slotIdx, value  need to know the frc_characterization values to plug in here...
+    talon.config_kI(0, 0);
+    talon.config_kD(0, 0);
+    talon.setNeutralMode(NeutralMode.Coast);
   }
 
   private void setupDrivetrain() {
-    // This configures the falcons to use their internal encoders
-    TalonFXConfiguration configs = new TalonFXConfiguration();
-    configs.primaryPID.selectedFeedbackSensor = FeedbackDevice.IntegratedSensor;
-    rightDriveFalconMain.configBaseAllSettings(configs);
-    leftDriveFalconMain.configBaseAllSettings(configs);
+    configureTalon(rightDriveFalconMain);
+    configureTalon(leftDriveFalconMain);
+    configureTalon(rightDriveFalconSub);
+    configureTalon(leftDriveFalconSub);
 
     leftDriveFalconSub.follow(leftDriveFalconMain);
     rightDriveFalconSub.follow(rightDriveFalconMain);
@@ -105,23 +164,48 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
   private void setupDifferentialDrive() {
     drive.setDeadband(0);
-    drive.setRightSideInverted(false);
+    drive.setRightSideInverted(true);
   }
 
-  public static DriveTrainSubsystem Create() {
-    ITeamTalon rightDriveFalconMainCAN =
-        new TeamTalonFX("Subsystems.DriveTrain.RightMain", Ports.RightDriveFalconMainCAN);
-    ITeamTalon leftDriveFalconMainCAN =
-        new TeamTalonFX("Subsystems.DriveTrain.LeftMain", Ports.LeftDriveFalconMainCAN);
-    ITeamTalon rightDriveFalconSubCAN =
-        new TeamTalonFX("Subsystems.DriveTrain.RightSub", Ports.RightDriveFalconSubCAN);
-    ITeamTalon leftDriveFalconSub =
-        new TeamTalonFX("Subsystems.DriveTrain.LeftSub", Ports.LeftDriveFalconSubCAN);
+  private void resetEncoders() {
+    rightDriveFalconMain.setSelectedSensorPosition(0, 0, 50);
+    leftDriveFalconMain.setSelectedSensorPosition(0, 0, 50);
+    rightDriveFalconSub.setSelectedSensorPosition(0, 0, 50);
+    leftDriveFalconSub.setSelectedSensorPosition(0, 0, 50);
+  }
+
+  public Pose2d getPose() {
+    return nav.odometry.getPoseMeters();
+  }
+
+  public static DriveTrainSubsystem Create(NavigationSubsystem nav) {
+    ITeamTalon rightDriveFalconMain;
+    ITeamTalon leftDriveFalconMain;
+    ITeamTalon rightDriveFalconSub;
+    ITeamTalon leftDriveFalconSub;
+
+    if (RobotBase.isSimulation()) {
+      rightDriveFalconMain =
+          new TeamTalonSRX("Subsystems.DriveTrain.RightMain", Ports.RightDriveFalconMainCAN);
+      leftDriveFalconMain =
+          new TeamTalonSRX("Subsystems.DriveTrain.LeftMain", Ports.RightDriveFalconMainCAN);
+      rightDriveFalconSub =
+          new TeamTalonSRX("Subsystems.DriveTrain.RightSub", Ports.RightDriveFalconMainCAN);
+      leftDriveFalconSub =
+          new TeamTalonSRX("Subsystems.DriveTrain.LeftSub", Ports.RightDriveFalconMainCAN);
+    } else {
+      rightDriveFalconMain =
+          new TeamTalonFX("Subsystems.DriveTrain.RightMain", Ports.RightDriveFalconMainCAN);
+      leftDriveFalconMain =
+          new TeamTalonFX("Subsystems.DriveTrain.LeftMain", Ports.RightDriveFalconMainCAN);
+      rightDriveFalconSub =
+          new TeamTalonFX("Subsystems.DriveTrain.RightSub", Ports.RightDriveFalconMainCAN);
+      leftDriveFalconSub =
+          new TeamTalonFX("Subsystems.DriveTrain.LeftSub", Ports.RightDriveFalconMainCAN);
+    }
+
     return new DriveTrainSubsystem(
-        rightDriveFalconMainCAN,
-        leftDriveFalconMainCAN,
-        rightDriveFalconSubCAN,
-        leftDriveFalconSub);
+        rightDriveFalconMain, leftDriveFalconMain, rightDriveFalconSub, leftDriveFalconSub, nav);
   }
 
   @Override
@@ -132,6 +216,106 @@ public class DriveTrainSubsystem extends SubsystemBase {
     updateVelocityForStopMetersPerSecond();
     printDrivetrainData();
     updateMotorOutputs();
+    field.setRobotPose(getPose());
+    nav.odometry.update(
+        Rotation2d.fromDegrees(nav.getHeading()),
+        getLeftDistanceMeters(),
+        getRightDistanceMeters());
+    SmartDashboard.putNumber("Left position", getLeftPosition());
+    SmartDashboard.putNumber("Right position", getRightPosition());
+  }
+
+  @Override
+  public void simulationPeriodic() {
+    drivetrainSim.setInputs(
+        leftDriveFalconMain.get() * RobotController.getBatteryVoltage(),
+        rightDriveFalconMain.get() * RobotController.getBatteryVoltage());
+    drivetrainSim.update(0.020);
+    System.out.println("Gyro Set to: " + -drivetrainSim.getHeading().getDegrees());
+
+    // Gyro
+    int dev = SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[0]");
+    SimDouble angle = new SimDouble(SimDeviceDataJNI.getSimValueHandle(dev, "Yaw"));
+    // NavX expects clockwise positive, but sim outputs clockwise negative
+    angle.set(-drivetrainSim.getHeading().getDegrees());
+
+    // Encoders
+    leftEncoderSimVelocity = metersToTicks(drivetrainSim.getLeftVelocityMetersPerSecond()) / 10d;
+    leftEncoderSimPosition = metersToTicks(drivetrainSim.getLeftPositionMeters());
+    rightEncoderSimVelocity = metersToTicks(drivetrainSim.getRightVelocityMetersPerSecond()) / 10d;
+    rightEncoderSimPosition = metersToTicks(drivetrainSim.getRightPositionMeters());
+  }
+
+  public double ticksToRotations(double ticks) {
+    return ticks / (double) DriveTrainConstants.kEncoderTicksPerRotation;
+  }
+
+  public double rotationsToTicks(double rotations) {
+    return rotations * (double) DriveTrainConstants.kEncoderTicksPerRotation;
+  }
+
+  public double ticksToMeters(double ticks) {
+    return ticksToRotations(ticks) * DriveTrainConstants.kWheelCircumferenceMeters;
+  }
+
+  public double metersToTicks(double meters) {
+    double rotations = meters / DriveTrainConstants.kWheelCircumferenceMeters;
+    return rotationsToTicks(rotations);
+  }
+
+  public double getLeftVelocityTicksPerDs() {
+    if (RobotBase.isSimulation()) {
+      return leftEncoderSimVelocity;
+    }
+    return (leftDriveFalconMain.getSelectedSensorVelocity(0)
+            + leftDriveFalconSub.getSelectedSensorVelocity(0))
+        / 2.0d;
+  }
+
+  public double getRightVelocityTicksPerDs() {
+    if (RobotBase.isSimulation()) {
+      return rightEncoderSimVelocity;
+    }
+    return (rightDriveFalconMain.getSelectedSensorVelocity(0)
+            + rightDriveFalconSub.getSelectedSensorVelocity(0))
+        / 2.0d;
+  }
+
+  private double getLeftPosition() {
+    if (RobotBase.isSimulation()) {
+      return leftEncoderSimPosition;
+    }
+    return (leftDriveFalconMain.getSelectedSensorPosition(0)
+            + leftDriveFalconSub.getSelectedSensorPosition(0))
+        / 2.0d;
+  }
+
+  private double getRightPosition() {
+    if (RobotBase.isSimulation()) {
+      return rightEncoderSimPosition;
+    }
+    return (rightDriveFalconMain.getSelectedSensorPosition(0)
+            + rightDriveFalconSub.getSelectedSensorPosition(0))
+        / 2.0d;
+  }
+
+  public double getLeftDistanceMeters() {
+    double leftTicks = getLeftPosition();
+    return ticksToMeters(leftTicks);
+  }
+
+  public double getRightDistanceMeters() {
+    double rightTicks = getRightPosition();
+    return ticksToMeters(rightTicks);
+  }
+
+  public void resetOdometry() {
+    resetOdometry(new Pose2d(0, 0, new Rotation2d(0)));
+  }
+
+  public void resetOdometry(Pose2d translationPose) {
+    resetEncoders();
+    nav.odometry.resetPosition(translationPose, Rotation2d.fromDegrees(nav.getHeading()));
   }
 
   private void updateMaxPowerChange() {
